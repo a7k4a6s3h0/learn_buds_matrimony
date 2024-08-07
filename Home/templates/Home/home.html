@@ -1,0 +1,39 @@
+{% extends 'base_files/base.html' %} {% block meta %}
+<title>Home</title>
+{% endblock meta %} 
+
+
+{% block header %} 
+{% include 'widget/base_navbar.html' with image="https://i.ibb.co/8Xqgtvq/profile.jpg" %}
+{% endblock header %} 
+
+{% block content %}
+<div
+  class="d-flex justify-content-around mb-3 filter-btn-container mx-1 rounded-pill"
+>
+  <button class="btn btn-sm btn-container rounded-pill">Location</button>
+  <button class="btn btn-sm btn-container rounded-pill">Designation</button>
+  <button class="btn btn-sm btn-container rounded-pill">Qualification</button>
+</div>
+
+<div class="container">
+  <div class="row">
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rumi tha" job='Developer' location='Kozhikode' status='online' gender='F' age='34'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="Clara jonh" job='Developer' location='Kozhikode' status='online' gender='F' age='25'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="dig" job='Developer' location='Kozhikode' status='offline' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="lahibha" job='Developer' location='Kozhikode' status='offline' gender='F' age='18'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%}
+  </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% include "widget/menu.html" %}
+    </div>
+</div>
+
+{% endblock content %}
