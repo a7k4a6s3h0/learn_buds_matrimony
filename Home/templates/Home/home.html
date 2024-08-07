@@ -8,12 +8,18 @@
 {% endblock header %} 
 
 {% block content %}
-<div
-  class="d-flex justify-content-around mb-3 filter-btn-container mx-1 rounded-pill"
->
-  <button class="btn btn-sm btn-container rounded-pill">Location</button>
-  <button class="btn btn-sm btn-container rounded-pill">Designation</button>
-  <button class="btn btn-sm btn-container rounded-pill">Qualification</button>
+<div class="container filter-btn-container rounded-pill">
+<div class="row d-flex justify-content-around">
+  <div class="col">
+      <button class="btn btn-sm btn-container rounded-pill">Location</button>
+  </div>
+    <div class="col">
+      <button class="btn btn-sm btn-container rounded-pill">Designation</button>
+    </div>
+      <div class="col">
+        <button class="btn btn-sm btn-container rounded-pill">Qualification</button>
+      </div>
+</div>
 </div>
 
 <div class="container">
@@ -27,13 +33,19 @@
     {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
     {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
     {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%}
+   {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rumi tha" job='Developer' location='Kozhikode' status='online' gender='F' age='34'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="Clara jonh" job='Developer' location='Kozhikode' status='online' gender='F' age='25'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="dig" job='Developer' location='Kozhikode' status='offline' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="lahibha" job='Developer' location='Kozhikode' status='offline' gender='F' age='18'%} 
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
+    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%}
+  
   </div>
 </div>
 
-<div class="container">
-    <div class="row">
-        {% include "widget/menu.html" %}
-    </div>
-</div>
+{% include "widget/menu.html" %}
 
 {% endblock content %}

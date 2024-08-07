@@ -60,9 +60,24 @@
 .menu_container{
     background-color: white;
     border: 1px solid var(--russian-violet);
+    width: 100%;
 }
 
 .menu-icons{
     background-color: var(--light-medium-orchid);
     color: var(--snow);
+}
+
+
+
+@media (min-width: 576px) {
+  .menu_container {
+    width: 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .menu_container {
+    width: 25%;
+  }
 }
