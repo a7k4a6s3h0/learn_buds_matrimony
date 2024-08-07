@@ -1,0 +1,83 @@
+:root {
+  --russian-violet: #4b164c;
+  --black: #000000;
+  --light-medium-orchid: #dd88cf;
+  --snow: #fffdf7;
+  --yellow-sun: #f6e89a;
+}
+
+.home-profile-card-container {
+  color: var(--snow);
+}
+
+.status-image {
+  border: 0.1rem solid #dd88cf;
+  padding: 0.2rem;
+}
+
+.filter-btn-container {
+  background-color: #f8e7f6;
+  color: #333333;
+  border: 0.2rem solid white;
+}
+
+.btn-container {
+  width: 100%;
+}
+
+.btn-container:focus {
+  background-color: #fdf7fd;
+  color: blue;
+}
+
+.profile-icons {
+  background-color: rgba(255, 255, 255, 0.381);
+  backdrop-filter: blur(100px);
+  border-radius: 1.5rem 0rem 0rem 1.5rem;
+}
+
+.profile-icons .icon {
+  background-color: rgba(255, 255, 255, 0.284);
+}
+
+/* navbar css  */
+.base_nav_right {
+  color: var(--russian-violet);
+  cursor: pointer;
+}
+
+.base_nav_left {
+  cursor: pointer;
+}
+
+.notifcation-icon {
+  border: 1px solid var(--russian-violet);
+}
+
+
+/* menu  */
+
+.menu_container{
+    background-color: white;
+    border: 1px solid var(--russian-violet);
+    width: 100%;
+}
+
+.menu-icons{
+    background-color: var(--light-medium-orchid);
+    color: var(--snow);
+}
+
+
+
+@media (min-width: 576px) {
+  .menu_container {
+    width: 50%;
+  }
+}
+
+@media (min-width: 992px) {
+  .menu_container {
+    width: 25%;
+  }
+}
