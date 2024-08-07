@@ -1,3 +1,14 @@
-h1{
-    color: blueviolet;
-}
+    :root {
+      --russian-violet: #4B164C;
+      --black: #000000;
+      --light-medium-orchid: #DD88CF;
+      --snow: #FFFDF7;
+      --yellow-sun: #F6E89A;
+    }
+
+    body {
+      background-color: var(--snow);
+      font-family: "Abel", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+    }
