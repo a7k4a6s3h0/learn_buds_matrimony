@@ -55,12 +55,35 @@
 }
 
 
+
+.left-menu-container{
+  background-color: var(--russian-violet);
+  width: 200px;
+}
+
+.left-menu-items{
+  color: var(--snow);
+}
+.profile-on-menu{
+  color: var(--snow);
+}
+
+.profile-on-menu:hover{
+  background-color: transparent;
+  color: var(--snow);
+}
+
+
+.left-menu-items:hover{
+  background-color: rgba(255, 255, 255, 0.384);
+  color: var(--snow); 
+  border-radius:0.5rem ;
+}
 /* menu  */
 
 .menu_container{
     background-color: white;
     border: 1px solid var(--russian-violet);
-    width: 100%;
 }
 
 .menu-icons{
