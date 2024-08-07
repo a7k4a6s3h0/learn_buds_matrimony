@@ -1,0 +1,25 @@
+.filter-card-profile-image{
+    border: 5px solid var(--light-medium-orchid);
+}
+
+.match-message {
+  color: var(--russian-violet);
+}
+
+.match-count {
+  color: var(--light-medium-orchid);
+}
+
+.match-container {
+  background-color: var(--light-medium-orchid);
+  border-radius:0rem 0rem 1.5rem 1.5rem ;
+  color: var(--snow);
+}
+
+.profile-info{
+    color: var(--snow);
+}
+
+.dis-container{
+    background-color: rgba(255, 255, 255, 0.246);
+}

@@ -1,0 +1,18 @@
+<div class="col-6 col-md-3 my-2 filter-profile-card-container">
+    <div class="profile-card position-relative ">
+        <div class="match-container text-center position-absolute top-0  start-50 translate-middle-x">
+            <p class="match-info fs-6 px-2 rounded-pill text-nowrap">
+                {{ match_per }} match
+            </p>
+        </div>
+
+        <div class="profile-info position-absolute bottom-0 text-center p-2 w-100">
+            <small class="fs-6 py-1 px-3 rounded-pill dis-container">{{distance}} km away</small><br>
+            <small class="fw-bold fs-5">{{ name }}</small>
+            <small class="fw-light ms-1 fs-5">{{ gender }},{{ age }}</small>
+            <p style="font-size: 10px" class="text-uppercase">{{ location }}</p>
+        </div>
+        <img src="{{ image }}" alt="Profile 3" class="img-fluid object-fit-cover rounded-5 filter-card-profile-image"
+            style="width: 100%; height: 250px" />
+    </div>
+</div>
