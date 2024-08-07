@@ -1,15 +1,46 @@
 <div class="container d-flex justify-content-between align-items-center">
-  <div class="d-flex align-items-center my-2 base_nav_right">
-    <i class="fa-solid fa-bars me-2"></i>
+  <div class="d-flex align-items-center my-2 base_nav_right dropdown">
+    <i class="fa-solid fa-bars me-2" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></i>
+    <ul class="dropdown-menu p-3 rounded-3 left-menu-container" aria-labelledby="dropdownMenuButton1">
+      <li><a class="dropdown-item p-3 left-menu-items" href="#">Dating</a></li>
+      <li><a class="dropdown-item p-3 left-menu-items border-top" href="#">Matrimony</a></li>
+      <li><a class="dropdown-item p-3 left-menu-items border-top" href="#">E-commerce</a></li>
+      <li><a class="dropdown-item p-3 left-menu-items border-top" href="#">Study abroad</a></li>
+      <li><a class="dropdown-item p-3 left-menu-items border-top" href="#">Job portal</a></li>
+    </ul>
     <span class="fw-bold">BuddyPair</span>
   </div>
   <div class="d-flex align-items-center my-2 base_nav_left">
     <i class="fa-regular fa-bell me-2 notifcation-icon p-1 rounded-circle"></i>
-    <img
-      src="{{ image }}"
-      alt="My Story"
-      class="rounded-circle overflow-hidden"
-      style="width: 30px; height: 30px"
-    />
+    <img src="{{ image }}" alt="My Story" class="rounded-circle overflow-hidden" id="dropdownMenuButton2"
+      data-bs-toggle="dropdown" aria-expanded="false" style="width: 30px; height: 30px" />
+    <!-- Dropdown Menu for Image -->
+    <ul class="dropdown-menu fw-light p-3 rounded-3 left-menu-container" aria-labelledby="dropdownMenuButton2">
+
+      <li>
+        <a class="dropdown-item d-flex align-items-center profile-on-menu" href="#">
+          <img src="{{ image }}" class="rounded-circle" alt="" style="width: 50px; height: 50px;">
+          <div class="d-flex flex-column ms-2">
+            <p class="mb-0" style="font-size: small;">{{ name }}</p>
+            <p class="mb-0 text-warning" style="font-size: x-small;"><i class="fa-solid fa-crown"></i> prime member</p>
+            <p class="mb-0 text-success" style="font-size: x-small;">Online</p>
+          </div>
+        </a>
+      </li>
+      <li><a class="dropdown-item  left-menu-items" href="#">My profile</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="#">Sent request</a></li>
+      <li><a class="dropdown-item left-menu-items" href="#">Viewed my profile</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="#">Accept request</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="#">Reject</a></li>
+      <li><a class="dropdown-item left-menu-items " href="#">Received</a></li>
+      <li><a class="dropdown-item left-menu-items" href="#">Shortlisted by</a></li>
+      <li><a class="dropdown-item left-menu-items " href="#">Shortlisted</a></li>
+      <li><a class="dropdown-item left-menu-items " href="#">Contacted</a></li>
+      <li><a class="dropdown-item left-menu-items " href="#">Message</a></li>
+      <li><a class="dropdown-item  left-menu-items " href="#">Settings</a></li>
+      <li><a class="dropdown-item left-menu-items d-flex align-items-center justify-content-center p-3" href="#">
+          <i class="fa-solid fa-right-from-bracket fa-flip-horizontal"></i> Logout
+        </a></li>
+    </ul>
   </div>
 </div>
