@@ -7,4 +7,5 @@ urlpatterns = [
     path('qualification', views.Qualification.as_view(), name='qualification'),
     path('loaction', views.Loaction.as_view(), name='loaction'),
     path('designation', views.Designation.as_view(), name='designation'),
+    path('profiles/filter', views.FilterPrifles.as_view(), name='filter_prifles'),
 ]

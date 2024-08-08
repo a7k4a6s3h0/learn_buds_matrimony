@@ -54,44 +54,45 @@
   border: 1px solid var(--russian-violet);
 }
 
-
-
-.left-menu-container{
+.left-menu-container {
   background-color: var(--russian-violet);
   width: 200px;
 }
 
-.left-menu-items{
+.left-menu-items {
   color: var(--snow);
 }
-.profile-on-menu{
+.profile-on-menu {
   color: var(--snow);
 }
 
-.profile-on-menu:hover{
+.profile-on-menu:hover {
   background-color: transparent;
   color: var(--snow);
 }
 
-
-.left-menu-items:hover{
+.left-menu-items:hover {
   background-color: rgba(255, 255, 255, 0.384);
-  color: var(--snow); 
-  border-radius:0.5rem ;
+  color: var(--snow);
+  border-radius: 0.5rem;
 }
+
 /* menu  */
-
-.menu_container{
-    background-color: white;
-    border: 1px solid var(--russian-violet);
+.menu_container {
+  background-color: white;
+  border: 1px solid var(--russian-violet);
 }
 
-.menu-icons{
-    background-color: var(--light-medium-orchid);
-    color: var(--snow);
+.menu-icons {
+  background-color: var(--light-medium-orchid);
+  color: var(--snow);
 }
 
-
+/* notifcation-icon */
+.notifaction-alert {
+  background-color: var(--russian-violet);
+  color: var(--snow);
+}
 
 @media (min-width: 576px) {
   .menu_container {

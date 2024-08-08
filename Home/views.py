@@ -14,3 +14,7 @@ class Loaction(TemplateView):
 
 class Designation(TemplateView):
     template_name='Home/designation.html'
+
+
+class FilterPrifles(TemplateView):
+    template_name='Home/filter.html'
