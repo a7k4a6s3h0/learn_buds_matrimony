@@ -1,5 +1,5 @@
-.filter-card-profile-image{
-    border: 5px solid var(--light-medium-orchid);
+.filter-card-profile-image {
+  border: 5px solid var(--light-medium-orchid);
 }
 
 .match-message {
@@ -12,14 +12,75 @@
 
 .match-container {
   background-color: var(--light-medium-orchid);
-  border-radius:0rem 0rem 1.5rem 1.5rem ;
+  border-radius: 0rem 0rem 1.5rem 1.5rem;
   color: var(--snow);
 }
 
-.profile-info{
-    color: var(--snow);
+.profile-info {
+  color: var(--snow);
 }
 
-.dis-container{
-    background-color: rgba(255, 255, 255, 0.246);
+.dis-container {
+  background-color: rgba(255, 255, 255, 0.246);
+}
+
+.filter-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--russian-violet);
+  color: var(--snow);
+}
+
+.filter-row {
+  flex-grow: 1;
+  background-color: var(--snow);
+  color: var(--black);
+  border-radius:2rem 2rem 0rem 0rem;
+}
+
+.top-row{
+  padding: 1.5rem;
+}
+
+/* Basic styles for the custom checkbox */
+.filter-checkobox {
+    appearance: none;
+    -webkit-appearance: none; /* For Webkit browsers */
+    background-color: var(--snow);
+    border: 2px solid var(--light-medium-orchid);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 0.8rem;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Styles for the checkbox when checked */
+.filter-checkobox:checked {
+    background-color: var(--russian-violet); /* Change to your desired color */
+    border-color: var(--russian-violet);
+}
+
+/* Adding the tick mark */
+.filter-checkobox:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 16px;
+    border: solid var(--snow); /* Color of the tick mark */
+    border-width: 2px 0 0 2px;
+    transform: translate(-50%, -50%) rotate(230deg);
+    transform-origin: center;
+}
+
+@media (min-width: 768px) {
+    .top-row {
+        padding: 1.5rem; /* equivalent to p-md-4 */
+    }
 }
