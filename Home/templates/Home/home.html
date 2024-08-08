@@ -11,14 +11,14 @@
 <div class="container filter-btn-container rounded-pill">
 <div class="row d-flex justify-content-around">
   <div class="col">
-      <button class="btn btn-sm btn-container rounded-pill">Location</button>
+      <a href="{% url 'loaction' %}"><button class="btn btn-sm btn-container rounded-pill">Location</button></a>
   </div>
     <div class="col">
-      <button class="btn btn-sm btn-container rounded-pill">Designation</button>
+      <a href="{% url 'designation' %}"><button class="btn btn-sm btn-container rounded-pill">Designation</button></a>
     </div>
       <div class="col">
-        <button class="btn btn-sm btn-container rounded-pill">Qualification</button>
-      </div>
+        <a href="{% url 'qualification' %}"><button class="btn btn-sm btn-container rounded-pill">Qualification</button></a>
+      </div> 
 </div>
 </div>
 
@@ -42,7 +42,6 @@
     {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
     {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
     {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%}
-  
   </div>
 </div>
 
