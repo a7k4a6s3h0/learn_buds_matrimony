@@ -17,3 +17,22 @@ a{
   text-decoration: none;
   color: var(--black);
 }
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0px transparent; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: transparent; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: transparent; 
+}
