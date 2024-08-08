@@ -1,0 +1,43 @@
+{% extends 'base_files/base.html' %}
+
+{% block meta %}
+<title>Qualification</title>
+{% endblock meta %}
+
+
+{% block header %}
+{% include 'widget/filter-page-navbar.html' with image="https://i.ibb.co/8Xqgtvq/profile.jpg" title="Loaction" %}
+{% endblock header %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="row">
+        <div class="col">
+            <h3 class="match-message">Your matches<span class="match-count ms-2">45</span></h3>
+        </div>
+    </div>
+    <div class="row">
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/KXB4vwM/profile5.png" name="sar tha" match_per='100%' location='Kozhikode' age='34' distance="2" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rich"  match_per='90%' location='Kozhikode' age='34' distance="4" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/KXB4vwM/profile5.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="sar tha" match_per='100%' location='Kozhikode' age='34' distance="2" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rich"  match_per='90%' location='Kozhikode' age='34' distance="4" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/KXB4vwM/profile5.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="sar tha" match_per='100%' location='Kozhikode' age='34' distance="2" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rich"  match_per='90%' location='Kozhikode' age='34' distance="4" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/Q9RcQpZ/profile3.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="sar tha" match_per='100%' location='Kozhikode' age='34' distance="2" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rich"  match_per='90%' location='Kozhikode' age='34' distance="4" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/4KbHP9W/profile4.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/Q9RcQpZ/profile3.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="sar tha" match_per='100%' location='Kozhikode' age='34' distance="2" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rich"  match_per='90%' location='Kozhikode' age='34' distance="4" %}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/4KbHP9W/profile4.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+        {% include "widget/filter-profile-card.html" with image="https://i.ibb.co/KXB4vwM/profile5.png" name="dim" match_per='89%' location='Kozhikode' age='34' distance="6"%}
+
+    </div>
+</div>
+
+
+{% include "widget/menu.html" %}
+{% endblock content %}
