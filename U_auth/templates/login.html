@@ -1,0 +1,75 @@
+{% extends 'base_files/base.html' %} {% load static %}
+{% block meta %}
+<title>LOGIN</title>
+
+
+{% endblock meta %}
+
+{% block content %}
+
+<div class="card" style="text-align: center;">
+    <div class="card-body">
+        <img src="https://th.bing.com/th/id/OIP.MFbNCjk8jqizPbpri0uT3AAAAA?rs=1&pid=ImgDetMain" alt="People Image">
+
+        <img src={%static 'Login.jpg' %} alt="People Image">
+    </div>
+  </div>
+
+<div class="card" style="text-align: center;">
+    <div class="card-body">
+        <H1> LETS MEET NEW <br>PEOPLE AROUND YOU </H1>
+{% comment %}         <button type="button" class="btn btn-info">LOG IN </button> {% endcomment %}
+    </div>
+  </div>
+
+
+  <div class="card" style="text-align: center;">
+    <div class="card-body">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">LOG in</button>
+        
+    </div>
+  </div>
+
+  <div class="modal-footer" style="text-align: center;">
+    <a href="forgot-password.html" class="btn btn-link">Donot have account ? Signupo</a>
+  </div>
+
+
+
+
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">EMAIL/MOBILE</label>
+              <input type="text" class="form-control" id="recipient-name">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">PASSWORD:</label>
+              <textarea class="form-control" id="message-text"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="submit">Submit form</button>
+          {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>{% endcomment %}
+        </div>
+        <div class="modal-footer">
+            <a href="forgot-password.html" class="btn btn-link">Forgot Password?</a><br>
+            <a href="forgot-password.html" class="btn btn-link">Already have account ? Login</a>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+        
+
+{% endblock content %}
