@@ -11,109 +11,68 @@
 {% endblock style %}
 
 {% block content %}
-    <div class="container">
-      <div class="row">
-        <div class="col-12 col-md-6 col-lg-4" id="c1">
-          <span
-            style="
-              font-family:Verdana, Geneva, Tahoma, sans-serif;
-              padding-top: 18%;
-              font-size: large;
-              color: whitesmoke;
-            "
-            >Subscription Plan</span
-          >
-        </div>
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12" id="h1">
+         <h4 class="text-center">Subscribe</h4>
       </div>
-      <div class="row">
-        <div class="col-12 col-md-6 col-lg-4" id="c2">
-          <div style="margin: 4%">
-            <h3 style="font-weight: bold; color: whitesmoke">Prime Member</h3>
-            <span style="color: whitesmoke; font-size: xx-large"
-              ><b>$79</b>/-month</span
-            >
-          </div>
+  </div>
+</div>
 
-          <div style="padding-left: 4%">
-            <span style="color: white; font-size: small">
-              <i class="fa-solid fa-circle-check" style="color: white"></i>
-              Daily Limits
-            </span>
-            <p style="color: white; padding-left: 10%; font-size: small">
-              View up to 15 profiles per day<br />Send up to 15 requests per day
-            </p>
-            <hr style="color: aliceblue" />
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-md-12" id="h2">
+          <h1 style="font-weight: bold; color: rgb(248, 247, 247)">Prime Member</h1>
+          <span style="color: rgb(248, 247, 247); font-size: xx-large"
+            ><b>$79</b>/-month</span
+          >
+          <div class="col-md-12" style="margin-top: 2%;">
+              <span style="color: white; font-size:smaller;">
+                  <i class="fa-solid fa-circle-check" style="color: white"></i>
+                  Daily Limits
+                </span>
+                <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                  View up to 15 Profiles per Day<br>Send up to 15 Requests per Day
+                </p>
+                <hr style="color: aliceblue;">
           </div>
-
-          <div style="padding-left: 4%">
-            <span style="color: white; font-size: small">
-              <i class="fa-solid fa-circle-check" style="color: white"></i>
-              Weekly Limits
-            </span>
-            <p style="color: white; padding-left: 10%; font-size: small">
-              View up to 90 profiles per week<br />Send up to 300 requests per
-            </p>
-            <hr style="color: aliceblue" />
+          <div class="col-md-12" style="margin-top: 2%;">
+              <span style="color: white; font-size:smaller;">
+                  <i class="fa-solid fa-circle-check" style="color: white"></i>
+                  Weekly Limits
+                </span>
+                <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                  View up to 90 Profiles per Week<br>Send up to 90 Requests per Week
+                </p>
+                <hr style="color: aliceblue;">
           </div>
-
-          <div style="padding-left: 4%">
-            <span style="color: white; font-size: small">
-              <i class="fa-solid fa-circle-check" style="color: white"></i>
-              Monthly Limits
-              <li style="color: white; font-size: small; padding-left: 10%">
-                View up to 300 profiles per month
-              </li>
-              <li style="color: white; font-size: small; padding-left: 10%">
-                View up to 300 requests per month
-              </li>
-            </span>
-            <hr style="color: aliceblue" />
+          <div class="col-md-12" style="margin-top: 2%;">
+              <span style="color: white; font-size:smaller;">
+                  <i class="fa-solid fa-circle-check" style="color: white"></i>
+                  Monthly Limits
+                </span>
+                <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                  View up to 300 Profiles per Month<br>Send up to 300 Requests per Month
+                </p>
+                <hr style="color: aliceblue;">
           </div>
-
-          <div style="padding-left: 4%">
-            <span style="color: white; font-size: small">
-              <i class="fa-solid fa-circle-check" style="color: white"></i>
-              Premium Features
-              <li style="color: white; font-size: small; padding-left: 10%">
-                Unlock Unlimited Messages
-              </li>
-              <li style="color: white; font-size: small; padding-left: 10%">
-                Unlock Shortlisted Page
-              </li>
-              <li style="color: white; font-size: small; padding-left: 10%">
-                View Profiles Who Shortlisted You
-              </li>
-              <li style="color: white; font-size: small; padding-left: 10%">
-                Short & filter Profiles
-              </li>
-            </span>
+          <div class="col-md-12" style="margin-top: 2%;">
+              <span style="color: white; font-size:smaller;">
+                  <i class="fa-solid fa-circle-check" style="color: white"></i>
+                  Premium Limits
+                </span>
+                <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                   View Profiles Who Shortlisted You<br>Unlock Unlimited Messages<br>Unlock Shortlisted Page<br>Short & filter Profiles
+                </p>
+                <hr style="color: aliceblue;">
+                <div class="col-md-12" style="display: flex; justify-content: center; margin-top:2%">
+                  <a href="./Payment.html" class="btn" id="btn1">Subscribe</a>
+                </div>
+      
           </div>
-          <div style="display: flex; justify-content: center;">
-            <a href="{% url 'addpayment' %}" class="btn" id="btn1">Subscribe</a>
-          </div>
-          
-          <div
-            class="row"
-            id="footer">
-            <button class="col-2" style="background: rgb(247, 102, 247)">
-              <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-            </button>
-            <button class="col-2" style="background: rgb(247, 102, 247)">
-              <i class="fa-solid fa-heart fa-lg"></i>
-            </button>
-            <button class="col-2" style="background: rgb(80, 1, 80);">
-              <i class="fa-solid fa-house fa-lg"></i>
-            </button>
-            <button class="col-2" style="background: rgb(247, 102, 247)">
-              <i class="fa-regular fa-star fa-lg"></i>
-            </button>
-            <button class="col-2" style="background: rgb(247, 102, 247)">
-              <i class="fa-brands fa-rocketchat fa-lg"></i>
-            </button>
-          </div>
-        </div>
-      </div> 
-  </div>  
+      </div>
+  </div>
+</div>
   {% endblock content %}
     
  
