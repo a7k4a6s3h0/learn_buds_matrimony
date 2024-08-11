@@ -1,75 +1,81 @@
-{% extends 'base_files/base.html' %} {% load static %}
-{% block meta %}
-<title>LOGIN</title>
+{% extends 'base_files/base.html' %}
+ {% load static %}
+ {% block meta %}
+ <title>LOGIN</title>
+ 
+ 
+ {% endblock meta %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-
-{% endblock meta %}
-
+      {% include "templates\widget\styling\login.css" %}  
+    
+</head>
 {% block content %}
+<body style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f8f9fa;">
+    <div class="login-container">
+        <img src="{% static 'images/auth1.png' %}" alt="Auth Image">
+        <h2>Let's meet new people around you</h2>
+        <!-- Button to trigger Login Modal -->
+        <button type="button" class="btn-login" data-bs-toggle="modal" data-bs-target="#loginModal" style="display: flex; align-items: center; justify-content: center; width: 100%;">
+          <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons/icons/telephone-fill.svg" alt="Phone" class="btn-login" width="20" height="20" style="margin-right: 8px;"> Login with Email/Phone
+      </button>
 
-<div class="card" style="text-align: center;">
-    <div class="card-body">
-        <img src="https://th.bing.com/th/id/OIP.MFbNCjk8jqizPbpri0uT3AAAAA?rs=1&pid=ImgDetMain" alt="People Image">
-
-        <img src={%static 'Login.jpg' %} alt="People Image">
+      <!-- Login with Google Button -->
+      <button type="button" class="btn-login-google" style="display: flex; align-items: center; justify-content: center; width: 100%;">
+          <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons/icons/google.svg" alt="Google" width="20" height="20" style="margin-right: 8px;"> Login with Google
+      </button>
+        <p class="signup-link">Don’t have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</a></p>
     </div>
-  </div>
 
-<div class="card" style="text-align: center;">
-    <div class="card-body">
-        <H1> LETS MEET NEW <br>PEOPLE AROUND YOU </H1>
-{% comment %}         <button type="button" class="btn btn-info">LOG IN </button> {% endcomment %}
-    </div>
-  </div>
-
-
-  <div class="card" style="text-align: center;">
-    <div class="card-body">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">LOG in</button>
-        
-    </div>
-  </div>
-
-  <div class="modal-footer" style="text-align: center;">
-    <a href="forgot-password.html" class="btn btn-link">Donot have account ? Signupo</a>
-  </div>
-
-
-
-
-
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header text-center">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="recipient-name" class="col-form-label">EMAIL/MOBILE</label>
-              <input type="text" class="form-control" id="recipient-name">
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Login Form -->
+                    <form>
+                        <div class="mb-3">
+                            <label for="email-mobile" class="form-label">Email/Mobile</label>
+                            <input type="text" class="form-control" id="email-mobile" placeholder="Value">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Value">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100" id="nextTopersonaldetails" >Log In</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="text-center w-100 mb-0">
+                        <a href="#" class="text-decoration-none">Forgot password?</a><br>
+                        Don’t have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" class="text-decoration-none">Sign Up</a>
+                    </p>
+                </div>
             </div>
-            <div class="mb-3">
-              <label for="message-text" class="col-form-label">PASSWORD:</label>
-              <textarea class="form-control" id="message-text"></textarea>
-            </div>
-          </form>
         </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="submit">Submit form</button>
-          {% comment %} <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>{% endcomment %}
-        </div>
-        <div class="modal-footer">
-            <a href="forgot-password.html" class="btn btn-link">Forgot Password?</a><br>
-            <a href="forgot-password.html" class="btn btn-link">Already have account ? Login</a>
-        </div>
-        
-      </div>
     </div>
-  </div>
-        
+    <script>
+        document.getElementById('nextTopersonaldetails').addEventListener('click', function() {
+            $('#loginModal').modal('hide');
+            $('#PersonalModal').modal('show');
+        });
+    </script>
+
+    <!-- Sign Up Modal (Reused from previous code) -->
+    {% include "widget\signup.html" %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+</body>
+</html>
 
 {% endblock content %}

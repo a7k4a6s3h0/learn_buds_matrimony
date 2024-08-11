@@ -1,0 +1,53 @@
+{% extends 'base_files/base.html' %}
+ {% load static %}
+ {% block meta %}
+ <title>Job details</title>
+ 
+ 
+ {% endblock meta %}
+{% block content %}
+<body>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#JobDetails1Modal">
+        Job Details
+    </button>
+
+    
+    <div class="modal fade" id="JobDetails1Modal" tabindex="-1" aria-labelledby="JobDetails1Modal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="JobDetails1ModalLabel">Job Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    <div class="d-grid gap-3">
+                        
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Title">
+                            </div>
+                            <div>
+                            <label for="sel1" class="form-label">Value:</label>
+                            <select class="form-select" id="sel1" name="sellist1">
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Expert</option>
+                              </select>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100" id="nextToRelationship">Next</button>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('nextToRelationship').addEventListener('click', function() {
+            $('#JobDetails1Modal').modal('hide');
+            $('#RelationModal').modal('show');
+        });
+    </script>
+</body>
+
+</html>
+{% endblock content %}
