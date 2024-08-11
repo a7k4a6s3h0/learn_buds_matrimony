@@ -1,0 +1,53 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #f8f9fa 40%, #f4e8ec);
+}
+
+.login-container {
+    text-align: center;
+}
+
+.login-container img {
+    width: 200px;
+    margin-bottom: 1.5rem;
+}
+
+.login-container h2 {
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.btn-login {
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+    align-items: center;
+    justify-content: center;
+    background-color: #d63384 !important; /* Pink background color */
+    color: #e21818 !important; /* White text color */
+    border: 1px solid #d11c1c;
+    
+}
+
+.btn-login-google {
+    margin-top: 1rem;
+    background-color: #f7f7f7;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.signup-link {
+    margin-top: 1.5rem;
+    color: #d63384;
+}
