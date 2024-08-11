@@ -1,0 +1,121 @@
+<div class="modal fade" style="backdrop-filter: blur(10px);background-color: transparent;" id="PersonalModal" tabindex="-1" aria-labelledby="PersonalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="PersonalModalLabel">Personal Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-grid">
+                    <!-- Step 1 -->
+                    <div id="step1">
+                        <h1>Personal Details</h1>
+                        {% include "widget/input_details_form.html" with type='number' label='Age' %}
+                        {% include "widget/input_details_form.html" with type='date' label='DOB' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Hobbies' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Smoking Habits' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Qualifications' %}
+                        {% include "widget/input_details_form.html" with type='file' label='Profile Pic' %}
+                        {% include "widget/input_details_form.html" with type='file' label='Short Reels' %}
+                        <button type="button" class="btn btn-dark w-100" id="nextToJobStatus">Next</button>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div id="step2" class="d-none">
+                        <h1>Job Status</h1>
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Employer' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Employee' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Job Seeker' %}
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="prevToPersonal">Previous</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="nextToJobDetails">Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div id="step3" class="d-none">
+                        <h1>Job Details</h1>
+                        {% include "widget/input_details_form.html" with type='text' label='Title' %}
+                        {% include "widget/input_details_form.html" with type='select' label='Experience Level' select_options=experance_level %}
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="prevToJobStatus">Previous</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="nextToRelationshipGoals">Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div id="step4" class="d-none">
+                        <h1>Relationship Goals</h1>
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Long Term Relationship' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Short Term Relationship' %}
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="prevToJobDetails">Previous</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="nextToInterested">Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div id="step5" class="d-none">
+                        <h1>Interested</h1>
+                        {% include "widget/input_details_form.html" with type='button' label='Matrimony' %}
+                        {% include "widget/input_details_form.html" with type='button' label='Dating' %}
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="prevToRelationshipGoals">Previous</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="nextToAdditionalDetails">Next</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6 -->
+                    <div id="step6" class="d-none">
+                        <h1>Additional Details</h1>
+                        {% include "widget/input_details_form.html" with type='select' label='Marital Status' select_options=marital_status %}
+                        {% include "widget/input_details_form.html" with type='text' label='Annual Income' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Family Type' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Smoking Habits' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Family Name' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Father\'s Name' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Father\'s Occupation' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Mother\'s Name' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Mother\'s Occupation' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Number Of Siblings Married' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Siblings Name & Details' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Height' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Weight' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Body Type' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Complexion' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Disabilities' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Religion' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Caste/Community' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Expectation from Partner' %}
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="prevToInterested">Previous</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="submitForm">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
