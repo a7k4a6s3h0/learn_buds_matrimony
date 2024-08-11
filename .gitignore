@@ -1,5 +1,17 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django,visualstudiocode,pycharm
 # Edit at https://www.toptal.com/developers/gitignore?templates=django,visualstudiocode,pycharm
+Home/migrations/__pycache__/
+Home/__pycache__/
+matrimony/__pycache__/
+profiles/migrations/__pycache__/
+profiles/templatetags/__pycache__/
+profiles/__pycache__/
+subscription/migrations/__pycache__/
+subscription/__pycache__/
+U_auth/migrations/__pycache__/
+U_auth/__pycache__/
+U_messages/migrations/__pycache__/
+U_messages/__pycache__/
 
 ### Django ###
 *.log
