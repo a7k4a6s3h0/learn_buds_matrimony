@@ -2,26 +2,24 @@
 
 {% block meta %}{% endblock meta %}
 
-{% block title %}AddPayment{% endblock title %}
+{% block title %}Subscribe{% endblock title %}
 
 {% block link %}{% endblock link %}
 
 {% block style %}
 
 {% endblock style %}
-  
-  {% block content %}
+
+{% block content %}
     <div class="container">
       <div class="row">
-        <!-- <div class="col-12 col-md-6 col-lg-4"> -->
         <div class="col d-flex justify-content-between flex-column flex-sm-row" id="row1">
-          <div class="mb-2 mb-sm-0"><a href="./Subscription.html" style="color: black;"><i class="fas fa-times fa-lg"></i></a></div>
+          <div class="mb-2 mb-sm-0"><a href="{% url 'subscribe' %}" style="color: black;"><i class="fas fa-times fa-lg"></i></a></div>
           <div>Done</div>
         </div>
-        <!-- </div> -->
         <h2 id="head">Payments Methods</h2>
-        <p style="font-size:x-small;padding-left:10%;">
-            choose desired payment type.We offer easy ways for payments on our app
+        <p style="font-size:smaller;padding-left:15%;">
+            choose desired payment type.We offer easy ways<br>for payments on our app
         </p>
         <a href="./Addcart.html" style="text-decoration: none;color: black;">
             <div class="d1">
@@ -33,7 +31,7 @@
                       />
                     </div>
                     <div class="col-2" style="padding-top:4%;">
-                        <span>***********7070<br><p style="font-size:x-small;color: rgb(111, 111, 111);">Expires&nbsp;08/25</p></span>
+                        <span style="color:black;">***********7070<br><p style="font-size:x-small;color: rgb(111, 111, 111);">Expires&nbsp;08/25</p></span>
                     </div>
                 </div>
             </div>
