@@ -1,0 +1,40 @@
+<div class="view_user" style="border-bottom: inset; border-color: darkgray;">
+    <div class="view_user_img">
+        <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
+    </div>
+    <div class="msg">
+        <span style="text-transform: capitalize;">Username</span><br>
+        <span style="text-transform: capitalize; color: green;">online</span>
+    </div>
+    <div class="chat_setting">
+        <i class="fas fa-bars" style="font-size: 25px;"></i>
+    </div>
+</div>
+
+<!-- Chat session -->
+<div class="chat-container">
+    {% for i in tag %}
+    <div class="row text-white pt-3 ">
+        <div class="col-auto chat-message-left">
+            <p>username: hey{{i}}</p>
+        </div>
+    </div>
+    <div class="row text-white pt-3 justify-content-end">
+        <div class="col-auto chat-message-right">
+            <p>username: hello{{i}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Chat input field -->
+<div class="row align-items-center mt-3">
+    <div class="col-10 col-md-11">
+        <input type="text" class="form-control" id="message" placeholder="Type a message">
+    </div>
+    <div class="col-2 col-md-1 text-center">
+        <button class="btn btn-primary" id="send-btn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 {% extends "base_files/base.html" %}
-
+{% load custom_tags %}
 {% block meta %}{% endblock meta %}
 
 {% block title %}userprofile{% endblock title %}
@@ -37,24 +37,44 @@
 
     .carousel-item {
         position: relative;
+        height: 100%;
     }
 
     .carousel-container {
         position: relative;
+        height: 100%;
+    }
+
+    .carousel-container img {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: cover;
     }
 
     .profile-container {
         position: absolute;
-        top: 70%;
+        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
         color: white;
+        padding: 10px;
+        max-width: 90%;
+        box-sizing: border-box;
     }
 
     .profile-container h2,
     .profile-container h4 {
         margin: 0;
+    }
+
+    .profile-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .profile-container h4 {
+        font-size: 1rem;
     }
 
     .profile-button {
@@ -75,20 +95,132 @@
         border-radius: 50%;
         margin-right: 5px;
     }
+
+    .custom_interest .btn {
+        width: 100%;
+    }
+
+    .row {
+        gap: 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 767px) {
+        .profile-container {
+            top: 46%;
+            transform: translate(-50%, 0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-container h2,
+        .profile-container h4 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .carousel-container {
+            height: auto;
+            max-height: 50vh;
+        }
+
+        .carousel-item img {
+            max-height: 50vh;
+        }
+
+        .navbar-custom {
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            flex-direction: row;
+        }
+
+        .nav-left, .nav-right {
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        .row {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .col-md-6 {
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .nav {
+            flex-direction: row;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .interest-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .interest-section .btn {
+            width: 48%;
+        }
+    }
+
+    .custom-width {
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .interest-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .interest-section .btn {
+        flex: 1 1 calc(50% - 10px);
+        max-width: 200px;
+    }
+
+    /* Background blur effect */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Adjust opacity for your preferred effect */
+        z-index: 999; /* Ensure it's above other content but below the modal */
+        display: none; /* Initially hidden */
+    }
+
+    .blur-background {
+        filter: blur(5px);
+        transition: filter 0.3s ease;
+    }
+
+    .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
 </style>
 {% endblock style %}
 
 {% block content %}
-<div class="container bg-dark mt-5">
-    <div class="row">
-        <div class="col-md-6">
+<div class="container-fluid bg-dark">
+    <div class="row justify-content-center align-items-center bg-secondary" style="min-height: 100vh;">
+        <div class="col-md-6 d-flex justify-content-center align-items-center custom-width">
             <div class="carousel-container">
                 <nav class="navbar-custom">
                     <div class="nav-left">
                         <i class='fas fa-angle-left' style='font-size:24px'></i>
                     </div>
                     <div class="nav-right">
-
                         <div class="distance"><i class='fas fa-location-arrow' style='font-size:18px'></i>2.5 km</div>
                     </div>
                 </nav>
@@ -120,69 +252,107 @@
                 </div>
 
                 <div class="profile-container">
-
-
-                    <!-- <div class="position-absolute top-50 start-50 translate-middle text-white"> -->
                     <label>
                         <h2>User Name</h2>
-                    </label><br>
+                    </label>
                     <label>
                         <h4>User Name</h4>
-                    </label><br>
+                    </label>
                     <button type="button" class="profile-button" data-mdb-ripple-init>
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
                             class="image-fluid" alt="">
                         Success
                     </button>
                 </div>
-
             </div>
-
         </div>
-        <div class="col-md-6">
-            <p>
-            <nav class="nav nav-pills flex-column flex-sm-row">
-                <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="#">Active</a>
-                <a class="flex-sm-fill text-sm-center nav-link" href="#">Longer nav link</a>
+
+        <div class="col-md-6 d-flex flex-column justify-content-center align-items-start" >
+            <nav class="nav nav-pills flex-column flex-sm-row w-100" style="border-color: black; border-radius: 16px; border-style: solid; border-width: thin;">
+                <a class="flex-sm-fill text-sm-center nav-link active btn-rounded" aria-current="page" href="#" style="border-radius: 15px; border-width: thin;">Active</a>
+                <a onclick="show_Userdatas()" class="flex-sm-fill text-sm-center nav-link btn-rounded" href="#" id="user_datas">Longer nav link</a>
             </nav>
-            <div class="mt-3 text-white">
-                <p> orem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
+            <div class="mt-3 text-white" id="show_details">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
                     molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
                     numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
                     optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
                     obcaecati tenetur iure eius earum</p>
             </div>
-            <div class="mt-3">
-                <button type="button" class="btn btn-outline-secondary btn-rounded" data-mdb-ripple-init
-                    data-mdb-ripple-color="dark">Interest</button>
-                <div class="row custom_interest pt-3">
-                    <div class="col-12 col-sm-6 col-md-4 mt-2">
-                        <button type="button" class="btn btn-outline-secondary btn-rounded w-100" data-mdb-ripple-init
-                            data-mdb-ripple-color="dark">Interest</button>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mt-2">
-                        <button type="button" class="btn btn-outline-secondary btn-rounded w-100" data-mdb-ripple-init
-                            data-mdb-ripple-color="dark">Secondary</button>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mt-2">
-                        <button type="button" class="btn btn-outline-secondary btn-rounded w-100" data-mdb-ripple-init
-                            data-mdb-ripple-color="dark">Secondary</button>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-4 mt-2">
-                        <button type="button" class="btn btn-outline-info btn-rounded w-100" data-mdb-ripple-init
-                            data-mdb-ripple-color="dark">Secondary</button>
-                    </div>
-                </div>
-            </div>
-            
 
+            <div id="details" style="display: none;">
+
+            </div>
+            <div class="mt-3 interest-section" id="interest_id">
+                <button type="button" class="btn btn-outline-light btn-rounded" data-mdb-ripple-init
+                    data-mdb-ripple-color="dark">Interest</button>
+                {% for i in 5|number_rangeobj %}
+                <button type="button" class="btn btn-outline-light btn-rounded" data-mdb-ripple-init
+                    data-mdb-ripple-color="light">Interest</button>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock content %}
 
-{% block footer %}{% endblock footer %}
+{% block footer %}
+<!-- Background overlay -->
+<div class="overlay" id="background-overlay"></div>
+
+
+<!-- Modal structure -->
+<div class="modal fade" id="exampleModalToggle1" aria-hidden="true" aria-labelledby="exampleModalToggleLabel1" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalToggleLabel1">Modal 1</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Show a second modal and hide this one with the button below.
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalToggle22">
+            Open second modal
+          </button>
+          <!-- Optionally add a "Go Back" button here if needed -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+{% endblock footer %}
 
 {% block scripts %}
+<script>
+function show_Userdatas() {
+    var x = document.getElementById("show_details");
+    x.style.display = "none";
+    var Y = document.getElementById("details");
+    Y.style.display = "block";
+    Y.innerHTML += "<div class='text-white'></div>";
+
+    // Trigger modal after 5 seconds
+    setTimeout(function() {
+        // Show the overlay and apply blur effect
+        document.getElementById('background-overlay').style.display = 'block';
+        document.querySelector('.container-fluid').classList.add('blur-background');
+
+        // Show the modal using Bootstrap 5's Modal API
+        var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle1'));
+        myModal.show();
+    }, 5000);
+}
+
+// Remove blur and hide overlay when modal is closed
+document.getElementById('exampleModalToggle1').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('background-overlay').style.display = 'none';
+    document.querySelector('.container-fluid').classList.remove('blur-background');
+});
+</script>
 
 {% endblock scripts %}
