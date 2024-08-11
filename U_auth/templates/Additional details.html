@@ -1,0 +1,91 @@
+{% extends 'base_files/base.html' %}
+{% load static %}
+{% block meta %}
+<title>Additional details</title>
+{% endblock meta %}
+
+{% block content %}
+<body>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AdditionalModal">
+        Additional Details
+    </button>
+
+    <div class="modal fade" id="AdditionalModal" tabindex="-1" aria-labelledby="AdditionalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AdditionalModalLabel">Additional details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-3">
+                        <label for="sel1" class="form-label">Marital Status</label>
+                        <select class="form-select" id="sel1" name="sellist1">
+                            <option>Unmarried</option>
+                            <option>Divorced</option>
+                        </select>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Annual Income">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Family Type">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Smoking Habits">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Drinking Habits">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Family Name">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Father's Name">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Father's Occupation">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Mother's Name">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Mother's Occupation">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Number Of Siblings Married">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Siblings Name & Details">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Height">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Weight">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Body Type">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Complexion">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Disabilities">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Religion">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Caste/Community">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Expectation from Partner">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock content %}
