@@ -1,0 +1,208 @@
+{% extends "base_files/base.html" %}
+{% load custom_tags %}
+{% block meta %}{% endblock meta %}
+
+{% block title %}send{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+<style>
+
+    .menu-icon {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        background-color: #343a40;
+        z-index: 10;
+        padding: 10px 0;
+    }
+
+    .menu-icon h3 {
+        margin: 0;
+        color: white;
+    }
+
+    .view_user {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-top: inset;
+        border-color: darkgray;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #343a40;
+    }
+
+    .view_user_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .msg {
+        margin-left: 10px;
+        color: white;
+    }
+
+    .view_user .chat_setting {
+        margin-left: auto;
+    }
+
+    #message {
+        border-radius: 20px;
+        padding: 10px 15px;
+        background-color: #2c2f33;
+        border: none;
+        color: white;
+    }
+
+    #message::placeholder {
+        color: #b1b3b5;
+    }
+
+    #send-btn {
+        background-color: #007bff;
+        border: none;
+        padding: 8px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 40px;
+        margin-left: -5px;
+    }
+
+    #send-btn i {
+        color: white;
+        font-size: 18px;
+    }
+
+    #send-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .col-10.col-md-11 {
+        padding-right: 0;
+    }
+
+    .chat-container {
+        padding: 20px;
+        overflow-y: auto;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 50px;
+    }
+
+    .chat-message-left,
+    .chat-message-right {
+        width: 100%;
+        word-wrap: break-word;
+    }
+
+    .chat-message-left {
+        background-color: #343a40;
+        padding: 10px;
+        border-radius: 15px;
+        max-width: 75%;
+        margin-bottom: 10px;
+    }
+
+    .chat-message-right {
+        background-color: #007bff;
+        padding: 10px;
+        border-radius: 15px;
+        max-width: 75%;
+        color: white;
+        margin-bottom: 10px;
+    }
+
+    .row.align-items-center.mt-3 {
+        margin-top: auto;
+        background-color: #343a40;
+        padding: 10px;
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .chat_userview {
+        overflow-y: auto;
+        height: calc(100vh - 282px);
+    }
+
+    @media (max-width: 576px) {
+        .profile-cards-container {
+            flex-direction: row;
+        }
+
+        .menu-icon {
+            flex-direction: row;
+            align-items: baseline;
+        }
+    }
+</style>
+{% endblock style %}
+
+{% block header %}
+
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-md-12 p-0 bg-secondary">
+            <div class="view_user" style="border-bottom: inset; border-color: darkgray;">
+                <div class="view_user_img">
+                    <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
+                </div>
+                <div class="msg">
+                    <span style="text-transform: capitalize;">Username</span><br>
+                    <span style="text-transform: capitalize; color: green;">online</span>
+                </div>
+                <div class="chat_setting">
+                    <i class="fas fa-bars" style="font-size: 25px;"></i>
+                </div>
+            </div>
+
+            <!-- Chat session -->
+            <div class="chat-container">
+                {% for i in ""|random_range %}
+                <div class="row text-white pt-3">
+                    <div class="col-auto chat-message-left">
+                        <p>username: hey{{i}}</p>
+                    </div>
+                </div>
+                <div class="row text-white pt-3 justify-content-end">
+                    <div class="col-auto chat-message-right">
+                        <p>username: hello{{i}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Chat input field -->
+            <div class="row align-items-center mt-3">
+                <div class="col-10 col-md-11">
+                    <input type="text" class="form-control" id="message" placeholder="Type a message">
+                </div>
+                <div class="col-2 col-md-1 text-center">
+                    <button class="btn btn-primary" id="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>//
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+{% block scripts %}
+{% endblock scripts %}
