@@ -1,0 +1,254 @@
+{% extends "base_files/base.html" %}
+{% load custom_tags %}
+{% block meta %}{% endblock meta %}
+
+{% block title %}Privacy & Setting{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+<style>
+    /* Custom styles for the messaging interface */
+    .navbar-custom {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        z-index: 10;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-left {
+        flex-shrink: 0;
+    }
+
+    .nav-right {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar-custom i {
+        color: white;
+        padding-right: 8px;
+    }
+
+    .navbar-custom .distance {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+
+
+    /* Container for chat users */
+    .chat_userview {
+        height: calc(100vh - 80px);
+        /* Adjust based on the height of the .menu-icon and any other fixed elements */
+        /* overflow-y: auto; */
+        /* Enable vertical scrolling */
+        /* position: relative; */
+        background-color: #343a40;
+        padding: 10px;
+    }
+
+
+    .main_div {
+        top: 0;
+        background-color: #343a40;
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .inner_flex{
+        display: flex;
+        /* gap: 20px; */
+        justify-content: space-between  ;
+        font-size: 20px;
+        color: white;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-bottom-style: inset;
+    }
+
+    /* .first_row .second_row{
+        font-size: 20px;
+        color: white;
+    } */
+
+    .col-10.col-md-11 {
+        padding-right: 0;
+    }
+
+    .chat-section {
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .button_reset{
+        align-self: flex-end;
+        padding-top: 10px;
+        text-transform: capitalize;
+    }
+
+
+    @media (max-width: 576px) {
+
+        .main_div {
+            flex-direction: column;
+            /* align-items: baseline; */
+            background-color: black;
+        }
+
+        .chat-section {
+            position: relative;
+            background-color: #343a40;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* Container for chat users */
+        .chat_userview {
+            height: calc(100vh - 80px);
+            background-color: black;
+            padding: 30px;
+            border-top-right-radius: 45px;
+            border-top-left-radius: 45px;
+            margin-top: 30px;
+        }
+
+        .inner_flex{
+            display: flex;
+            /* gap: 20px; */
+            justify-content: space-between  ;
+            font-size: 12px;
+            color: white;
+            padding-bottom: 10px;
+            padding-top: 10px;
+            border-bottom-style: inset;
+        }
+
+
+        .button_reset button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%; /* Optional: Make the button take full width of the container */
+        }
+
+
+    }
+</style>
+{% endblock style %}
+
+{% block header %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar-custom">
+                <div class="nav-left">
+                    <i class='fas fa-angle-left' style='font-size:24px'></i>
+                </div>
+                <div class="nav-right">
+                    <div class="distance">Privacy & Setting</div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid bg-dark">
+
+    <div class="row chat-section" style="padding-top: 80px;">
+        <!-- Chat User View -->
+        <div class="col-md-6 chat_userview">
+
+            <div class="main_div">
+
+                <div class="inner_flex">
+
+                    <div class="first_row">
+                        <label for="">Sign-in Email</label><br>
+                        <label for="">password</label>
+
+                    </div>
+
+                    <div class="second_row">
+                        <label for="">johnsmith@gmail.com</label><br>
+                        <label for=""><a style="color: blue;" href="#">password</a></label>
+
+                    </div>
+
+            </div>
+
+            <div class="inner_flex">
+
+                <div class="first_row">
+                    <label for="">2-FA authentification</label><br>
+                    <label for="">Phone Number</label><br>
+                    <label for="">Partner Preference</label>
+
+                </div>
+
+                <div class="second_row">
+                    <label for="">johnsmith@gmail.com</label><br>
+                    <label for="">+50 90876543</label><br>
+                    <label for=""></label>
+
+                </div>
+
+            </div>
+
+            <div class="inner_flex">
+
+                <div class="first_row">
+                    <label for="">Last Sign in</label><br>
+                    <label for="">today at 18:34, safary 198.872.333.12</label><br><br><br>
+                    <label for="">Total active sessions (5)</label><br>
+                    <label for="">DESKTOP-6TIG6EC + kyiv, Ukriane</label><br>
+                    <span>Chrome Used Right now</span>
+
+                </div>
+
+            </div>
+
+            <div class="inner_flex">
+
+                <div class="first_row">
+                    <label for="">Iphone 11 Kyive, Ukraine</label><br>
+                    <span>Chrome Used Right now</span>
+                </div>
+
+            </div>
+               
+            <div class="button_reset">
+                <button type="button" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> &nbsp;&nbsp;&nbsp; reset all active sessions</button>
+            </div>
+        </div>
+
+        </div>
+
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+{% block scripts %}
+
+
+{% endblock scripts %}

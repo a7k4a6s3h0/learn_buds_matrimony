@@ -25,3 +25,6 @@ def user_reject_pg(request):
 
 def user_recieved_pg(request):
     return render(request, 'recieved.html')
+
+def user_chat_pg(request):
+    return render(request, 'col_chat.html')
