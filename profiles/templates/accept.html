@@ -104,6 +104,24 @@
     }
 
 
+    .volume_icon{
+        margin-left: 560px;
+        color: white;
+
+    }
+
+    .volume_icon span{
+        font-size: 25px;
+    }
+    .video_icon span{
+        font-size: 25px;
+    }
+    .video_icon{
+        color: white;
+        padding-left: 25px;
+    }
+
+
     @media (max-width: 576px) {
         .profile-cards-container {
             flex-direction: row;
@@ -129,6 +147,33 @@
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
+        }
+
+        .msg {
+            margin-left: 10px;
+            color: white;
+            font-size: 10px;
+        }
+
+        .volume_icon{
+            margin-left: 60px;
+            color: white;
+
+        }
+        .video_icon{
+            color: white;
+            padding-left: 15px;
+        }
+
+        .volume_icon span{
+            font-size: 15px;
+        }
+
+        .video_icon span{
+            font-size: 15px;
+        }
+        .phone_icone i{
+            font-size: 10px;
         }
     }
 </style>
@@ -179,17 +224,19 @@
                 </div>
                 <div class="msg">
                     <span style="text-transform: capitalize;">Username</span><br>
-                    <span><i class="fa fa-phone"></i>&nbsp;Today&nbsp;12.30&nbsp;PM</span>
+                    <span class="phone_icone" ><i class="fa fa-phone"></i>&nbsp;Today&nbsp;12.30&nbsp;PM</span>
                 </div>
-                <div style="margin-left: 560px;">
-                    <span style="font-size: 25px;"><i class="fa-solid fa-phone-volume"></i></span>
+                <div class="volume_icon">
+                    <span><i class="fa-solid fa-phone-volume"></i></span>
                 </div>
-                <div style="padding-left: 25px;">
-                    <span style="font-size: 25px;"><i class="fa-solid fa-video"></i></span>
+                <div class="video_icon">
+                    <span><i class="fa-solid fa-video"></i></span>
                 </div>
                 <!-- </a> -->
             </div>
             {% endfor %}
+            {% include "widget/moveable_navbar.html" %}
+
         </div>
     </div>
 </div>

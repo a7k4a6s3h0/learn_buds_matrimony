@@ -1,0 +1,247 @@
+{% extends "base_files/base.html" %}
+{% load custom_tags %}
+{% block meta %}{% endblock meta %}
+
+{% block title %}Send{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+<style>
+    /* Custom styles for the messaging interface */
+    .navbar-custom {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        z-index: 10;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-left {
+        flex-shrink: 0;
+    }
+
+    .nav-right {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar-custom i {
+        color: white;
+        padding-right: 8px;
+    }
+
+    .navbar-custom .distance {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+
+
+    .menu-icon h3 {
+        margin: 0;
+        color: white;
+    }
+
+    /* Container for chat users */
+    .chat_userview {
+        height: calc(100vh - 80px);
+        background-color: #343a40;
+        padding: 10px;
+        /* position: relative; */
+        
+    }
+
+ 
+
+
+    /* Ensure the view_user div elements do not overflow */
+    .view_user {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+        position: relative;
+    }
+
+    .msg {
+        margin-left: 10px;
+        color: white;
+        border-bottom: inset;
+    }
+
+
+    .menu-icon {
+        top: 0;
+        background-color: #343a40;
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+
+    .col-10.col-md-11 {
+        padding-right: 0;
+    }
+
+    .chat-section {
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+
+    @media (max-width: 576px) {
+
+        .menu-icon {
+            flex-direction: column;
+            /* align-items: baseline; */
+            background-color: black;
+        }
+
+        .chat-section {
+            position: relative;
+            background-color: #343a40;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* Container for chat users */
+        .chat_userview {
+            /* position: relative; */
+            padding-bottom: 50px; /* Add padding to account for the button height */
+            height: calc(100vh - 80px);
+            background-color: black;
+            padding: 30px;
+            border-top-right-radius: 45px;
+            border-top-left-radius: 45px;
+            margin-top: 30px;
+        }
+
+
+        .msg {
+            margin-left: 5px;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+        }
+
+            /* Ensure the view_user div elements do not overflow */
+        .view_user {
+            display: flex;
+            padding: 10px 0;
+            align-items: center;
+        }
+
+        .button-container {
+            position: absolute;
+            /* bottom: 0; */
+            width: 100%;
+            padding-bottom: 10px; /* Optional: Adds some space at the bottom */
+        }
+    }
+</style>
+{% endblock style %}
+
+{% block header %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar-custom">
+                <div class="nav-left">
+                    <i class='fas fa-angle-left' style='font-size:24px'></i>
+                </div>
+                <div class="nav-right">
+                    <div class="distance">change password</div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid bg-dark">
+
+    <div class="row chat-section" style="padding-top: 80px;">
+        <!-- Chat User View -->
+        <div class="col-md-6 chat_userview">
+            <div class="menu-icon">
+
+                <div class="view_user" id="user_imgs">
+                    <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                    <div class="msg">
+                        <p> tenetur iure eius earum ut molestias architecto voluptate aliquam
+                            nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,
+                            tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,
+                         </p>
+                    </div>
+
+                   
+                    <!-- </a> -->
+
+                </div>
+
+                <div class="user_form text-white">
+
+
+                    <form>
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4 ">
+                          <div class="col">
+                            <div data-mdb-input-init class="form-outline">
+                              <input type="text" id="form3Example1" class="form-control" />
+                              <label class="form-label" for="form3Example1">current password</label>
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <!-- Email input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                          <input type="email" id="form3Example3" class="form-control" />
+                          <label class="form-label" for="form3Example3">new password</label>
+                        </div>
+                      
+                        <!-- Password input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                          <input type="password" id="form3Example4" class="form-control" />
+                          <label class="form-label" for="form3Example4">confirm password</label>
+                        </div>
+                      </form>
+    
+    
+                </div>
+
+
+            </div>
+
+            <!-- Submit button -->
+            <div class="row button-container">
+                <div class="col-12 d-flex justify-content-center align-items-end">
+                    <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Change password</button>
+                </div>
+            </div>
+            
+            
+        </div>
+
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+{% block scripts %}
+
+{% endblock scripts %}
