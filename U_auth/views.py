@@ -21,3 +21,23 @@ def interest(request):
     return render(request, 'Interested.html')
 def adddet(request):
     return render(request, 'Additional details.html')
+
+def user_details(request):
+    return render(request, 'User_profile_templates/user_pr_1.html')
+
+def user_details_2(request):
+    return render(request, 'User_profile_templates/user_pr_2.html')
+
+
+def user_details_3(request):
+    return render(request, 'User_profile_templates/user_pr_3.html')
+
+def user_details_4(request):
+    return render(request, 'User_profile_templates/user_pr_4.html')
+
+
+def user_details_5(request):
+    return render(request, 'User_profile_templates/user_pr_5.html')
+
+def user_details_6(request):
+    return render(request, 'User_profile_templates/user_pr_6.html')

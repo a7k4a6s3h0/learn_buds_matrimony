@@ -287,8 +287,8 @@
             </div>
 
             {% for k in ""|random_range%}
+            <a onclick="open_chat()" href= "{% url 'chat' %}" id="but">
             <div class="view_user" style="border-top: inset; border-color:darkgray ;">
-                <a onclick="open_chat()" href="#" id="but">
                 <div class="view_user_img">
                     <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
                 </div>
@@ -299,19 +299,24 @@
                 <div style="margin-left: auto;">
                     <span>T: 12.30 AM</span>
                 </div>
-                </a>
             </div>
+        </a>
             {% endfor %}
         </div>
 
         <!-- Chat Interaction Section -->
         <div class="col-12 col-md-6 bg-secondary chat-interaction" id="show_chat">
             
-            <div class="chat_img">
+            <!-- <div class="chat_img">
                 <img class="img-fluid" src="https://img.freepik.com/premium-photo/love-road-illustration-background_916191-42282.jpg" alt="img">
-            </div>
+            </div> -->
 
-            <!-- use widget chat method here..... -->
+            <!-- use widget chat method here..... -->      
+            {% with random_range_value=""|random_range %}     
+            {% include "widget/chat.html" with tag=random_range_value %}
+           {% endwith %}"
+
+
         </div>
     </div>
 </div>

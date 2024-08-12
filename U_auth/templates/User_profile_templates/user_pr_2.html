@@ -1,0 +1,421 @@
+{% extends "base_files/base.html" %}
+{% load custom_tags %}
+{% block meta %}{% endblock meta %}
+
+{% block title %}Send{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+<style>
+    /* Custom styles for the messaging interface */
+    .navbar-custom {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        z-index: 10;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-left {
+        flex-shrink: 0;
+    }
+
+    .nav-right {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar-custom i {
+        color: white;
+        padding-right: 8px;
+    }
+
+    .navbar-custom .distance {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+
+    /* .menu-icon {
+        top: 0;
+        background-color: #343a40;
+        padding: 10px 0;
+        display: flex;
+        gap: 20px;
+
+    } */
+
+    .menu-icon h3 {
+        margin: 0;
+        color: white;
+    }
+
+    /* Container for chat users */
+    .chat_userview {
+        height: calc(100vh - 80px);
+        /* Adjust based on the height of the .menu-icon and any other fixed elements */
+        /* overflow-y: auto; */
+        /* Enable vertical scrolling */
+        background-color: #343a40;
+        padding: 10px;
+    }
+
+/* Ensure the view_user div elements do not overflow */
+.view_user {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    /* height: 118px; */
+    /* align-items: center; */
+    position: relative;
+}
+
+    /* Ensure the image in view_user scales properly */
+    .view_user_img img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+
+    .msg {
+        margin-left: 10px;
+        color: white;
+    }
+
+    /* Position show_pic_in_lap at the bottom of view_user */
+    .show_pic_in_lap {
+        padding-top: 5px;
+        
+    }
+
+    .show_pic_in_lap img{
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+
+    .menu-icon {
+        top: 0;
+        background-color: #343a40;
+        padding: 10px 0;
+        display: flex;
+        gap: 20px;
+    }
+
+
+    .col-10.col-md-11 {
+        padding-right: 0;
+    }
+
+    .chat-section {
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+
+    @media (max-width: 576px) {
+
+        .menu-icon {
+            flex-direction: column;
+            /* align-items: baseline; */
+            background-color: black;
+        }
+
+        .chat-section {
+            background-color: #343a40;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* Container for chat users */
+        .chat_userview {
+            height: calc(100vh - 80px);
+            background-color: black;
+            padding: 30px;
+            border-top-right-radius: 45px;
+            border-top-left-radius: 45px;
+            margin-top: 30px;
+        }
+
+        .view_user_img img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            align-items: center;
+        }
+
+        .msg {
+            margin-left: 5px;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+        }
+
+            /* Ensure the view_user div elements do not overflow */
+        .view_user {
+            display: flex;
+            padding: 10px 0;
+            align-items: center;
+        }
+
+        .show_pic_in_lap {
+            padding-top: 5px;
+            
+        }
+
+        .show_pic_in_lap img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    }
+</style>
+{% endblock style %}
+
+{% block header %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar-custom">
+                <div class="nav-left">
+                    <i class='fas fa-angle-left' style='font-size:24px'></i>
+                </div>
+                <div class="nav-right">
+                    <div class="distance">My Profile</div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid bg-dark">
+
+    <div class="row chat-section" style="padding-top: 80px;">
+        <!-- Chat User View -->
+        <div class="col-md-6 chat_userview">
+            <div class="menu-icon">
+
+                <div class="view_user" style="border-top: inset; border-color:darkgray ;" id="user_imgs">
+                    <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                    <div class="view_user_img">
+                        <img class="img-fluid"
+                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                            alt="">
+                    </div>
+                    <div class="msg">
+                        <span style="text-transform: capitalize;">Username</span><br>
+                        <span style="text-transform: capitalize;">hello how are you</span>
+                        <p>cfsdscsjcoccaydddddsdcksclccioscjscjsdcy</p>
+                    </div>
+
+                   
+                    <!-- </a> -->
+                    <label for="images" id="img_label">Images</label>
+                    <div class="show_pic_in_lap" id="add_pic" >
+                        {% for i in 5|number_rangeobj %}
+                        <img class="img-fluid"
+                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                            alt="img">
+                        {% endfor %}
+                    </div>
+
+            
+                       <label for="reels" id="reel_label">Reels</label>
+                       <div class="show_pic_in_lap" id="add_reel" >
+                           {% for i in 5|number_rangeobj %}
+                           <img class="img-fluid"
+                               src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                               alt="img">
+                           {% endfor %}
+                       </div>
+
+                </div>
+
+
+
+                <div class="user_form text-white">
+
+
+                    <form>
+                        <!-- 2 column grid layout with text inputs for the first and last names -->
+                        <div class="row mb-4 ">
+                          <div class="col">
+                            <div data-mdb-input-init class="form-outline">
+                              <input type="text" id="form3Example1" class="form-control" />
+                              <label class="form-label" for="form3Example1">First name</label>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div data-mdb-input-init class="form-outline">
+                              <input type="text" id="form3Example2" class="form-control" />
+                              <label class="form-label" for="form3Example2">Last name</label>
+                            </div>
+                          </div>
+                        </div>
+                      
+                        <!-- Email input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                          <input type="email" id="form3Example3" class="form-control" />
+                          <label class="form-label" for="form3Example3">Email address</label>
+                        </div>
+                      
+                        <!-- Password input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                          <input type="password" id="form3Example4" class="form-control" />
+                          <label class="form-label" for="form3Example4">Password</label>
+                        </div>
+
+                        <!-- show user photo in mobile size -->
+                        
+                        <label for="images" id="img_label_ph">Images</label>
+                    <div class="show_pic_in_lap" id="add_pic_ph" >
+                        {% for i in 5|number_rangeobj %}
+                        <img class="img-fluid"
+                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                            alt="img">
+                        {% endfor %}
+                    </div>
+
+            
+                       <label for="reels" id="reel_label_ph">Reels</label>
+                       <div class="show_pic_in_lap" id="add_reel_ph" >
+                           {% for i in 5|number_rangeobj %}
+                           <img class="img-fluid"
+                               src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                               alt="img">
+                           {% endfor %}
+                       </div>
+
+                        <!-- add user pictures -->
+                 
+                        <div class="form-outline mb-4">
+                            <label for="formFileSm" class="form-label">Small file input example</label>
+                            <input class="form-control form-control-sm" id="formFileSm" type="file" />
+                        </div>
+                      
+                        <!-- Submit button -->
+                         <div class="row">
+                        <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Sign in</button>
+                         </div>
+                        <!-- Register buttons -->
+                      </form>
+    
+    
+                </div>
+
+
+            </div>
+
+            
+        </div>
+
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+{% block scripts %}
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script>
+
+    var images_ph = document.getElementById('add_pic_ph');
+    var reels_ph = document.getElementById('add_reel_ph');
+    var images_label_ph = document.getElementById('img_label_ph');
+    var reels_label_ph = document.getElementById('reel_label_ph');
+
+
+    images_ph.style.display = 'None'
+    reels_ph.style.display = 'None'
+
+    // To remove lables
+
+    images_label_ph.style.display = 'None'
+    reels_label_ph.style.display = 'None'
+
+function checkBrowserSize() {
+
+    var images = document.getElementById('add_pic');
+    var reels = document.getElementById('add_reel');
+    var images_label = document.getElementById('img_label');
+    var reels_label = document.getElementById('reel_label');
+ 
+
+    if (window.matchMedia("(max-width: 767px)").matches) {
+        // If the screen width is less than or equal to 767px, it is considered phone size
+        // To remove displayed images
+        console.log("Phone size");
+        images.style.display = 'None'
+        reels.style.display = 'None'
+
+        // To remove lables
+
+        images_label.style.display = 'None'
+        reels_label.style.display = 'None' 
+
+
+
+        images_ph.style.display = 'block'
+        reels_ph.style.display = 'block'
+
+
+        images_label_ph.style.display = 'block'
+        reels_label_ph.style.display = 'block' 
+
+
+    } else {
+       
+        console.log("Tablet/Desktop size");
+
+        // this will back all 
+
+        images.style.display = 'block'
+        reels.style.display = 'block'
+
+
+        images_label.style.display = 'block'
+        reels_label.style.display = 'block' 
+
+
+        images_ph.style.display = 'None'
+        reels_ph.style.display = 'None'
+
+        // To remove lables
+
+        images_label_ph.style.display = 'None'
+        reels_label_ph.style.display = 'None'
+        
+    }
+}
+
+// Call the function initially
+// checkBrowserSize();
+
+
+// window.onload = function() {
+//     checkBrowserSize();
+// };
+
+// Optional: Add an event listener to detect changes in screen size
+window.addEventListener('resize', checkBrowserSize);
+
+
+
+</script>
+
+{% endblock scripts %}

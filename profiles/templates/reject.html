@@ -104,6 +104,8 @@
     }
 
 
+
+
     @media (max-width: 576px) {
         .profile-cards-container {
             flex-direction: row;
@@ -130,6 +132,7 @@
             border-top-left-radius: 45px;
             margin-top: 30px;
         }
+
     }
 </style>
 {% endblock style %}
@@ -185,6 +188,8 @@
                 <!-- </a> -->
             </div>
             {% endfor %}
+            {% include "widget/moveable_navbar.html" %}
+
         </div>
     </div>
 </div>
