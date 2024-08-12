@@ -1,0 +1,86 @@
+{% extends "base_files/base.html" %}
+
+{% block meta %}{% endblock meta %}
+
+{% block title %}Addpayment{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+
+{% endblock style %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+      <!-- <div class="col-12 col-md-6 col-lg-4"> -->
+      <div class="col d-flex justify-content-between flex-column flex-sm-row" id="row1">
+        <div class="mb-2 mb-sm-0"><a href="{% url 'subscribe' %}" style="color: black;"><i class="fas fa-times fa-lg"></i></a></div>
+        <div>Done</div>
+      </div>
+      <!-- </div> -->
+      <h2 id="head">Payments Methods</h2>
+      <p style="font-size:smaller;padding-left:15%;">
+          choose desired payment type.We offer easy ways<br>for payments on our app
+      </p>
+      <a href="{% url 'addcard' %}" style="text-decoration: none;color: black;">
+          <div class="d1">
+              <div class="row" style="margin-left: 2%;">
+                  <div class="col-2" style="padding-top:5%;">
+                      <img class="im"
+                      src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                      alt="MasterCard"
+                    />
+                  </div>
+                  <div class="col-2" style="padding-top:4%;">
+                      <span>***********7070<br><p style="font-size:x-small;color: rgb(111, 111, 111);">Expires&nbsp;08/25</p></span>
+                  </div>
+              </div>
+          </div>
+          <div class="d1">
+              <div class="row" style="margin-left: 2%;">
+                  <div class="col-2" style="padding-top:5%;">
+                      <img class="im"
+                      src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg"
+                      alt="Visa"
+                    />
+                  </div>
+                  <div class="col-2" style="padding-top:4%;">
+                      <span>***********4040<br><p style="font-size:x-small;color: rgb(111, 111, 111);">Expires&nbsp;08/25</p></span>
+                  </div>
+              </div>
+          </div>
+          <div class="d1">
+              <div class="row" style="margin-left: 2%;">
+                  <div class="col-2" style="padding-top:5%;"> 
+                      <img class="im"
+                      src="https://upload.wikimedia.org/wikipedia/commons/9/9f/PayPal2007.svg"
+                      alt="PayPal" style="width:50px;"
+                    />
+                  </div>
+                  <div class="col-2" style="padding-top:4%;">
+                      <span>***********7878<br><p style="font-size:x-small;color: rgb(111, 111, 111);">Expires&nbsp;08/25</p></span>
+                  </div>
+              </div>
+          </div>
+      </a>
+
+      <p style="font-size:smaller;padding-left:6%;padding-top: 5%;font-weight: bold;">CURRENT METHODS</p>
+      <div class="d1">
+          <div class="row" style="margin-left: 2%;">
+              <div class="col-2" style="padding-top:6%;">
+                  <i class="fa-solid fa-money-check-dollar fa-2x" style="color: rgb(254, 138, 13);"></i>
+              </div>
+              <div class="col-6" style="padding-top:5%;padding-left:6%;">
+                  <span>Cash Payment<br><p style="font-size:x-small;color: rgb(111, 111, 111);">Default method</p></span>
+              </div>
+              <div class="col-3" style="padding-top:5%;">
+                  <input class="form-check-input" type="checkbox" id="flexCheckDefault" style="margin-left:100%;height:25px;width:25px;">
+              </div>
+          </div>
+      </div>
+      <a href="" class="btn text-white">ADD PAYMENT METHOD</a>
+  </div>
+  <hr style="color: rgb(29, 0, 55);width: 120px;margin-left:35%;">
+
+    {% endblock content %}
