@@ -1,4 +1,4 @@
-.container-fluid{
+.container {
     margin-top: 1%;
     margin-left: 40%;
     width:390px;
@@ -37,6 +37,6 @@
       background-color:rgb(80, 1, 80);
       border-radius: 10px;
   }
-  img{
+  .im{
       height: 25px;
   }

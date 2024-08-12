@@ -1,0 +1,30 @@
+<!-- signup.html  -->
+
+<div class="modal fade" style="backdrop-filter: blur(10px);" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Sign Up Form -->
+                <form>
+                    <!-- Step 1 -->
+                    {% include "widget/input.html" with type='text' label='Name' %}
+                    {% include "widget/input.html" with type='email' label='Email' %}
+                    {% include "widget/input.html" with type='number' label='Phone' %}
+                    {% include "widget/input.html" with type='password' label='Password' %}
+                    {% include "widget/input.html" with type='password' label='Confirm Password' %}
+                    {% include "widget/input.html" with type='text' label='We sent a code to Email/Phone"' %}
+                    <button type="button" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#PersonalModal">Register</button>
+                    <button type="button" class="btn btn-secondary w-100">Social Media Login</button>
+                    <div class="login-link text-center mt-3">
+                        <p>Already have an account? <a href="#">Log In</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "auth/details_form.html" %}
