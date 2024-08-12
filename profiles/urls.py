@@ -10,6 +10,8 @@ urlpatterns = [
     path('accept',views.user_accept_pg, name="accept"),
     path('reject',views.user_reject_pg, name="reject"),
     path('recieved',views.user_recieved_pg, name="recieved"),
+    path('chat',views.user_chat_pg, name="chat"),
+
 
 
 

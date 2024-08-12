@@ -1,0 +1,97 @@
+<div class="menu-bar" style="position: absolute;">
+    <div class="hamburger" id="hamburger">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="menu-content" id="menuContent">
+        <div class="menu-item">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="menu-item">
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="menu-item" id="closeBtn">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("hamburger").addEventListener("click", function (event) {
+    event.stopPropagation();
+    const menuBar = document.querySelector(".menu-bar");
+    menuBar.classList.toggle("active");
+});
+
+// Close the menu when clicking outside
+document.addEventListener("click", function (event) {
+    const menuBar = document.querySelector(".menu-bar");
+    if (!menuBar.contains(event.target)) {
+        menuBar.classList.remove("active");
+    }
+});
+
+// Close the menu when touching outside (for touch devices)
+document.addEventListener("touchstart", function (event) {
+    const menuBar = document.querySelector(".menu-bar");
+    if (!menuBar.contains(event.target)) {
+        menuBar.classList.remove("active");
+    }
+});
+
+// Make the menu-bar draggable
+let isDragging = false;
+let offset = { x: 0, y: 0 };
+
+const menuBar = document.querySelector(".menu-bar");
+
+menuBar.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offset.x = menuBar.offsetLeft - e.clientX;
+    offset.y = menuBar.offsetTop - e.clientY;
+    e.stopPropagation();
+});
+
+document.addEventListener("mouseup", () => {
+    isDragging = false;
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+        const newX = e.clientX + offset.x;
+        const newY = e.clientY + offset.y;
+
+        const maxX = window.innerWidth - menuBar.offsetWidth;
+        const maxY = window.innerHeight - menuBar.offsetHeight;
+
+        menuBar.style.left = Math.min(Math.max(0, newX), maxX) + "px";
+        menuBar.style.top = Math.min(Math.max(0, newY), maxY) + "px";
+    }
+});
+
+// For mobile devices (touch)
+menuBar.addEventListener("touchstart", (e) => {
+    isDragging = true;
+    offset.x = menuBar.offsetLeft - e.touches[0].clientX;
+    offset.y = menuBar.offsetTop - e.touches[0].clientY;
+    e.stopPropagation();
+});
+
+document.addEventListener("touchend", () => {
+    isDragging = false;
+});
+
+document.addEventListener("touchmove", (e) => {
+    if (isDragging) {
+        const newX = e.touches[0].clientX + offset.x;
+        const newY = e.touches[0].clientY + offset.y;
+
+        const maxX = window.innerWidth - menuBar.offsetWidth;
+        const maxY = window.innerHeight - menuBar.offsetHeight;
+
+        menuBar.style.left = Math.min(Math.max(0, newX), maxX) + "px";
+        menuBar.style.top = Math.min(Math.max(0, newY), maxY) + "px";
+    }
+});
+</script>

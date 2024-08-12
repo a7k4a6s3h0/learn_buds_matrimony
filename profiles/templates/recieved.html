@@ -104,6 +104,18 @@
     }
 
 
+    .cross_icon{
+        margin-left: 560px;
+        color: white;
+    }
+
+
+    .heart_icon{
+        padding-left: 25px;
+        color: white;
+    }
+
+
     @media (max-width: 576px) {
         .profile-cards-container {
             flex-direction: row;
@@ -129,6 +141,23 @@
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
+        }
+
+
+        .msg {
+            margin-left: 10px;
+            color: white;
+        }
+
+        .cross_icon{
+            margin-left: 10px;
+            color: white;
+        }
+
+        .heart_icon{
+           padding-left: 15px;
+            color: white;
+            font-size: 15px;
         }
     }
 </style>
@@ -181,15 +210,17 @@
                     <span style="text-transform: capitalize;">Username</span><br>
                     <span style="text-transform: capitalize;">hello how are you</span>
                 </div>
-                <div style="margin-left: 560px;">
+                <div class="cross_icon">
                     <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
                 </div>
-                <div style="padding-left: 25px;">
+                <div class="heart_icon">
                     <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
                 </div>
                 <!-- </a> -->
             </div>
             {% endfor %}
+            {% include "widget/moveable_navbar.html" %}
+
         </div>
     </div>
 </div>
