@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from U_auth.views import demo
 
 # Create your views here.
 

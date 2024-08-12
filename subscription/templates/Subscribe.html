@@ -1,0 +1,75 @@
+{% extends "base_files/base.html" %}
+
+{% block meta %}{% endblock meta %}
+
+{% block title %}Subscription{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+
+{% endblock style %}
+
+{% block content %}
+    <div class="container-fluid w-100" style="height:100px;margin-left:0%;">
+        <div class="row">
+            <div class="col-md-12" id="h1">
+               <h4 class="text-center">Subscribe</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid w-100" style="margin-left:0%;">
+        <div class="row">
+            <div class="col-md-12" id="h2">
+                <h1 style="font-weight: bold; color: rgb(248, 247, 247)">Prime Member</h1>
+                <span style="color: rgb(248, 247, 247); font-size: xx-large"
+                  ><b>$79</b>/-month</span
+                >
+                <div class="col-md-12" style="margin-top: 2%;">
+                    <span style="color: white; font-size:smaller;">
+                        <i class="fa-solid fa-circle-check" style="color: white"></i>
+                        Daily Limits
+                      </span>
+                      <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                        View up to 15 Profiles per Day<br>Send up to 15 Requests per Day
+                      </p>
+                      <hr style="color: aliceblue;">
+                </div>
+                <div class="col-md-12" style="margin-top: 2%;">
+                    <span style="color: white; font-size:smaller;">
+                        <i class="fa-solid fa-circle-check" style="color: white"></i>
+                        Weekly Limits
+                      </span>
+                      <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                        View up to 90 Profiles per Week<br>Send up to 90 Requests per Week
+                      </p>
+                      <hr style="color: aliceblue;">
+                </div>
+                <div class="col-md-12" style="margin-top: 2%;">
+                    <span style="color: white; font-size:smaller;">
+                        <i class="fa-solid fa-circle-check" style="color: white"></i>
+                        Monthly Limits
+                      </span>
+                      <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                        View up to 300 Profiles per Month<br>Send up to 300 Requests per Month
+                      </p>
+                      <hr style="color: aliceblue;">
+                </div>
+                <div class="col-md-12" style="margin-top: 2%;">
+                    <span style="color: white; font-size:smaller;">
+                        <i class="fa-solid fa-circle-check" style="color: white"></i>
+                        Premium Limits
+                      </span>
+                      <p style="color: white; padding-left: 10%; font-size: small;margin-top: 1%;margin-right: 9%;">
+                         View Profiles Who Shortlisted You<br>Unlock Unlimited Messages<br>Unlock Shortlisted Page<br>Short & filter Profiles
+                      </p>
+                      <hr style="color: aliceblue;">
+                      <div class="col-md-12" style="display: flex; justify-content: center;margin-top:0%">
+                        <a href="{% url 'addpayment' %}" class="btn text-center" id="btn1">Subscribe</a>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
