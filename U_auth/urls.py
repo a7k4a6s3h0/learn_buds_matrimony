@@ -4,6 +4,7 @@ from . import views
 
 
 urlpatterns = [
+<<<<<<< HEAD
     path('',views.demo,),
     path('login/',views.login_view,name="login"),
     path('perdet/',views.perdet_view,name="personal details"),
@@ -25,4 +26,7 @@ urlpatterns = [
 
 
 
+=======
+    path('',views.AuthPage,name="auth"),
+>>>>>>> 22a095854b16821541ffbbe77d28e1907338171c
 ]
