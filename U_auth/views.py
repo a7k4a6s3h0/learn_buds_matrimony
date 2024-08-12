@@ -2,9 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 
-<<<<<<< HEAD
-def demo(request):
-    return render(request, 'base_files/base.html')
+# def demo(request):
+    # return render(request, 'base_files/base.html')
 
 def login_view(request):
     return render(request, 'login.html')
@@ -42,11 +41,10 @@ def user_details_5(request):
 
 def user_details_6(request):
     return render(request, 'User_profile_templates/user_pr_6.html')
-=======
+
 def AuthPage(request):
     context = {
         'experance_level': ['Beginner', 'Intermediate', 'Expert'],
         'marital_status': ['Unmarried', 'Divorced']
     }
     return render(request, 'auth/auth.html',context)
->>>>>>> 22a095854b16821541ffbbe77d28e1907338171c
