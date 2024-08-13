@@ -18,3 +18,8 @@ class Designation(TemplateView):
 
 class FilterPrifles(TemplateView):
     template_name='Home/filter.html'
+
+class demotemplate(TemplateView):
+    template_name='Home/demo.html'    
+
+    
