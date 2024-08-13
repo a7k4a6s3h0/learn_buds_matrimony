@@ -1,298 +1,398 @@
-{% extends "base_files/base.html" %}
-{% load custom_tags %}
-{% block meta %}{% endblock meta %}
-
-{% block title %}Privacy & Setting{% endblock title %}
-
-{% block link %}{% endblock link %}
-
+{% extends "base_files/base.html" %} 
+{% load custom_tags %} 
+{% block meta %}
+{%endblock meta %} 
+{% block title %}Privacy & Setting{% endblock title %} 
+{% block link %}{% endblock link %} 
 {% block style %}
 <style>
-    /* Custom styles for the messaging interface */
-    .navbar-custom {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        z-index: 10;
-        padding: 10px;
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+  /* Custom styles for the messaging interface */
+  .navbar-custom {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 10;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .nav-left {
-        flex-shrink: 0;
-    }
+  .nav-left {
+    flex-shrink: 0;
+  }
 
-    .nav-right {
-        flex-grow: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  .nav-right {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .navbar-custom i {
-        color: white;
-        padding-right: 8px;
-    }
+  .navbar-custom i {
+    color: white;
+    padding-right: 8px;
+  }
 
-    .navbar-custom .distance {
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 15px;
-    }
+  .navbar-custom .distance {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+  }
 
+  /* Container for chat users */
+  .chat_userview {
+    height: calc(100vh - 80px);
+    background-color: #343a40;
+    padding: 10px;
+  }
 
-    /* Container for chat users */
-    .chat_userview {
-        height: calc(100vh - 80px);
-        /* Adjust based on the height of the .menu-icon and any other fixed elements */
-        /* overflow-y: auto; */
-        /* Enable vertical scrolling */
-        /* position: relative; */
-        background-color: #343a40;
-        padding: 10px;
-    }
+  .main_div {
+    top: 0;
+    background-color: #343a40;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
+  .inner_flex {
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-bottom-style: inset;
+  }
 
+  .content_flex {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-size: 20px;
+    color: white;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-bottom-style: inset;
+  }
+
+  .col-10.col-md-11 {
+    padding-right: 0;
+  }
+
+  .chat-section {
+    background-color: #343a40;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .button_reset {
+    align-self: flex-end;
+    padding-top: 10px;
+    text-transform: capitalize;
+  }
+
+  /* Range Slider Styles */
+  .slider-container {
+    width: 300px;
+    position: relative;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    position: absolute;
+    pointer-events: none;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+
+  input[type="range"]:focus {
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    background: #ddd;
+    border-radius: 5px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 15px;
+    height: 15px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -5px;
+  }
+
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    background: #ddd;
+    border-radius: 5px;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    pointer-events: all;
+    width: 15px;
+    height: 15px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .slider-values {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+  }
+
+  /* Multi-Selector Styles */
+  .multi-selector-container {
+    width: 300px;
+    margin: 20px;
+    position: relative;
+  }
+
+  .multi-selector {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .selected-items {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 50px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .selected-item {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .selected-item i {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  .location-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+  }
+
+  .location-dropdown.open {
+    display: block;
+  }
+
+  .location-item {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .location-item:hover {
+    background-color: #f1f1f1;
+  }
+
+  @media (max-width: 576px) {
     .main_div {
-        top: 0;
-        background-color: #343a40;
-        padding: 10px 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .inner_flex{
-        display: flex;
-        /* gap: 20px; */
-        justify-content: center  ;
-        font-size: 20px;
-        color: white;
-        padding-bottom: 10px;
-        padding-top: 10px;
-        border-bottom-style: inset;
-    }
-
-    .content_flex{
-        display: flex;
-        flex-direction: row;
-        gap: 20px;
-        /* justify-content: center  ; */
-        font-size: 20px;
-        color: white;
-        padding-bottom: 10px;
-        padding-top: 10px;
-        border-bottom-style: inset;
-    }
-
-    /* .first_row .second_row{
-        font-size: 20px;
-        color: white;
-    } */
-
-    .col-10.col-md-11 {
-        padding-right: 0;
+      flex-direction: column;
+      background-color: black;
     }
 
     .chat-section {
-        background-color: #343a40;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
+      position: relative;
+      background-color: #343a40;
+      display: flex;
+      flex-direction: row;
     }
 
-    .button_reset{
-        align-self: flex-end;
-        padding-top: 10px;
-        text-transform: capitalize;
+    /* Container for chat users */
+    .chat_userview {
+      height: calc(100vh - 80px);
+      background-color: black;
+      padding: 30px;
+      border-top-right-radius: 45px;
+      border-top-left-radius: 45px;
+      margin-top: 30px;
     }
 
-
-    @media (max-width: 576px) {
-
-        .main_div {
-            flex-direction: column;
-            /* align-items: baseline; */
-            background-color: black;
-        }
-
-        .chat-section {
-            position: relative;
-            background-color: #343a40;
-            display: flex;
-            flex-direction: row;
-        }
-
-        /* Container for chat users */
-        .chat_userview {
-            height: calc(100vh - 80px);
-            background-color: black;
-            padding: 30px;
-            border-top-right-radius: 45px;
-            border-top-left-radius: 45px;
-            margin-top: 30px;
-        }
-
-        .inner_flex{
-            display: flex;
-            /* gap: 20px; */
-            justify-content: space-between  ;
-            font-size: 12px;
-            color: white;
-            padding-bottom: 10px;
-            padding-top: 10px;
-            border-bottom-style: inset;
-        }
-
-
-        .button_reset button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%; /* Optional: Make the button take full width of the container */
-        }
-
-
+    .inner_flex {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: white;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      border-bottom-style: inset;
     }
+
+    .button_reset button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
+  }
 </style>
-{% endblock style %}
-
+{% endblock style %} 
 {% block header %}
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar-custom">
-                <div class="nav-left">
-                    <i class='fas fa-angle-left' style='font-size:24px'></i>
-                </div>
-                <div class="nav-right">
-                    <div class="distance">Privacy & Setting</div>
-                </div>
-            </nav>
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="navbar-custom">
+        <div class="nav-left">
+          <i class="fas fa-angle-left" style="font-size: 24px"></i>
         </div>
+        <div class="nav-right">
+          <div class="distance">Privacy & Setting</div>
+        </div>
+      </nav>
     </div>
+  </div>
 </div>
-{% endblock header %}
-
+{% endblock header %} 
 {% block content %}
 <div class="container-fluid bg-dark">
+  <div class="row chat-section" style="padding-top: 80px">
+    <!-- Chat User View -->
+    <div class="col-md-6 chat_userview">
+      <div class="main_div">
+        <div class="inner_flex">
+          <div class="first_row">
+            <label for="">Partner Preference</label><br />
+          </div>
+        </div>
 
-    <div class="row chat-section" style="padding-top: 80px;">
-        <!-- Chat User View -->
-        <div class="col-md-6 chat_userview">
-
-            <div class="main_div">
-
-                <div class="inner_flex">
-
-                    <div class="first_row">
-                        <label for="">Partner Preference</label><br>
-                    </div>
-
-
+        <div class="content_flex">
+          <div class="first_row">
+            <label for="">Age Range</label><br />                                                 
+            <div class="slider-container">
+                <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
+                <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
+                <div class="slider-values">
+                    <span id="minValue">20</span> - <span id="maxValue">80</span>
                 </div>
-
-
-
-                <div class="content_flex">
-
-                    <div class="first_row">
-                        <label for="">Gender</label><br>
-
-                        Filter by price interval: <b>€ 10</b> <input id="ex2" type="text" class="span2" value="" data-slider-min="10" data-slider-max="1000" data-slider-step="5" data-slider-value="[250,450]"/> <b>€ 1000</b>
-                    </div>
-
-                    
-
-
-                </div>
-
-                <div class="content_flex">
-
-                    <div class="first_row">
-                        <label for="">Gender</label><br>
-
-                    </div>
-                    <div class="second_row">
-                        <select name="gender" id="gender" class="form-control">
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                            </select>
-                    </div>
-
-                </div>
-
-
-                <div class="content_flex">
-
-                    <div class="first_row">
-                        <label for="">Location</label><br>
-
-                    </div>
-                    <div class="second_row">
-                        <select data-mdb-select-init multiple>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                            <option value="4">Four</option>
-                            <option value="5">Five</option>
-                            <option value="6">Six</option>
-                            <option value="7">Seven</option>
-                            <option value="8">Eight</option>
-                          </select>                    
-                        </div>
-
-
-                </div>
-
-
- 
-               
-            <div class="button_reset">
-                <button type="button" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> &nbsp;&nbsp;&nbsp; reset all active sessions</button>
             </div>
+          </div>
         </div>
 
+        <div class="content_flex">
+          <div class="first_row"><label for="">Gender</label><br /></div>
+          <div class="second_row">
+            <select name="gender" id="gender" class="form-control">
+              <option value="">Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
         </div>
 
-
+        <div class="content_flex">
+          <div class="first_row"><label for="">Location</label><br /></div>
+          <div class="second_row">
+            <div class="multi-selector-container">
+                <div class="multi-selector" onclick="toggleDropdown()">Select Location</div>
+                <div class="location-dropdown">
+                    <div class="location-item" onclick="selectLocation(this)">Location 1</div>
+                    <div class="location-item" onclick="selectLocation(this)">Location 2</div>
+                    <div class="location-item" onclick="selectLocation(this)">Location 3</div>
+                    <div class="location-item" onclick="selectLocation(this)">Location 4</div>
+                </div>
+                <div class="selected-items"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <!-- Other Column (Empty) -->
+    <div class="col-md-6"></div>
+  </div>
 </div>
 {% endblock content %}
-
-{% block footer %}{% endblock footer %}
-
 {% block scripts %}
-
 <script>
-$(document).ready(function() {
-    $("#ex2").slider({
-        min: 10,
-        max: 1000,
-        step: 5,
-        value: [250, 450]
-    });
-});
+    // Range Slider Script
+    function updateRange() {
+        const minRange = document.getElementById("minRange");
+        const maxRange = document.getElementById("maxRange");
+        const minValue = document.getElementById("minValue");
+        const maxValue = document.getElementById("maxValue");
 
+        if (parseInt(minRange.value) > parseInt(maxRange.value)) {
+            minRange.value = maxRange.value;
+        }
+
+        minValue.innerText = minRange.value;
+        maxValue.innerText = maxRange.value;
+    }
+
+    // Multi-Selector Script
+    function toggleDropdown() {
+        const dropdown = document.querySelector('.location-dropdown');
+        dropdown.classList.toggle('open');
+    }
+
+    function selectLocation(element) {
+        const selectedItemsContainer = document.querySelector('.selected-items');
+        const location = element.innerText;
+
+        // Create a selected item element
+        const selectedItem = document.createElement('div');
+        selectedItem.classList.add('selected-item');
+        selectedItem.innerText = location;
+
+        // Create a remove icon
+        const removeIcon = document.createElement('i');
+        removeIcon.classList.add('fas', 'fa-times');
+        removeIcon.onclick = function () {
+            selectedItemsContainer.removeChild(selectedItem);
+            element.style.display = 'block'; // Show the location back in the dropdown
+        };
+
+        selectedItem.appendChild(removeIcon);
+        selectedItemsContainer.appendChild(selectedItem);
+
+        // Hide the selected location from the dropdown
+        element.style.display = 'none';
+    }
 </script>
-
-<!-- <script>
-    $(document).ready(function() {
-      // Example of initializing a component (e.g., Bootstrap Slider)
-      $('#ex2').slider();
-
-      // Example for initializing selectpicker (if used)
-      $('select[data-mdb-select-init]').selectpicker();
-    });
-  </script> -->
-
 {% endblock scripts %}

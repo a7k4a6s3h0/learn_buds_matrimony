@@ -42,6 +42,7 @@ def user_details_5(request):
 def user_details_6(request):
     return render(request, 'User_profile_templates/user_pr_6.html')
 
+
 def AuthPage(request):
     context = {
         'experance_level': ['Beginner', 'Intermediate', 'Expert'],

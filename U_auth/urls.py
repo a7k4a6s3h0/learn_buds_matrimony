@@ -13,10 +13,5 @@ urlpatterns = [
     path('user_pr_5/', views.user_details_5, name="user_pr_5"),
     # path('user_pr_5/', views.user_details_5, name="user_pr_5"),
     path('user_pr_6/', views.user_details_6, name="user_pr_6"),
-
-  
-
-
-
     path('',views.AuthPage,name="auth"),
 ]
