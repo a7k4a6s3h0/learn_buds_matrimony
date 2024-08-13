@@ -41,6 +41,7 @@
 }
 
 /* navbar css  */
+
 .base_nav_right {
   color: var(--russian-violet);
   cursor: pointer;
@@ -86,6 +87,41 @@
 .menu-icons {
   background-color: var(--light-medium-orchid);
   color: var(--snow);
+}
+
+/* leftside-bar */
+/* Left Sidebar */
+.leftside-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: var(--russian-violet);
+    color: var(--snow);
+    overflow-y: auto;
+}
+
+.leftside-bar ul li {
+    color: var(--snow);
+}
+
+.leftside-bar ul li:hover {
+    background-color: rgba(255, 255, 255, 0.384);
+    border-radius: 0.5rem;
+}
+
+.leftside-bar ul li a {
+    color: var(--snow);
+}
+
+.leftside-bar ul li a:hover {
+    color: var(--snow);
+}
+
+/* Main Content Area */
+.main-content {
+    margin-left: 16.666667%; /* Aligns with the width of the sidebar */
+    padding-top: 20px; /* Adjust as needed */
 }
 
 /* notifcation-icon */
