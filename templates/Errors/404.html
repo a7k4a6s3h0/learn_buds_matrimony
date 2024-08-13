@@ -1,0 +1,84 @@
+{% extends "base_files/base.html" %}
+
+{% load static %}
+{% block meta %}
+    <title>404 - Page Not Found</title>
+{% endblock meta %}
+
+{% block link %}
+    <!-- Link to Google Fonts for Aldrich -->
+    <link href="https://fonts.googleapis.com/css2?family=Aldrich&display=swap" rel="stylesheet">
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Link to Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+{% endblock link %}
+
+{% block style %}
+    <style>
+        body {
+            background-color: #4B164C;
+            color: #F6E89A;
+            font-family: 'Aldrich', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .btn-custom {
+            background-color: transparent;
+            color: #ffffff;
+            border: 4px solid #ffffff;
+            border-radius: 5px;
+            padding: 8px 20px;
+            display: inline-block;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .btn-custom:hover {
+            background-color: white;
+            color: #4B164C;
+            border-color: #F6E89A;
+            text-decoration: none;
+        }
+
+        .btn-custom .fa-chevron-right {
+            font-size: 13px;
+            transition: transform 0.3s ease;
+            margin-left: 3px;
+        }
+
+        .btn-custom:hover .fa-chevron-right {
+            transform: translateX(5px);
+        }
+    </style>
+{% endblock style %}
+
+{% block content %}
+    <div class="container">
+        <h1>404</h1>
+        <p>Ooops...</p>
+        <a href="#" class="btn-custom">
+            Let's try something different
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+{% endblock content %}
