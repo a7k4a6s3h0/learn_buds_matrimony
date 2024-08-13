@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 
 def demo_pr(request):
-    return render(request, 'otheruser_profile.html')
+    return render(request, 'users_pr_view.html')
 
 
 def messages_pg(request):
