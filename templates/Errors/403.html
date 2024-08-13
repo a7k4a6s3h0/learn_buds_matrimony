@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block meta %}
-    <title>404 - Page Not Found</title>
+    <title>403 - Access Denied</title>
 {% endblock meta %}
 
 {% block link %}
@@ -61,7 +61,7 @@
         }
 
         .btn-custom .fa-chevron-right {
-            font-size: 13px;
+            font-size: 15px;
             transition: transform 0.3s ease;
             margin-left: 3px;
         }
@@ -73,12 +73,13 @@
 {% endblock style %}
 
 {% block content %}
-    <div class="container">
-        <h1>404</h1>
-        <p>Ooops...</p>
-        <a href="#" class="btn-custom">
-            Let's try something different
-            <i class="fas fa-chevron-right"></i>
-        </a>
-    </div>
+<div class="container">
+    <h1>403</h1>
+    <h3>Access Denied</h3>
+    <p>Sorry, You dont' have access to this page</p>
+    <a href="#" class="btn-custom">
+        Go back to the Previous page
+        <i class="fas fa-chevron-right"></i>
+    </a>
+</div>
 {% endblock content %}

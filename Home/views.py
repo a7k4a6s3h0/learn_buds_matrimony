@@ -19,7 +19,7 @@ class Designation(TemplateView):
 class FilterPrifles(TemplateView):
     template_name='Home/filter.html'
 
-class demotemplate(TemplateView):
-    template_name='Home/demo.html'    
+# class error404(TemplateView):
+#     template_name='Home/error.html'    
 
     
