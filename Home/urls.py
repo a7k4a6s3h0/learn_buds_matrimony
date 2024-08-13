@@ -8,4 +8,5 @@ urlpatterns = [
     path('loaction', views.Loaction.as_view(), name='loaction'),
     path('designation', views.Designation.as_view(), name='designation'),
     path('profiles/filter', views.FilterPrifles.as_view(), name='filter_prifles'),
+    path('demo', views.demotemplate.as_view(), name="demo"),
 ]
