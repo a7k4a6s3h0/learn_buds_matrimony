@@ -48,3 +48,11 @@ def AuthPage(request):
         'marital_status': ['Unmarried', 'Divorced']
     }
     return render(request, 'auth/auth.html',context)
+
+
+def error_404(request):
+    return render(request, 'Errors/404.html')
+
+
+def error_403(request):
+    return render(request, 'Errors/403.html')
