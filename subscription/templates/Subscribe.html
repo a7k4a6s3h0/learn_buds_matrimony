@@ -1,5 +1,7 @@
 {% extends "base_files/base.html" %}
 
+{% load static %}
+
 {% block meta %}{% endblock meta %}
 
 {% block title %}Subscription{% endblock title %}
@@ -7,7 +9,7 @@
 {% block link %}{% endblock link %}
 
 {% block style %}
-
+<link rel="stylesheet" href="{% static 'css/Subscribe.css' %}">
 {% endblock style %}
 
 {% block content %}
