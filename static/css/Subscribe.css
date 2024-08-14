@@ -13,7 +13,7 @@ body{
   text-align: center;
   padding-top:2%;
   border-radius:10px;
-  height:1000px;
+  /* height:1000px; */
   background-color: black;
 }
 #btn1 {
@@ -24,7 +24,7 @@ body{
   font-weight: bold;
   color: rgb(119, 118, 118);
   border-radius: 10px;
-  margin-top:2%;
-  padding-top: 1%;
-  margin-right: 5%;
+  margin-top:5%;
+  margin-right:0%;
+  margin-bottom: 4%;
 }

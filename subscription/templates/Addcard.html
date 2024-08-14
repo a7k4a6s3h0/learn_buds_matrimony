@@ -1,77 +1,82 @@
 {% extends "base_files/base.html" %}
 
+{% load static %}
+
 {% block meta %}{% endblock meta %}
 
 {% block title %}Addcard{% endblock title %}
 
-{% block link %}{% endblock link %}
-
 {% block style %}
-
+<link rel="stylesheet" href="{% static 'css/Addcard.css' %}">
 {% endblock style %}
 
 {% block content %}
-    <div class="card-form">
-      <a href="#" class="text-decoration-none"
-        ><i class="bi bi-arrow-left"></i
-      ></a>
-      <h2>Add credit card</h2>
-      <form>
-        <div class="mb-3">
-          <label for="cardName" class="form-label">Name</label>
-          <input type="text" class="form-control" id="cardName" />
-        </div>
-        <div class="mb-3">
-          <label for="cardNumber" class="form-label">Credit card number</label>
-          <input
-            type="text"
-            class="form-control"
-            id="cardNumber"
-            placeholder="****-****-****-**67"
-          />
-        </div>
-        <div class="mb-3">
-          <div class="scan-card w-">
-            <i class="fas fa-qrcode"></i>Scan card
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <nav class="navbar-custom">
+          <div class="nav-left">
+            <a href="{% url 'addpayment' %}">
+              <i class='fas fa-angle-left' style='margin-top: 0%;margin-bottom:10%;font-size: 20px;color: black;'></i>
+            </a>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-6 mb-3">
-            <label for="expDate" class="form-label">Express</label>
-            <input
-              type="text"
-              class="form-control"
-              id="expDate"
-              value="10/25/2030"
-            />
-          </div>
-          <div class="col-6 mb-3">
-            <label for="cvv" class="form-label">CVV</label>
-            <input
-              type="password"
-              class="form-control"
-              id="cvv"
-              value="******"
-            />
-          </div>
-        </div>
-        <div class="footer-text">
-          Debit cards are accepted at some locations and for some categories.
-        </div>
-        <div class="text-center mb-3 card-logos">
-          <img class="ig" src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" />
-          <img class="ig"
-            src="https://upload.wikimedia.org/wikipedia/commons/9/9f/PayPal2007.svg"
-            alt="paypal"
-          />
-          <img class="ig" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Amex" />
-        </div>
-        <div style="margin-right:8% ;">
-            <button type="submit" class="btn w-100">
-                ADD PAYMENT METHOD
-              </button>
-        </div>
-      </form>
+      </nav>
+    </div>      
+  </div>
+  <h2 id="head">Add Credit Card</h2>
+  <form>
+    <div class="mb-3">
+      <label for="cardName" class="form-label">Name</label>
+      <input type="text" class="form-control" id="cardName" />
     </div>
+    <div class="mb-3">
+      <label for="cardNumber" class="form-label">Credit Card Number</label>
+      <input
+        type="text"
+        class="form-control"
+        id="cardNumber"
+        placeholder="****-****-****-**67"
+      />
+    </div>
+    <div class="mb-3">
+      <div class="scan-card w-">
+        <i class="fas fa-qrcode"></i>Scan card
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 mb-3">
+        <label for="expDate" class="form-label">Express</label>
+        <input
+          type="date"
+          class="form-control"
+          id="expDate"
+        />
+      </div>
+      <div class="col-6 mb-3">
+        <label for="cvv" class="form-label">cvv</label>
+        <input
+          type="password"
+          class="form-control"
+          id="cvv"
+          value="******"
+        />
+      </div>
+    </div>
+    <div class="footer-text">
+      Debit cards are accepted at some locations and for some categories.
+    </div>
+    <div class="text-center mb-3 card-logos">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" />
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/9/9f/PayPal2007.svg"
+        alt="paypal"
+      />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Amex" />
+    </div>
+    <button type="submit" class="btn w-100 mt-5" id="bt">
+      ADD PAYMENT METHOD
+    </button>
+  </form>
+</div>
 
     {% endblock content %}
