@@ -1,4 +1,4 @@
-.container-fluid{
+#mp{
   background-color: white;
   border-radius: 25px;
   padding: 30px 20px;
@@ -20,12 +20,12 @@
   margin-top: 1%;
   color: white;
 }
-.card-logos img {
-  height: 25px;
+#im{
+  height:25px;
   border-radius: 3px;
   margin: 0 5px;
 }
-.scan-card {
+#card {
   color: white;
   background-color:rgb(80, 1, 80);
   font-size: small;
@@ -36,21 +36,18 @@
   align-items: center;
   justify-content: center;
 }
-.scan-card i {
-  margin-right: 5px;
-}
 .form-label {
   color:black;
   font-size: smaller;
   font-weight: bold;
 }
-.footer-text {
+#ft {
   color: gray;
   font-size: 0.8em;
   text-align: center;
   margin-bottom: 15px;
 }
-.footer-text img {
+#im{
   height: 25px;
   margin: 0 5px;
 }
