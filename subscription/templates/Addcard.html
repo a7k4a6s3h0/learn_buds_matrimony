@@ -7,11 +7,13 @@
 {% block title %}Addcard{% endblock title %}
 
 {% block style %}
+
 <link rel="stylesheet" href="{% static 'css/Addcard.css' %}">
+
 {% endblock style %}
 
-{% block content %}
-<div class="container-fluid">
+{% block content %} 
+<div class="container-fluid" id="mp">
   <div class="row">
     <div class="col-md-6">
       <nav class="navbar-custom">
@@ -39,8 +41,8 @@
       />
     </div>
     <div class="mb-3">
-      <div class="scan-card w-">
-        <i class="fas fa-qrcode"></i>Scan card
+      <div class="scan-card" id="card">
+        <i class="fas fa-qrcode" style="margin-right: 5px;"></i>Scan card
       </div>
     </div>
     <div class="row">
@@ -62,16 +64,16 @@
         />
       </div>
     </div>
-    <div class="footer-text">
+    <div class="footer-text" id="ft">
       Debit cards are accepted at some locations and for some categories.
     </div>
     <div class="text-center mb-3 card-logos">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" />
-      <img
+      <img id="im" src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" />
+      <img id="im"
         src="https://upload.wikimedia.org/wikipedia/commons/9/9f/PayPal2007.svg"
         alt="paypal"
       />
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Amex" />
+      <img id="im" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Amex" />
     </div>
     <button type="submit" class="btn w-100 mt-5" id="bt">
       ADD PAYMENT METHOD
