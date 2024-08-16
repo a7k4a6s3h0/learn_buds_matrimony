@@ -10,3 +10,7 @@ class AddPaymentView(TemplateView):
      
 class AddCardView(TemplateView):
     template_name='Addcard.html'
+    
+class DemoView(TemplateView):
+    template_name='demo.html'
+    
