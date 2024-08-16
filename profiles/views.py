@@ -28,3 +28,16 @@ def user_recieved_pg(request):
 
 def user_chat_pg(request):
     return render(request, 'col_chat.html')
+
+
+def user_shortlist_pg(request):
+    return render(request, 'shortlist.html')
+
+def user_shortlisted_pg(request):
+    return render(request, 'shortlisted_by.html')
+
+def user_contacted_pg(request):
+    return render(request, 'contacted.html')
+
+def user_viewed_pg(request):
+    return render(request, 'pr_viewed.html')

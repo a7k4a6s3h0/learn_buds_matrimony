@@ -52,25 +52,28 @@
         color: white;
     }
 
+    .chat-section {
+        height: 100vh;
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
     /* Container for chat users */
     .chat_userview {
-        height: calc(100vh - 80px);
-        /* Adjust based on the height of the .menu-icon and any other fixed elements */
-        /* overflow-y: auto; */
-        /* Enable vertical scrolling */
         background-color: #343a40;
-        padding: 10px;
     }
 
 /* Ensure the view_user div elements do not overflow */
-.view_user {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0;
-    /* height: 118px; */
-    align-items: center;
-    position: relative;
-}
+    .view_user {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+        /* height: 118px; */
+        align-items: center;
+        position: relative;
+    }
 
     /* Ensure the image in view_user scales properly */
     .view_user_img img {
@@ -100,25 +103,19 @@
         padding-right: 0;
     }
 
-    .chat-section {
-        background-color: #343a40;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
 
     .user_setting {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Vertically center align the flex items */
-    gap: 20px; /* Gap between inner_setting divs */
-    }
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Vertically center align the flex items */
+        gap: 20px; /* Gap between inner_setting divs */
+        }
 
     .inner_setting {
         display: flex;
         gap: 20px; /* Adjust the gap between the icon and the text */
         width: 100%;
-        padding-bottom: 10px; /* Add some padding at the bottom */
+        padding-bottom: 9px; /* Add some padding at the bottom */
         border-bottom-style: inset;
         border-bottom-color: white;
     }
@@ -149,16 +146,17 @@
         }
 
         .chat-section {
-            background-color: #343a40;
+            height: 100vh;
+            background-color: rgb(80, 1, 80);
             display: flex;
             flex-direction: row;
         }
 
         /* Container for chat users */
         .chat_userview {
-            height: calc(100vh - 80px);
+            /* height: calc(100vh - 80px); */
             background-color: black;
-            padding: 30px;
+            padding: 20px;
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;

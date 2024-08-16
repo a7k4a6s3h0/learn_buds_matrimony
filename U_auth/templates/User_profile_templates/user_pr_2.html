@@ -62,7 +62,7 @@
 
     /* Container for chat users */
     .chat_userview {
-        height: calc(100vh - 80px);
+        /* height: calc(100vh - 80px); */
         /* Adjust based on the height of the .menu-icon and any other fixed elements */
         /* overflow-y: auto; */
         /* Enable vertical scrolling */
@@ -70,25 +70,30 @@
         padding: 10px;
     }
 
-/* Ensure the view_user div elements do not overflow */
-.view_user {
-    display: flex;
-    flex-direction: column;
-    padding: 10px 0;
-    /* height: 118px; */
-    /* align-items: center; */
-    position: relative;
-}
+    /* Ensure the view_user div elements do not overflow */
+    .view_user {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 0;
+        /* height: 118px; */
+        /* align-items: center; */
+        position: relative;
+    }
+
+    .view_user_img{
+        display: flex;
+        gap: 8px;
+    }
 
     /* Ensure the image in view_user scales properly */
-    .view_user_img img {
+    .img_div img {
         width: 80px;
         height: 80px;
         border-radius: 50%;
     }
 
     .msg {
-        margin-left: 10px;
+        padding-top: 10px;
         color: white;
     }
 
@@ -122,54 +127,60 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
 
 
     @media (max-width: 576px) {
 
         .menu-icon {
-            flex-direction: column;
-            /* align-items: baseline; */
             background-color: black;
+            flex-direction: column;
+            gap: 0;
+            /* align-items: baseline; */
         }
 
         .chat-section {
-            background-color: #343a40;
+            /* background-color: #343a40; */
+            background-color: rgb(80, 1, 80);
             display: flex;
             flex-direction: row;
         }
 
         /* Container for chat users */
         .chat_userview {
-            height: calc(100vh - 80px);
+            /* height: auto; */
             background-color: black;
-            padding: 30px;
+            padding: 20px;
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
         }
 
-        .view_user_img img {
+        .img_div img {
             width: 55px;
             height: 55px;
             border-radius: 50%;
             align-items: center;
         }
 
-        .msg {
-            margin-left: 5px;
-            color: white;
-            font-size: 12px;
-            text-align: center;
-        }
-
-            /* Ensure the view_user div elements do not overflow */
+        /* Ensure the view_user div elements do not overflow */
         .view_user {
             display: flex;
             padding: 10px 0;
-            align-items: center;
+            /* align-items: center; */
         }
 
+
+        .msg {
+            padding-top: 10px;
+            color: white;
+            font-size: 12px;
+            /* text-align: center; */
+        }
+
+        
         .show_pic_in_lap {
             padding-top: 5px;
             
@@ -193,7 +204,7 @@
                     <i class='fas fa-angle-left' style='font-size:24px'></i>
                 </div>
                 <div class="nav-right">
-                    <div class="distance">My Profile</div>
+                    <div class="distance">Edit My Profile</div>
                 </div>
             </nav>
         </div>
@@ -212,15 +223,20 @@
                 <div class="view_user" style="border-top: inset; border-color:darkgray ;" id="user_imgs">
                     <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                     <div class="view_user_img">
+                        <div class="img_div">
                         <img class="img-fluid"
                             src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
                             alt="">
+                        </div>    
+                        <div class="msg">
+                            <span style="text-transform: capitalize;">Username</span><br>
+                            <span style="text-transform: capitalize;">hello how are you</span>
+                        </div>
                     </div>
-                    <div class="msg">
-                        <span style="text-transform: capitalize;">Username</span><br>
-                        <span style="text-transform: capitalize;">hello how are you</span>
+                    <div class="show_page_function_details pt-2 text-white">
                         <p>cfsdscsjcoccaydddddsdcksclccioscjscjsdcy</p>
                     </div>
+
 
                    
                     <!-- </a> -->
@@ -309,7 +325,7 @@
                       
                         <!-- Submit button -->
                          <div class="row">
-                        <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Sign in</button>
+                        <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Submit</button>
                          </div>
                         <!-- Register buttons -->
                       </form>

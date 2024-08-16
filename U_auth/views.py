@@ -42,6 +42,7 @@ def user_details_5(request):
 def user_details_6(request):
     return render(request, 'User_profile_templates/user_pr_6.html')
 
+
 def AuthPage(request):
     context = {
         'experance_level': ['Beginner', 'Intermediate', 'Expert'],
@@ -49,6 +50,8 @@ def AuthPage(request):
     }
     return render(request, 'auth/auth.html',context)
 
+# def demo_fun(request):
+#     return render(request, 'User_profile_templates/demo.html')
 
 def error_404(request):
     return render(request, 'Errors/404.html')

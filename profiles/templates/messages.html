@@ -8,6 +8,15 @@
 
 {% block style %}
 <style>
+
+    .couston_color{
+        background-color: rgb(33, 37, 41);
+    }
+
+    #style_row{
+        padding-top: 75px;
+    }
+
     /* Custom styles for the messaging interface */
     .navbar-custom {
         position: absolute;
@@ -155,7 +164,7 @@
 
     .chat-section {
         background-color: #343a40;
-        height: calc(100vh - 282px); /* Adjust this based on the header/footer height */
+        height: calc(100vh - 80px); /* Adjust this based on the header/footer height */
         display: flex;
         flex-direction: row;
     }
@@ -204,7 +213,7 @@
 
     .chat_userview {
         overflow-y: auto; /* Enable vertical scrolling for multiple chat users */
-        height: calc(100vh - 282px); /* Ensure height is dynamic based on viewport */
+        height: calc(100vh - 80px); /* Ensure height is dynamic based on viewport */
     }
 
     .chat_img img{
@@ -215,8 +224,18 @@
 
 
     @media (max-width: 576px) {
+
+        .couston_color{
+            background-color: rgb(80, 1, 80);
+        }
+
+        #style_row{
+            padding-top: 65px;
+        }
+
         .profile-cards-container {
             flex-direction: row;
+            padding: 0 0 10px;
         }
 
         .menu-icon {
@@ -228,6 +247,7 @@
             justify-content: flex-start;
             margin-top: 10px;
         }
+
 
         .chat-interaction {
             display: none;
@@ -254,8 +274,8 @@
 {% endblock header %}
 
 {% block content %}
-<div class="container-fluid bg-dark">
-    <div class="row" style="padding-top: 80px;">
+<div class="container-fluid couston_color">
+    <div class="row" id="style_row">
         <div class="col">
             <h3 class="match-message">Recent Messages</h3>
         </div>

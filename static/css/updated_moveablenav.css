@@ -1,7 +1,47 @@
-.menu-bar {
+/* Desktop Navbar */
+/* .menu-bar-desktop {
+    display: flex;
     position: fixed;
-    bottom: 115px;
-    right: 400px;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    gap: 15px;
+    align-items: center;
+
+} */
+
+
+.menu-bar-desktop {
+    display: flex;
+    position: fixed;
+    bottom: 268px;
+    width: 298px;
+    left: 490px;
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    gap: 15px;
+    align-items: center;
+    gap: 56px;
+}
+
+.menu-bar-desktop .menu-item {
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Mobile Navbar */
+.menu-bar-mobile {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
     width: 60px;
     height: 60px;
     background-color: #333;
@@ -27,11 +67,11 @@
 .menu-content {
     position: absolute;
     top: -120px;
-    left: -80px;
-    width: 200px;
+    left: -10px;
+    width: 95px;
     height: 200px;
     background-color: #333;
-    border-radius: 50%;
+    border-radius: 15%;
     display: none;
     justify-content: center;
     align-items: center;
@@ -40,29 +80,23 @@
     z-index: 1001;
 }
 
-.menu-item {
-    margin: 10px 0;
-    font-size: 30px;
-    color: white;
-}
-
 .menu-item i {
     transition: transform 0.3s;
 }
 
-.menu-bar.active .hamburger div:nth-child(1) {
+.menu-bar-mobile.active .hamburger div:nth-child(1) {
     transform: rotate(45deg) translate(5px, 5px);
 }
 
-.menu-bar.active .hamburger div:nth-child(2) {
+.menu-bar-mobile.active .hamburger div:nth-child(2) {
     opacity: 0;
 }
 
-.menu-bar.active .hamburger div:nth-child(3) {
+.menu-bar-mobile.active .hamburger div:nth-child(3) {
     transform: rotate(-45deg) translate(5px, -5px);
 }
 
-.menu-bar.active .menu-content {
+.menu-bar-mobile.active .menu-content {
     display: flex;
     animation: menu-open 0.3s ease-out forwards;
 }
@@ -76,9 +110,13 @@
     }
 }
 
-/* For responsive design */
+/* Responsive adjustments */
 @media screen and (max-width: 768px) {
-    .menu-bar {
+    .menu-bar-desktop {
+        display: none;
+    }
+
+    .menu-bar-mobile {
         bottom: 20px;
         right: 20px;
         width: 50px;
@@ -99,5 +137,11 @@
 
     .menu-item {
         font-size: 25px;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .menu-bar-mobile {
+        display: none;
     }
 }
