@@ -54,14 +54,20 @@
 
     /* Container for chat users */
     .chat_userview {
-        height: calc(100vh - 80px);
+        /* height: calc(100vh - 80px); */
         background-color: #343a40;
         padding: 10px;
         /* position: relative; */
         
     }
 
- 
+    .chat-section {
+        height: 100vh;
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
 
 
     /* Ensure the view_user div elements do not overflow */
@@ -93,12 +99,7 @@
         padding-right: 0;
     }
 
-    .chat-section {
-        background-color: #343a40;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-    }
+
 
 
     @media (max-width: 576px) {
@@ -110,8 +111,9 @@
         }
 
         .chat-section {
+            height: 100vh;
             position: relative;
-            background-color: #343a40;
+            background-color: rgb(80, 1, 80);
             display: flex;
             flex-direction: row;
         }
@@ -120,9 +122,9 @@
         .chat_userview {
             /* position: relative; */
             padding-bottom: 50px; /* Add padding to account for the button height */
-            height: calc(100vh - 80px);
+            /* height: calc(100vh - 80px); */
             background-color: black;
-            padding: 30px;
+            padding: 20px;
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
@@ -133,7 +135,7 @@
             margin-left: 5px;
             color: white;
             font-size: 12px;
-            text-align: center;
+            /* text-align: center; */
         }
 
             /* Ensure the view_user div elements do not overflow */
@@ -141,13 +143,6 @@
             display: flex;
             padding: 10px 0;
             align-items: center;
-        }
-
-        .button-container {
-            position: absolute;
-            /* bottom: 0; */
-            width: 100%;
-            padding-bottom: 10px; /* Optional: Adds some space at the bottom */
         }
     }
 </style>

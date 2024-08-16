@@ -115,6 +115,10 @@
         color: white;
     }
 
+    .footer_nav{
+        height: 70px;
+    }
+
 
     @media (max-width: 576px) {
         .profile-cards-container {
@@ -137,7 +141,7 @@
             height: calc(100vh - 80px); /* Adjust based on the height of the .menu-icon and any other fixed elements */
             overflow-y: auto; /* Enable vertical scrolling */
             background-color: black;
-            padding: 30px;
+            padding: 18px;
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
@@ -150,14 +154,18 @@
         }
 
         .cross_icon{
-            margin-left: 10px;
+            margin: auto;
             color: white;
         }
 
         .heart_icon{
-           padding-left: 15px;
+           padding-left: 0;
             color: white;
             font-size: 15px;
+        }
+
+        .footer_nav{
+            height: 95px;
         }
     }
 </style>
@@ -219,7 +227,9 @@
                 <!-- </a> -->
             </div>
             {% endfor %}
-            {% include "widget/moveable_navbar.html" %}
+            <div class="footer_nav">
+                {% include "widget/menu.html" %}
+            </div>
 
         </div>
     </div>
