@@ -1,7 +1,5 @@
 {% extends "base_files/base.html" %} 
 {% load custom_tags %} 
-{% block meta %}
-{%endblock meta %} 
 {% block title %}Privacy & Setting{% endblock title %} 
 {% block link %}{% endblock link %} 
 {% block style %}
@@ -71,15 +69,46 @@
   }
 
   .content_flex {
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    gap: 20px;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    gap: 10px;
     font-size: 20px;
     color: white;
     padding-bottom: 10px;
     padding-top: 10px;
     border-bottom-style: inset;
   }
+
+  .location_flex{
+    display: flex;
+
+  }
+
+  .inner_flex_1{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+
+  }
+
+
+  .inner_flex_2{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+  }
+
+  /* .second_row{
+    display: flex;
+    width: 500px;
+    justify-content: center;
+  } */
 
   .col-10.col-md-11 {
     padding-right: 0;
@@ -101,6 +130,8 @@
   /* Range Slider Styles */
   .slider-container {
     width: 300px;
+    padding-top: 15px;
+    /* margin-left: 100px; */
     position: relative;
   }
 
@@ -155,13 +186,14 @@
   .slider-values {
     display: flex;
     justify-content: space-between;
-    padding-top: 20px;
+    padding-top: 8px;
   }
 
   /* Multi-Selector Styles */
   .multi-selector-container {
+    color: black;
     width: 300px;
-    margin: 20px;
+    /* margin: 20px; */
     position: relative;
   }
 
@@ -175,16 +207,26 @@
     position: relative;
   }
 
+  .title_row_2{
+    display: none;
+  }
+
+  .right_row{
+    width: 300px;
+  }
+
   .selected-items {
-    margin-top: 10px;
-    padding: 10px;
+    /* width: 100%; */
+    /* margin-top: 10px; */
+    /* padding: 10px; */
     border: 1px solid #ccc;
     border-radius: 5px;
-    min-height: 50px;
+    height: 50px;
     background-color: #f9f9f9;
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+    overflow: auto;
   }
 
   .selected-item {
@@ -245,9 +287,10 @@
 
     /* Container for chat users */
     .chat_userview {
-      height: calc(100vh - 80px);
+      /* height: calc(100vh - 80px); */
+      height: 100%;
       background-color: black;
-      padding: 30px;
+      /* padding: 30px; */
       border-top-right-radius: 45px;
       border-top-left-radius: 45px;
       margin-top: 30px;
@@ -255,13 +298,55 @@
 
     .inner_flex {
       display: flex;
-      justify-content: space-between;
-      font-size: 12px;
+      /* justify-content: space-between; */
+      font-size: 20px;
       color: white;
       padding-bottom: 10px;
       padding-top: 10px;
       border-bottom-style: inset;
     }
+
+    .content_flex {
+        width: 100%;
+        display: flex;
+        /* flex-direction: column; */
+        /* align-items: center; */
+        gap: 10px;
+        font-size: 15px;
+        color: white;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-bottom-style: inset;
+        
+    }
+
+    .location_flex{
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .inner_flex_1{
+        display: none;
+    }
+
+    .title_row_2{
+        display: block;
+        padding-bottom: 5px;
+        font-size: 20px;
+    }
+
+    .inner_flex_2{
+        width: 100%;
+        margin-left: 30px;
+    }
+
+    .slider-container {
+        width: 300px;
+        padding-top: 15px;
+        /* margin-left: 100px; */
+        position: relative;
+    }    
 
     .button_reset button {
       display: flex;
@@ -301,50 +386,177 @@
           </div>
         </div>
 
-        <div class="content_flex">
-          <div class="first_row">
-            <label for="">Age Range</label><br />                                                 
-            <div class="slider-container">
-                <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
-                <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
-                <div class="slider-values">
-                    <span id="minValue">20</span> - <span id="maxValue">80</span>
-                </div>
-            </div>
-          </div>
-        </div>
 
         <div class="content_flex">
-          <div class="first_row"><label for="">Gender</label><br /></div>
-          <div class="second_row">
-            <select name="gender" id="gender" class="form-control">
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
+            <div class="inner_flex_1">
+
+                <div class="title_row">
+                <label for="">Age Range</label><br />                                                 
+                </div>
+                <div class="title_row">
+                <label for="">gender</label>
+                </div>
+
+                <div class="title_row">
+                    <label for="">location</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">Interest and hobbies</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">Education Level</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">Height</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">weight</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">religion</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">occupation</label>
+                 </div>
+
+            </div>
+
+            <div class="inner_flex_2">
+                <div class="second_row">
+                    <div class="title_row_2">
+                        <label for="">Age Range</label>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
+                        <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
+                        <div class="slider-values">
+                            <span id="minValue">20</span> - <span id="maxValue">80</span>
+                        </div>
+                    </div>                                          
+                </div>
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">Age Range</label>
+                        </div>
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                          </select>
+                    </div>
+
+                    <div>
+                        <div class="location_flex">
+                            <div class="title_row_2">
+                                <label for="">location</label>
+                            </div>
+                        <div class="multi-selector-container">
+                            <div class="multi-selector" onclick="toggleDropdown()">Select Location</div>
+                            <div class="location-dropdown">
+                                {% for i in 5|number_rangeobj%}
+                                <div class="location-item" onclick="selectLocation(this)">Location {{i}}</div>
+                                {% endfor %}
+                              </div>
+                        </div>
+                        <div class="selected-items" style="display: none;"></div>   
+
+                    </div>
+                    </div>
+
+                    <div class="fourth_row">
+                        <div class="location_flex">
+                            <div class="title_row_2">
+                                <label for="">hobbies & Habbits</label>
+                            </div>
+                            <div class="multi-selector-container">
+                                <div class="multi-selector" onclick="toggleDropdown()">Select Location</div>
+                                <div class="location-dropdown">
+                                    {% for i in 5|number_rangeobj%}
+                                    <div class="location-item" onclick="selectLocation(this)">Location {{i}}</div>
+                                    {% endfor %}
+                                  </div>
+                            </div>
+                            <div class="selected-items" style="display: none;"></div>   
+    
+                        </div>
+                    </div>
+
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">Education level</label>
+                        </div>
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="">Select Education</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                          </select>
+                    </div>
+
+
+                    <div class="first_row">
+                        <div class="title_row_2">
+                            <label for="">height</label>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
+                            <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
+                            <div class="slider-values">
+                                <span id="minValue">20</span> - <span id="maxValue">80</span>
+                            </div>
+                        </div>                                          
+                    </div>
+
+                    <div class="first_row">
+                        <div class="title_row_2">
+                            <label for="">weight</label>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
+                            <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
+                            <div class="slider-values">
+                                <span id="minValue">20</span> - <span id="maxValue">80</span>
+                            </div>
+                        </div>                                          
+                    </div>
+                    
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">religion</label>
+                        </div>
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="">Select religion</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                          </select>
+                    </div>
+
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">occupation</label>
+                        </div>
+                        <select name="gender" id="gender" class="form-control">
+                            <option value="">Select occupation</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                          </select>
+                    </div>
+    
+            </div>
+
         </div>
 
-        <div class="content_flex">
-          <div class="first_row"><label for="">Location</label><br /></div>
-          <div class="second_row">
-            <div class="multi-selector-container">
-                <div class="multi-selector" onclick="toggleDropdown()">Select Location</div>
-                <div class="location-dropdown">
-                    <div class="location-item" onclick="selectLocation(this)">Location 1</div>
-                    <div class="location-item" onclick="selectLocation(this)">Location 2</div>
-                    <div class="location-item" onclick="selectLocation(this)">Location 3</div>
-                    <div class="location-item" onclick="selectLocation(this)">Location 4</div>
-                </div>
-                <div class="selected-items"></div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
-    <!-- Other Column (Empty) -->
-    <div class="col-md-6"></div>
   </div>
 </div>
 {% endblock content %}
@@ -373,6 +585,7 @@
 
     function selectLocation(element) {
         const selectedItemsContainer = document.querySelector('.selected-items');
+        selectedItemsContainer.style.display = 'block'
         const location = element.innerText;
 
         // Create a selected item element
@@ -386,6 +599,10 @@
         removeIcon.onclick = function () {
             selectedItemsContainer.removeChild(selectedItem);
             element.style.display = 'block'; // Show the location back in the dropdown
+            if (selectedItemsContainer.children.length === 0) {
+                console.log('The div is empty.');
+                selectedItemsContainer.style.display = 'none'
+            } 
         };
 
         selectedItem.appendChild(removeIcon);
@@ -394,5 +611,15 @@
         // Hide the selected location from the dropdown
         element.style.display = 'none';
     }
+
+    // Close dropdown when clicking outside of it
+    window.addEventListener('click', function (event) {
+        const dropdown = document.querySelector('.location-dropdown');
+        const multiSelector = document.querySelector('.multi-selector');
+        if (!multiSelector.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('open');
+        }
+    });
+
 </script>
 {% endblock scripts %}

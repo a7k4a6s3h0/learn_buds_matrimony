@@ -2,7 +2,7 @@
 {% load custom_tags %}
 {% block meta %}{% endblock meta %}
 
-{% block title %}accept{% endblock title %}
+{% block title %}contacted{% endblock title %}
 
 {% block link %}{% endblock link %}
 
@@ -104,27 +104,24 @@
     }
 
 
-    .volume_icon{
+    .cross_icon{
         margin-left: 560px;
         color: white;
-
     }
 
-    .volume_icon span{
-        font-size: 25px;
-    }
-    .video_icon span{
-        font-size: 25px;
-    }
-    .video_icon{
-        color: white;
+
+    .heart_icon{
         padding-left: 25px;
+        color: white;
     }
 
     .footer_nav{
         height: 70px;
     }
 
+    @media (min-width: 768px){
+
+    }
 
     @media (max-width: 576px) {
         .profile-cards-container {
@@ -153,31 +150,21 @@
             margin-top: 30px;
         }
 
+
         .msg {
             margin-left: 10px;
             color: white;
-            font-size: 10px;
         }
 
-        .volume_icon{
-            margin-left: 60px;
+        .cross_icon{
+            margin: auto;
             color: white;
-
         }
-        .video_icon{
+
+        .heart_icon{
+           padding-left: 15px;
             color: white;
-            padding-left: 15px;
-        }
-
-        .volume_icon span{
             font-size: 15px;
-        }
-
-        .video_icon span{
-            font-size: 15px;
-        }
-        .phone_icone i{
-            font-size: 10px;
         }
 
         .footer_nav{
@@ -196,7 +183,7 @@
                     <i class='fas fa-angle-left' style='font-size:24px'></i>
                 </div>
                 <div class="nav-right">
-                    <div class="distance">Accept</div>
+                    <div class="distance">contacted</div>
                 </div>
             </nav>
         </div>
@@ -232,13 +219,13 @@
                 </div>
                 <div class="msg">
                     <span style="text-transform: capitalize;">Username</span><br>
-                    <span class="phone_icone" ><i class="fa fa-phone"></i>&nbsp;Today&nbsp;12.30&nbsp;PM</span>
+                    <span style="text-transform: capitalize;">hello how are you..........</span>
                 </div>
-                <div class="volume_icon">
-                    <span><i class="fa-solid fa-phone-volume"></i></span>
+                <div class="cross_icon">
+                    <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
                 </div>
-                <div class="video_icon">
-                    <span><i class="fa-solid fa-video"></i></span>
+                <div class="heart_icon">
+                    <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
                 </div>
                 <!-- </a> -->
             </div>

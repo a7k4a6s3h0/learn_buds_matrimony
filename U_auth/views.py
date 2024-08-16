@@ -50,6 +50,8 @@ def AuthPage(request):
     }
     return render(request, 'auth/auth.html',context)
 
+# def demo_fun(request):
+#     return render(request, 'User_profile_templates/demo.html')
 
 def error_404(request):
     return render(request, 'Errors/404.html')

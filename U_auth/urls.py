@@ -1,7 +1,4 @@
 from django.urls import path
-from U_auth.views import user_details_3
-from U_auth.views import error_404
-from U_auth.views import error_403
 from . import views
 
 
@@ -19,10 +16,7 @@ urlpatterns = [
     path('error_404/', views.error_404,name="error_404"),
     path('error_403/', views.error_403,name="error_403"),
 
-   
-
-  
-
+    # path('demo/', views.demo_fun,name="demo"),
 
 
     path('',views.AuthPage,name="auth"),

@@ -103,7 +103,9 @@
         justify-content: center;
     }
 
-
+    .footer_nav{
+        height: 70px;
+    }
 
 
     @media (max-width: 576px) {
@@ -131,6 +133,10 @@
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
+        }
+
+        .footer_nav{
+            height: 95px;
         }
 
     }
@@ -188,7 +194,10 @@
                 <!-- </a> -->
             </div>
             {% endfor %}
-            {% include "widget/moveable_navbar.html" %}
+            <div class="footer_nav">
+
+                {% include "widget/menu.html" %}
+            </div>
 
         </div>
     </div>

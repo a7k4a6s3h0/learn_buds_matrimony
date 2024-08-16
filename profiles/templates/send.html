@@ -107,6 +107,10 @@
         margin-left: 620px;
     }
 
+    .footer_nav{
+        height: 70px;
+    }
+
 
     @media (max-width: 576px) {
         .profile-cards-container {
@@ -160,6 +164,9 @@
         .cross_icon{
             margin-left: 70px;
             color: white;
+        }
+        .footer_nav{
+            height: 95px;
         }
     }
 </style>
@@ -219,8 +226,10 @@
             </div>
             {% endfor %}
 
-            {% include "widget/moveable_navbar.html" %}
+            <div class="footer_nav">
 
+            {% include "widget/menu.html" %}
+        </div>
         </div>
     </div>
 </div>
