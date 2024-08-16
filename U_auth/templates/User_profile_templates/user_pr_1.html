@@ -69,7 +69,7 @@
     }
 
     .profile-container {
-        background-color: beige;
+        background-color: rgb(245, 245, 239);
         width: 50%;
         display: flex;
         padding: 20px;
@@ -93,21 +93,24 @@
 
     .but_1 {
         width: 100%;
-        background-color: antiquewhite;
+        background-color: white;
+        box-shadow: 0px 0px 2px 2px rgb(235, 228, 228);
         height: 50px;
         border-radius: 30px;
         border-style: inset;
-        border-color: black;
+        border-color: rgb(236, 229, 229);
         padding-top: 10px;
     }
 
     .but_2 {
         width: 100%;
         height: 50px;
+        background-color: pink;
+        box-shadow: 0px 0px 2px 2px rgb(235, 232, 232);
         border-style: none;
         border-radius: 30px;
         border-style: inset;
-        border-color: black;
+        border-color: rgb(223, 217, 217);
         padding-top: 10px;
     }
 
@@ -280,21 +283,24 @@
 
     .but_1 {
         width:200px;
-        background-color: antiquewhite;
+        background-color: white;
+        box-shadow: 0px 0px 2px 2px rgb(235, 228, 228);
         height: 40px;
         border-radius: 30px;
         border-style: inset;
-        border-color: black;
+        border-color: rgb(223, 217, 217);
         padding-top: 5px;
     }
 
     .but_2 {
         width:200px;
         height: 40px;
+        background-color: pink;
+        box-shadow: 0px 0px 2px 2px rgb(235, 232, 232);
         border-style: none;
         border-radius: 30px;
         border-style: inset;
-        border-color: black;
+        border-color: rgb(223, 217, 217);
         padding-top: 5px;
     }
 
@@ -374,11 +380,11 @@
         <div class="user_details">
 
             <div class="nav_button">
-                <div class="but_1">
+                <div class="but_1" id="button_1">
                     <a onclick="show_about()" href="#">About</a>
                 </div>
 
-                <div class="but_2">
+                <div class="but_2" id="button_2">
                     <a onclick="show_address()" href="#">Contact</a>
                 </div>
             </div>
@@ -431,16 +437,23 @@ document.addEventListener('DOMContentLoaded', function () {
     var x = document.getElementById("show_details");
     var z = document.getElementById("interest_section");
     var y = document.getElementById("address");
-
+    but_on_2 = document.getElementById('button_2');
+    but_on_1 = document.getElementById('button_1');
     function show_address() {
+        
+        but_on_1.style.backgroundColor = 'white';
+        but_on_2.style.backgroundColor = 'pink';
 
         x.style.display = "none";
         z.style.display = "none";
         y.style.display = "block";
-
+        
     }
-
+    
     function show_about(){
+        but_on_1.style.backgroundColor = 'pink';
+        but_on_2.style.backgroundColor = 'white';
+
         x.style.display = "block";
         z.style.display = "block";
         y.style.display = "none";
