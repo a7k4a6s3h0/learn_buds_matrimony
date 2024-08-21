@@ -9,7 +9,6 @@
 
 {% block link %}
 <link rel="stylesheet" href="{% static 'css/updated_moveablenav.css' %}">
-
 {% endblock link %}
 
 {% block style %}
@@ -234,7 +233,7 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            /* height: 100%; */
+            height: auto;
         }
 
         .carousel-item {
@@ -282,33 +281,36 @@
         }
 
 
-    .but_1 {
-        width:200px;
-        background-color: rgb(238, 237, 235);
-        box-shadow: 0px 0px 2px 2px rgb(235, 232, 232);
-        height: 40px;
-        border-radius: 30px;
-        border-style: inset;
-        border-color: rgb(223, 217, 217);
-        padding-top: 5px;
-    }
+        .but_1 {
+            width:200px;
+            background-color: rgb(238, 237, 235);
+            box-shadow: 0px 0px 2px 2px rgb(235, 232, 232);
+            height: 40px;
+            border-radius: 30px;
+            border-style: inset;
+            border-color: rgb(223, 217, 217);
+            padding-top: 5px;
+        }
 
-    .but_2 {
-        width:200px;
-        height: 40px;
-        background-color: pink;
-        box-shadow: 0px 0px 2px 2px rgb(235, 232, 232);
-        border-style: none;
-        border-radius: 30px;
-        border-style: inset;
-        border-color: rgb(223, 217, 217);
-        padding-top: 5px;
-    }
+        .but_2 {
+            width:200px;
+            height: 40px;
+            background-color: pink;
+            box-shadow: 0px 0px 2px 2px rgb(235, 232, 232);
+            border-style: none;
+            border-radius: 30px;
+            border-style: inset;
+            border-color: rgb(223, 217, 217);
+            padding-top: 5px;
+        }
 
 
         .user_details .btn {
             margin-bottom: 5px;
         }
+
+
+
     }
 
 </style>
@@ -359,8 +361,7 @@
                 </button>
             </div>
 
-            {% include "widget/updated_moveablenav.html" %}
-
+            
             <div class="profile-name">
                 <label>
                     <h2>User Name</h2>
@@ -374,8 +375,7 @@
                     Success
                 </button>
             </div>
-
-
+                {% include "widget/updated_moveablenav.html" %}
         </div>
 
         <div class="user_details">

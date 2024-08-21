@@ -1,27 +1,10 @@
-/* Desktop Navbar */
-/* .menu-bar-desktop {
-    display: flex;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #333;
-    border-radius: 10px;
-    padding: 10px;
-    z-index: 1000;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
-    gap: 15px;
-    align-items: center;
-
-} */
-
 
 .menu-bar-desktop {
     display: flex;
-    position: fixed;
-    bottom: 268px;
-    width: 298px;
-    left: 490px;
-    background-color: #333;
+    position: absolute;
+    width: 300px;
+    top: 325px;
+    background-color: #a33b78;
     border-radius: 10px;
     padding: 10px;
     z-index: 1000;
