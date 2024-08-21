@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'profiles',
     'U_messages',
     'subscription',
+    'matrimony_admin',
 ]
 
 MIDDLEWARE = [
