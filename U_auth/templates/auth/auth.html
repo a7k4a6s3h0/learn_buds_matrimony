@@ -156,6 +156,10 @@
         myModal.show();
         
     }
+    function show_restpass(){
+        var myModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+        myModal.show();
+    }
     function hide_signup(){
         var X = document.getElementById('sign');
         X.style.display = 'none';
@@ -170,10 +174,23 @@
 
             // Redirect to the constructed URL
             window.location.href = redirectURL;
-            show_login()
             console.log("login worked..!!")
         });
 
+    }
+    function reload_restpass(){
+        var resetpass = document.getElementById('resetPasswordModal');
+        resetpass.addEventListener('hidden.bs.modal', function () {
+            // Reset the URL without reloading the page
+            // history.replaceState(null, null, window.location.pathname);
+            // Redirect to the specified URL
+            var baseURL = window.location.origin;
+            var redirectURL = baseURL + '/auth/';
+
+            // Redirect to the constructed URL
+            window.location.href = redirectURL;
+            console.log("login worked..!!")
+        });
     }
     {% if show_signup_modal %}
     show_signup()
@@ -184,6 +201,11 @@
     hide_signup()
     {% endif %}
 
+
+    {% if show_resetPass_modal %}
+    show_restpass()
+    reload_restpass()
+    {% endif %}
 
     {% if messages %}    
         {% for message in messages %}

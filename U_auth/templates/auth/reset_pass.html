@@ -19,7 +19,7 @@
                 </form>
             </div>
 
-            {% if form.errors %}
+            {% if form.errors and show_resetPass_modal%}
                 <div class="alert alert-danger" role="alert">
                     {% for field, errors in form.errors.items %}
                         {% if field and field != '__all__' %}
