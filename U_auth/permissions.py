@@ -1,3 +1,4 @@
+import U_auth.permissions
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -23,3 +24,11 @@ class RedirectAuthenticatedUserMixin(UserPassesTestMixin):
     def handle_no_permission(self):
         # If the user is authenticated and tries to access the page like login or signup, redirect them
         return redirect(reverse_lazy('home'))  # Redirect to home page or any other page
+    
+class RedirectNotAuthenticatedUserMixin(UserPassesTestMixin):
+    def test_func(self):
+        # This will return False if the user is not authenticated, blocking access to the view.
+        return self.request.user.is_authenticated
+    
+    def handle_no_permission(self):
+        return redirect(reverse_lazy('auth_page'))
