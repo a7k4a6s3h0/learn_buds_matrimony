@@ -1,0 +1,52 @@
+<!-- Forgot Password Modal -->
+<div class="modal fade" style="backdrop-filter: blur(10px);" id="resetPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'pass_reset' %}" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="current_password">Email/Phone</label>
+                        <input type="text" name="email_or_phone"  class="form-control" placeholder="Enter Email or Phone Number" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100">Reset Password</button>
+                </form>
+            </div>
+
+            {% comment %} {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for field, errors in form.errors.items %}
+                        <div>
+                            {{ field.label_tag }}: {{ errors|join:', ' }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %} {% endcomment %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <div>
+                                {{ field.label_tag }}: {{ field.errors|join:', ' }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            
+            <div class="modal-footer">
+                <p class="text-center w-100 mb-0">
+                    <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginModal">Back to Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
