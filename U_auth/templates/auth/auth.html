@@ -51,32 +51,25 @@
                     <button type="submit" class="btn btn-dark w-100">Log In</button>
                 </form>
             </div>
-             {% if form.errors %}
+            {% if form.errors and show_login_modal%}
                 <div class="alert alert-danger" role="alert">
                     {% for field, errors in form.errors.items %}
+                        {% if field and field != '__all__' %}
                         <div>
-                            {{field.label_tag }}: {{ errors|join:', ' }}
+                            {{field }}: {{ errors|join:', ' }}
                         </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% comment %} {% if form.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {% for field in form %}
-                        {% if field.errors %}
-                            <div>
-                                {{ field.label_tag }}: {{ field.errors|join:', ' }}
-                            </div>
+                        {% else %}
+                        <div>
+                            {{ errors|join:', ' }}
+                        </div>
                         {% endif %}
                     {% endfor %}
                 </div>
-            {% endif %} {% endcomment %}
-                    
+            {% endif %}        
             <div class="modal-footer">
                 <p class="text-center w-100 mb-0">
                     <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">Reset password?</a><br>
-                    Don’t have an account? <a href="{% url 'auth_page' %}" data-bs-toggle="modal" data-bs-target="#signupModal"
+                    Don’t have an account? <a id="sign" href="#" data-bs-toggle="modal" data-bs-target="#signupModal"
                         class="text-decoration-none">Sign Up</a>
                 </p>
             </div>
@@ -150,6 +143,7 @@
         $('#PersonalModal').modal('hide');
     });
     
+    
     function show_signup(){
         // Show the modal using Bootstrap 5's Modal API
         var myModal = new bootstrap.Modal(document.getElementById('signupModal'));
@@ -162,14 +156,34 @@
         myModal.show();
         
     }
-    
+    function hide_signup(){
+        var X = document.getElementById('sign');
+        X.style.display = 'none';
+        var loginModal = document.getElementById('loginModal');
+        // var signupModal = document.getElementById('signupModal');
+        loginModal.addEventListener('hidden.bs.modal', function () {
+            // Reset the URL without reloading the page
+            // history.replaceState(null, null, window.location.pathname);
+            // Redirect to the specified URL
+            var baseURL = window.location.origin;
+            var redirectURL = baseURL + '/auth/';
+
+            // Redirect to the constructed URL
+            window.location.href = redirectURL;
+            show_login()
+            console.log("login worked..!!")
+        });
+
+    }
     {% if show_signup_modal %}
     show_signup()
     {% endif %}
 
     {% if show_login_modal %}
     show_login()
+    hide_signup()
     {% endif %}
+
 
     {% if messages %}    
         {% for message in messages %}
