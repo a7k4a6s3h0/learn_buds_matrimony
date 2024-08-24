@@ -297,7 +297,8 @@ class ResetPassword(RedirectAuthenticatedUserMixin, FormView):
             # Handle the case where the user does not exist
             messages.error(self.request, "User doesn't exist..!!")
             # Render the form with errors without redirecting
-            return self.form_invalid(form)
+            # return self.form_invalid(form)
+            return self.render_to_response(self.get_context_data(form=form, show_resetPass_modal=True))
 
     def get_success_url(self):
         # Store context data in the session
