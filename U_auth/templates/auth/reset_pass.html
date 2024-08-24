@@ -19,17 +19,23 @@
                 </form>
             </div>
 
-            {% comment %} {% if form.errors %}
+            {% if form.errors %}
                 <div class="alert alert-danger" role="alert">
                     {% for field, errors in form.errors.items %}
-                        <div>
-                            {{ field.label_tag }}: {{ errors|join:', ' }}
-                        </div>
+                        {% if field and field != '__all__' %}
+                            <div>
+                                {{field }}: {{ errors|join:', ' }}
+                            </div>
+                            {% else %}
+                                <div>
+                                    {{ errors|join:', ' }}
+                                </div>
+                        {%endif%}   
                     {% endfor %}
-                </div>
-            {% endif %} {% endcomment %}
+                 </div>
+            {% endif %}
 
-            {% if form.errors %}
+            {% comment %} {% if form.errors %}
                 <div class="alert alert-danger" role="alert">
                     {% for field in form %}
                         {% if field.errors %}
@@ -39,7 +45,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-            {% endif %}
+            {% endif %} {% endcomment %}
 
             
             <div class="modal-footer">
