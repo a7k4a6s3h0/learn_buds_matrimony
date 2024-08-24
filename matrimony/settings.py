@@ -75,7 +75,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'matrimony.wsgi.application'
-
+AUTH_USER_MODEL = "U_auth.costume_user"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
