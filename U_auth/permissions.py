@@ -27,8 +27,9 @@ class RedirectAuthenticatedUserMixin(UserPassesTestMixin):
     
 class RedirectNotAuthenticatedUserMixin(UserPassesTestMixin):
     def test_func(self):
-        # This will return False if the user is not authenticated, blocking access to the view.
+        # This will return True if the user is not authenticated, blocking access to the view.
         return self.request.user.is_authenticated
     
     def handle_no_permission(self):
+        # If the user is not authenticated and tries to access the authendication need pages like home or signup, redirect them
         return redirect(reverse_lazy('auth_page'))
