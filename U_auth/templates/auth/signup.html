@@ -15,12 +15,18 @@
                     {% include "widget/input.html" with field=form.password label='Password' %}
                     {% include "widget/input.html" with field=form.confirm_password label='Confirm Password' %}
                     
-                    {% if form.errors %}
+                    {% if form.errors and show_signup_modal%}
                         <div class="alert alert-danger" role="alert">
                             {% for field, errors in form.errors.items %}
-                                <div>
-                                    {{field.label_tag }}: {{ errors|join:', ' }}
-                                </div>
+                                {% if field and field != '__all__' %}
+                                    <div>
+                                        {{field }}: {{ errors|join:', ' }}
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        {{ errors|join:', ' }}
+                                    </div>
+                                {%endif%}    
                             {% endfor %}
                         </div>
                     {% endif %}
@@ -38,15 +44,11 @@
                     {% endif %} {% endcomment %}
                     
                     <!-- auth/auth.html -->
-                    
-
-
-
 
                     <button type="submit" class="btn btn-dark w-100">Register</button>
                     <button type="button" class="btn btn-secondary w-100">Social Media Login</button>
                     <div class="login-link text-center mt-3">
-                        <p>Already have an account? <a href="#">Log In</a></p>
+                        <p>Already have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" >Log In</a></p>
                     </div>
                 </form>
             </div>

@@ -197,9 +197,18 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
     
     def get_success_url(self):
         # Remove from session
-        self.request.session.pop('purpose', None)   # Retrieve purpose from session
-        # Redirect to a success URL after form submission
-        return reverse_lazy(self.get_url(self.purpose))
+        self.request.session.pop('purpose', None)  # Remove purpose from session
+        
+        # Get the URL name from the purpose
+        url_name = self.get_url(self.purpose)
+        
+        if url_name:
+            # If the URL name is valid, reverse it
+            return reverse_lazy(url_name)
+        else:
+            # If the URL name is None, redirect to a default page or raise an error
+            messages.error(self.request, "Unable to determine the redirect URL. Please try again.")
+            return reverse_lazy('auth_page')
     
 class LoginView(RedirectAuthenticatedUserMixin, FormView):
 
