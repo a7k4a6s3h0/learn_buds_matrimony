@@ -16,8 +16,15 @@ urlpatterns = [
     path('error_404/', views.error_404,name="error_404"),
     path('error_403/', views.error_403,name="error_403"),
 
-    # path('demo/', views.demo_fun,name="demo"),
 
+    path('', views.SignupView.as_view(), name='auth_page'),
+    path('login/', views.LoginView.as_view(), name='login'),
 
-    path('',views.AuthPage,name="auth"),
+    
+    path('otp/',views.CheckOTPView.as_view(),name="check_otp"),
+    path('logout/',views.UserLogout.as_view(),name="logout"),
+
+    path('forgot_password/',views.ForgotPassword.as_view(),name="forgot_password"),
+    path('pass_reset/',views.ResetPassword.as_view(),name="pass_reset"),
+    path('pass_reset_2/',views.ResetPassword_2.as_view(),name="pass_reset_2"),
 ]
