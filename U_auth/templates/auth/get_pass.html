@@ -60,14 +60,20 @@
                         </div>
                     </div>
                     {% if form.errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {% for field, errors in form.errors.items %}
-                            <div>
-                                {{field.label_tag }}: {{ errors|join:', ' }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for field, errors in form.errors.items %}
+                                {% if field and field != '__all__' %}
+                                    <div>
+                                        {{field }}: {{ errors|join:', ' }}
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        {{ errors|join:', ' }}
+                                    </div>
+                                {%endif%}   
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
