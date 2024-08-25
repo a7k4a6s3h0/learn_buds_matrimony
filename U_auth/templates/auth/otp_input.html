@@ -92,7 +92,7 @@
                     </button>
                     </form>
                     <p class="resend text-muted mb-0">
-                        Didn't receive the code? <a href="#">Request again</a>
+                        Didn't receive the code? <a href="{% url 'resend' %}">Request again</a>
                     </p>
                 </div>
                 {% if form.errors %}
