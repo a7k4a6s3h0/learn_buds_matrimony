@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {% block admin_meta %}
+        {% endblock admin_meta %}
+        <title>
+            {% block admin_title %}
+                My Site
+            {% endblock admin_title %}
+        </title>
+        <!-- FONT AWESOME -->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+              rel="stylesheet" />
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Abel&family=Aldrich&display=swap"
+              rel="stylesheet">
+        <!-- MDB CSS (Optional, if needed for Material Design Bootstrap components) -->
+        <!-- <link href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.19.0/css/mdb.min.css"
+       rel="stylesheet">-->
+        <!-- MDB -->
+        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css"
+       rel="stylesheet" /> -->
+        <!-- Include custom CSS files -->
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/home.css' %}">
+        <link rel="stylesheet" href="{% static 'css/qualification.css' %}">
+        {% block admin_link %}
+        {% endblock admin_link %}
+        {% block admin_style %}
+        {% endblock admin_style %}
+    </head>
+    <body>
+        <header>
+            {% block admin_header %}
+            {% endblock admin_header %}
+        </header>
+        <main>
+            <div class="row gap-0 gx-0 sidebar-flex vh-100 ">
+                <div class="col-1 sidebar">
+                    {% include "./admin_nav.html" %}
+                </div>
+                <div class="col bg-body-secondary">
+                    <nav class="navbar p-0 navbar-expand-lg bg-body-tertiary">
+                        <div class="container no-flex-warp">
+                            <button id="sidebarToggle" class="btn d-md-none">
+                                <i class="bi bi-list"></i>
+                            </button>
+                            <form class="d-flex mt-2 search me-auto" role="search">
+                                <div class="input-group  mb-3">
+                                    <span class="input-group-text border-end-0" id="basic-addon1"><i class="bi bi-search"></i></span>
+                                    <input type="text"
+                                           class="form-control search bg-body-tertiary border-start-0"
+                                           placeholder="search"
+                                           aria-label="search"
+                                           aria-describedby="basic-addon1">
+                                </div>
+                            </form>
+                            <ul class="navbar-nav custom-nav ms-auto d-flex align-items-center">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <img src="{% static 'images/moon.svg' %}"
+                                             alt="moon"
+                                             width="25"
+                                             height="25">
+                                    </a>
+                                </li>
+                                <li class="nav-item mx-3">
+                                    <a class="nav-link" href="#">
+                                        <img src="{% static 'images/bell.svg' %}"
+                                             alt="bell"
+                                             width="25"
+                                             height="25">
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <img class="rounded-circle"
+                                             src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                                             alt="user-profile"
+                                             height="25"
+                                             width="25">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <div class="content">
+                        {% block admin_content %}
+                        {% endblock admin_content %}
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            {% block admin_footer %}
+            {% endblock admin_footer %}
+        </footer>
+        <!-- jQuery (required for jQuery-based methods) -->
+        <script src="https://code.jquery.com/jquery-3.6.1.js"
+                integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+                crossorigin="anonymous"></script>
+        <!-- Popper and Bootstrap JS -->
+        <!-- Popper and Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+        <!-- MDB JS (Optional, if needed for Material Design Bootstrap components) -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.19.0/js/mdb.min.js"></script> -->
+    </body>
+    {% block admin_scripts %}
+    {% endblock admin_scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const sidebarToggle = document.getElementById('sidebarToggle');
+          const sidebar = document.querySelector('.sidebar');
+      
+          sidebarToggle.addEventListener('click', function () {
+            sidebar.classList.toggle('show');
+          });
+        });
+    </script>
+</html>
