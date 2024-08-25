@@ -1,7 +1,7 @@
-{% extends "admin_base.html" %}
+{% extends "base_files/admin_base.html" %}
+{% load static %}
 {% block admin_link %}
-<link rel="stylesheet" href="{% static 'main/home.css' %}">
-
+    <link rel="stylesheet" href="{% static 'main/home.css' %}">
 {% endblock admin_link %}
-
-{% block admin_content %}{% endblock admin_content %}
+{% block admin_content %}
+{% endblock admin_content %}
