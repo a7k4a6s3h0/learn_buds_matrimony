@@ -32,4 +32,5 @@ class RedirectNotAuthenticatedUserMixin(UserPassesTestMixin):
     
     def handle_no_permission(self):
         # If the user is not authenticated and tries to access the authendication need pages like home or signup, redirect them
+        print(self.request.user,"in per..")
         return redirect(reverse_lazy('auth_page'))
