@@ -119,7 +119,7 @@ class SignupView(RedirectAuthenticatedUserMixin, FormView):
             # Generate OTP after the user is created
             otp_code = generate_otp(user)
             print(f"Generated OTP: {otp_code}")  # Debugging
-
+            self.request.session['user'] = user.email
             # Add a message to the context that OTP was generated successfully
             messages.success(self.request, "OTP generated successfully.")
 
@@ -142,16 +142,17 @@ class SignupView(RedirectAuthenticatedUserMixin, FormView):
         messages.success(self.request, "For user verification..!!")
         return reverse('check_otp')
     
-
+# code need to change remember
 class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
+    purpose_1 : str = ''
     template_name = 'auth/otp_input.html'  # The template to render
     form_class = GenerateOTP
-    purpose = None
+
 
     def get_url(self, purpose):
         url_dict = {
             'newuser_verification':'home',
-            'pass_verification':'login',
+            'pass_verification':'auth_page',
             'reset_pass_verification': 'pass_reset_2'
         }
         return url_dict.get(purpose, None)
@@ -163,10 +164,11 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
         return context
 
     # If no request purpose is found, redirect to the login page (or any other page)
-    def get(self, request: HttpRequest, *args: str, **kwargs: reverse_lazy) -> HttpResponse:
+    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
 
-        self.purpose = self.request.session.get('purpose', None)   # Retrieve purpose from session
-        if not self.purpose:
+        self.purpose_1 = self.request.session.get('purpose', None)   # Retrieve purpose from session
+        
+        if not self.purpose_1:
             # If no purpose is found, redirect to the login page (or any other page)
             messages.error(self.request, "Unauthorized access. Please try again.")
             return redirect(reverse('auth_page'))
@@ -181,11 +183,15 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
                             form.cleaned_data['digit3'],
                             form.cleaned_data['digit4']])  
         
+        # Retrieve the purpose from the session
+        purpose = self.request.session.get('purpose', None)
         boolen, msg, = validate_otp(User_otp_code)
         if boolen:
             # create session for user
             current_user = OTP.objects.get(otp_code=User_otp_code)
-            login(self.request, current_user.user)
+            if purpose == 'newuser_verification':
+                print("in session creation")
+                login(self.request, current_user.user)
             # OTP is valid
             # messages.success(self.request, msg)
             return super().form_valid(form)
@@ -196,12 +202,12 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
 
     
     def get_success_url(self):
-        # Remove from session
-        self.request.session.pop('purpose', None)  # Remove purpose from session
         
+        purpose = self.request.session.get('purpose', None)  # Remove purpose from session
+
         # Get the URL name from the purpose
-        url_name = self.get_url(self.purpose)
-        
+        url_name = self.get_url(purpose)
+
         if url_name:
             # If the URL name is valid, reverse it
             return reverse_lazy(url_name)
@@ -209,7 +215,52 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
             # If the URL name is None, redirect to a default page or raise an error
             messages.error(self.request, "Unable to determine the redirect URL. Please try again.")
             return reverse_lazy('auth_page')
-    
+
+
+class ResendOTPView(FormView):
+    template_name = 'auth/otp_input.html'
+    # success_url = reverse_lazy('check_otp')  # URL to redirect to after successful OTP generation
+
+    # Define a dummy form class if your view requires a form but you don't need any input
+    class DummyForm(forms.Form):
+        pass
+
+    form_class = DummyForm  # Specify a form class even if it's a dummy one
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Retrieve context data from the session
+        context['purpose'] = self.request.session.get('purpose', None)
+        return context
+
+
+    def get(self, request, *args, **kwargs):
+        # Retrieve the purpose and user email from the session
+        purpose = self.request.session.get('purpose')
+        user_email = self.request.session.get('user')
+
+        if not purpose:
+            # If no purpose is found, redirect to the login page (or any other page)
+            messages.error(self.request, "No purpose found. Please try again.")
+            return redirect(reverse('auth_page'))
+        elif not user_email:
+            # If no user email is found, redirect to the login page (or any other page)
+            messages.error(self.request, "No user email found. Please try again.")
+            return redirect(reverse('auth_page'))
+
+        try:
+            current_user = costume_user.objects.get(email=user_email)  # Ensure you're using the correct model
+            # Generate OTP after the user is found
+            otp_code = generate_otp(current_user)
+            print(f"Generated OTP: {otp_code}")  # Debugging
+            messages.success(self.request, "Resend OTP generated successfully")
+            return super().get(request, *args, **kwargs)  # Call the parent's get method to render the form
+
+        except costume_user.DoesNotExist:
+            # If the user does not exist, redirect to the login page (or any other page)
+            messages.error(self.request, "User does not exist. Please try again.")
+            return redirect(reverse('auth_page'))
+
 class LoginView(RedirectAuthenticatedUserMixin, FormView):
 
     template_name = 'auth/auth.html'
@@ -316,10 +367,10 @@ class ResetPassword_2(FormView):
     # success_url = reverse('auth_page')
 
     # If no request purpose is found, redirect to the login page (or any other page)
-    def get(self, request: HttpRequest, *args: str, **kwargs: reverse_lazy) -> HttpResponse:
+    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
 
         # Perform validation here
-        user_email = request.session.pop('user', None)
+        user_email = request.session.get('user', None)
 
         if not user_email:
             # If no user is found in the session, redirect to the login page with an error message
@@ -346,5 +397,7 @@ class ResetPassword_2(FormView):
         
     def get_success_url(self):
         # Redirect to a success URL after form submission
+        self.request.session.pop('user', None) # remove user data from session 
+        self.request.session.pop('purpose', None)
         return reverse_lazy('auth_page')
 
