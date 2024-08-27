@@ -28,4 +28,8 @@ urlpatterns = [
     path('forgot_password/',views.ForgotPassword.as_view(),name="forgot_password"),
     path('pass_reset/',views.ResetPassword.as_view(),name="pass_reset"),
     path('pass_reset_2/',views.ResetPassword_2.as_view(),name="pass_reset_2"),
+
+    path('user_details/',views.UserPersonalDetailsView.as_view(),name="user_details"),
+    path('job_details/', views.JobDetailsView.as_view(), name='job_details')
+
 ]
