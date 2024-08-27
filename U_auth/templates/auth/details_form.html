@@ -7,49 +7,91 @@
             </div>
             <div class="modal-body">
                 <div class="d-grid">
+                    <form action="{% url 'user_details' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
                     <!-- Step 1 -->
                     <div id="step1">
                         <h1>Personal Details</h1>
-                        {% include "widget/input_details_form.html" with type='number' label='Age' %}
-                        {% include "widget/input_details_form.html" with type='date' label='DOB' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Hobbies' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Smoking Habits' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Qualifications' %}
-                        {% include "widget/input_details_form.html" with type='file' label='Profile Pic' %}
-                        {% include "widget/input_details_form.html" with type='file' label='Short Reels' %}
+                        {% include "widget/input_details_form.html" with type='number' label='Age'  name='age'%}
+                        {% include "widget/input_details_form.html" with type='gender_select' label='gender' name='gender' %}
+                        {% include "widget/input_details_form.html" with type='date' label='DOB' name='dob'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Hobbies' name='hobbies' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Intrestes' name='Intrestes' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Smoking Habits' name='smoking_habits' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Drinking Habits' name='drinking_habits' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Qualifications' name='qualification' %}
+                        {% include "widget/input_details_form.html" with type='file' label='Profile Pic' name='profile_pic' %}
+                        {% include "widget/input_details_form.html" with type='file' label='more Pic' name='photos' multi='true' %}
+                        {% include "widget/input_details_form.html" with type='file' label='Short Reels' name='short_video' %}
+                        {% if form.errors and show_personaldetails_modal%}
+                            <div class="alert alert-danger" role="alert">
+                                {% for field, errors in form.errors.items %}
+                                    {% if field and field != '__all__' %}
+                                    <div>
+                                        {{field }}: {{ errors|join:', ' }}
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        {{ errors|join:', ' }}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}        
                         <button type="button" class="btn btn-dark w-100" id="nextToJobStatus">Next</button>
                     </div>
 
                     <!-- Step 2 -->
                     <div id="step2" class="d-none">
                         <h1>Job Status</h1>
-                        {% include "widget/input_details_form.html" with type='checkbox' label='Employer' %}
-                        {% include "widget/input_details_form.html" with type='checkbox' label='Employee' %}
-                        {% include "widget/input_details_form.html" with type='checkbox' label='Job Seeker' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Employer' name='is_employer' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Employee' name='is_employee' %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Job Seeker' name='is_jobseeker' %}
                         <div class="row">
                             <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToPersonal">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-dark w-100" id="nextToJobDetails">Next</button>
+                                <button type="submit" class="btn btn-dark w-100" id="">save</button>
                             </div>
+                            <button type="button" class="btn btn-dark w-100" id="nextToJobDetails">job</button>
                         </div>
                     </div>
-
+                </form>
                     <!-- Step 3 -->
                     <div id="step3" class="d-none">
+                        <form action="{% url 'job_details' %}" method="post">
+                            {% csrf_token %}
                         <h1>Job Details</h1>
-                        {% include "widget/input_details_form.html" with type='text' label='Title' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Title' name='job_title' %}
+                        {% include "widget/input_details_form.html" with type='text' label='company name' name='company_name' %}
+                        {% include "widget/input_details_form.html" with type='text' label='location' name='location' %}
+                        {% include "widget/input_details_form.html" with type='text' label='designation' name='designation' %}
                         {% include "widget/input_details_form.html" with type='select' label='Experience Level' select_options=experance_level %}
+                        {% if form.errors%}
+                            <div class="alert alert-danger" role="alert">
+                                {% for field, errors in form.errors.items %}
+                                    {% if field and field != '__all__' %}
+                                    <div>
+                                        {{field }}: {{ errors|join:', ' }}
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        {{ errors|join:', ' }}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}   
                         <div class="row">
                             <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToJobStatus">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-dark w-100" id="nextToRelationshipGoals">Next</button>
+                                <button type="submit" class="btn btn-dark w-100" id="nextToRelationshipGoals">Next</button>
                             </div>
                         </div>
+                    </form>
                     </div>
 
                     <!-- Step 4 -->
@@ -114,7 +156,9 @@
                             </div>
                         </div>
                     </div>
+                
                 </div>
+                
             </div>
         </div>
     </div>
