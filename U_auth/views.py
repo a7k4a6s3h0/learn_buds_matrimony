@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.urls import reverse
 from .otp import generate_otp, validate_otp
-from .models import costume_user, OTP
+from .models import AdditionalDetails, costume_user, OTP, UserPersonalDetails
 from .forms import *
 from django.views import View
 # Create your views here.
@@ -81,7 +81,7 @@ def error_403(request):
 # ................................backend code starting..............................................
 
 
-class SignupView(RedirectAuthenticatedUserMixin, FormView):
+class SignupView(FormView):
     
     template_name = 'auth/auth.html'  # The template to render
     form_class = CreateUser
@@ -89,7 +89,8 @@ class SignupView(RedirectAuthenticatedUserMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['experance_level'] = ['Beginner', 'Intermediate', 'Expert']
+        context['experance_level'] = ['entry', 'mid', 'senior']
+        # context['experance_level'] = ['Beginner', 'Intermediate', 'Expert']
         context['marital_status'] = ['Unmarried', 'Divorced']
         return context
     
@@ -261,7 +262,7 @@ class ResendOTPView(FormView):
             messages.error(self.request, "User does not exist. Please try again.")
             return redirect(reverse('auth_page'))
 
-class LoginView(RedirectAuthenticatedUserMixin, FormView):
+class LoginView(FormView):
 
     template_name = 'auth/auth.html'
     form_class = LoginForm
@@ -401,3 +402,75 @@ class ResetPassword_2(FormView):
         self.request.session.pop('purpose', None)
         return reverse_lazy('auth_page')
 
+
+class UserPersonalDetailsView(FormView):
+    template_name = 'auth/auth.html'
+    form_class = UserPersonalDetailsForm
+
+
+    def get_form_kwargs(self):
+        """
+        Passes the request data to the form.
+        """
+        kwargs = super().get_form_kwargs()
+        # Get the default form kwargs
+        kwargs['user'] = self.request.user  # Pass the user to the form
+
+        print(kwargs, "***********************************")
+
+        return kwargs
+
+
+    def form_valid(self, form):
+        photos = form.files.getlist('photos', None)
+        print(photos,"****************************************")
+        details = form.save()
+        print(details,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+        return super().form_valid(form)
+    
+    def form_invalid(self, form: Any) -> HttpResponse:
+        print("in")
+        return self.render_to_response(self.get_context_data(form=form, show_personaldetails_modal=True))
+    
+    def get_success_url(self) -> str:
+        return reverse_lazy('auth_page')
+    
+
+class JobDetailsView(FormView):
+    template_name = 'auth/auth.html'
+    form_class = JobDetailsForm    
+
+    def get_form_kwargs(self):
+        """
+        Passes the request data to the form.
+        """
+        kwargs = super().get_form_kwargs()
+        # Get the default form kwargs
+        # kwargs['user'] = self.request.user  # Pass the user to the form
+
+        print(kwargs, "***********************************")
+
+        return kwargs
+
+    def form_valid(self, form: Any) -> HttpResponse:
+        job = form.save(commit=False)
+        print(job,"jjjjjjjjjjjjjjjjjjjjjjjjjj")
+        return super().form_valid(form)
+    
+    def form_invalid(self, form: Any) -> HttpResponse:
+        
+        return self.render_to_response(self.get_context_data(form=form, show_jobdetails_modal=True))
+    
+    def get_success_url(self) -> str:
+        return reverse_lazy('auth_page')
+    
+
+class AdditionalDetailsView(FormView):
+    template_name = 'auth/auth.html'
+    form_class = AdditionalDetailsForm
+
+    def form_valid(self, form: Any) -> HttpResponse:
+        return super().form_valid(form)
+    
+    def get_success_url(self) -> str:
+        return super().get_success_url()
