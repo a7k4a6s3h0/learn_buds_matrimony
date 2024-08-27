@@ -1,7 +1,10 @@
+import django.views.generic.edit
+import os
 import random
 from typing import Any
 from django import forms
-from .models import costume_user, Country_codes, OTP
+from datetime import date
+from .models import *
 import re
 
 
@@ -182,13 +185,6 @@ class ResetPasswordForm(forms.Form):
         'placeholder': 'Enter email or phone number'
     })
     )
-
-    # password = forms.CharField(widget=forms.PasswordInput(attrs={
-    #     'class': 'form-control',
-    #     'name': 'password',
-    #     'placeholder': 'Password'
-    # })
-    # )
        
     def clean(self):
         cleaned_data = super().clean()
@@ -230,3 +226,169 @@ class ResetPasswordForm_2(forms.Form):
                 raise forms.ValidationError("Password must contain at least 8 characters, including both letters and digits")
 
         return cleaned_data
+
+class MultipleValueField(forms.CharField):
+    def clean(self, value):
+        # Split the input value into a list based on a delimiter
+        value = super().clean(value)
+        if value:
+            return [item.strip() for item in value.split(',')]
+        return []
+
+class UserPersonalDetailsForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)  # Get user from kwargs
+        super().__init__(*args, **kwargs)
+
+
+    photos = forms.FileField(required=False)
+    hobbies = MultipleValueField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter hobbies separated by commas'}),
+        required=False
+    )
+    Intrestes = MultipleValueField(
+        widget=forms.Textarea(attrs={'placeholder': 'Enter interstes separated by commas'}),
+        required=False
+    )
+
+    class Meta:
+        model = UserPersonalDetails
+        fields = ['age', 'gender', 'dob', 'smoking_habits', 'drinking_habits', 'qualification', 'profile_pic', 'short_video', 'is_employer', 'is_employee', 'is_jobseeker']
+
+    allowed_image_extensions = ['jpg', 'jpeg', 'png', 'webp', 'svg']
+    allowed_video_extensions = ['mp4', 'mov']
+
+
+    def clean_profile_pic(self):
+        profile_pic = self.files.get('profile_pic')
+        if profile_pic:
+            if isinstance(profile_pic, str):
+                ext = os.path.splitext(profile_pic)[1][1:].lower()  # Handle as a string
+            else:
+                ext = os.path.splitext(profile_pic.name)[1][1:].lower()  # Handle as a file
+            if ext not in self.allowed_image_extensions:
+                raise forms.ValidationError(f"Unsupported file extension for profile picture. Allowed extensions are: {', '.join(self.allowed_image_extensions)}")
+        return profile_pic
+
+    def clean_short_video(self):
+        short_video = self.files.get('short_video')
+        if short_video:
+            ext = os.path.splitext(short_video.name)[1][1:].lower()
+            if ext not in self.allowed_video_extensions:
+                raise forms.ValidationError(f"Unsupported file extension for video. Allowed extensions are: {', '.join(self.allowed_video_extensions)}")
+        return short_video
+    
+    def clean_photos(self):
+        photos = self.files.getlist('photos', [])
+        for photo in photos:
+            ext = os.path.splitext(photo.name)[1][1:].lower()
+            if ext not in self.allowed_image_extensions:
+                raise forms.ValidationError(f"Unsupported file extension for photo '{photo.name}'. Allowed extensions are: {', '.join(self.allowed_image_extensions)}")
+        return photos
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # check the required fields are not empty 
+        # print(self.fields)
+        required_fields = ['age', 'gender', 'dob', 'qualification']
+    
+        for field in required_fields:
+            if not cleaned_data.get(field):
+                raise forms.ValidationError(f"{field.replace('_', ' ').capitalize()} is required.")
+
+        age = cleaned_data.get('age')
+        dob = cleaned_data.get('dob')
+        if age < 18:
+            raise forms.ValidationError("Age must be at least 18 years old.")
+        today = date.today()
+        calculated_age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        if calculated_age != age:
+            raise forms.ValidationError("Age does not match the date of birth.")
+        
+        
+        # Ensure is_employee, is_jobseeker, and is_employer are set to appropriate boolean values
+        smoking_habits = cleaned_data.get('smoking_habits', False)
+        drinking_habits = cleaned_data.get('drinking_habits', False)
+        is_employee = cleaned_data.get('is_employee', False)
+        is_jobseeker = cleaned_data.get('is_jobseeker', False)
+        is_employer = cleaned_data.get('is_employer', False)
+
+        # Adjust values based on form input
+        cleaned_data['smoking_habits'] = bool(smoking_habits)
+        cleaned_data['drinking_habits'] = bool(drinking_habits)
+        cleaned_data['is_employee'] = bool(is_employee)
+        cleaned_data['is_jobseeker'] = bool(is_jobseeker)
+        cleaned_data['is_employer'] = bool(is_employer)
+
+        return cleaned_data
+        
+    def save(self, commit: bool = True) -> Any:
+        try:
+            # Access the user from the form instance
+            user = self.user
+
+            # Create or update the UserPersonalDetails instance
+            datas = UserPersonalDetails(
+                user=user,
+                age=self.cleaned_data['age'],
+                gender=self.cleaned_data['gender'],
+                dob=self.cleaned_data['dob'],
+                smoking_habits=self.cleaned_data['smoking_habits'],
+                drinking_habits=self.cleaned_data['drinking_habits'],
+                qualification=self.cleaned_data['qualification'],
+                profile_pic=self.files.get('profile_pic'),
+                short_video=self.files.get('short_video'),
+                is_employer=self.cleaned_data['is_employer'],
+                is_employee=self.cleaned_data['is_employee'],
+                is_jobseeker=self.cleaned_data['is_jobseeker']
+            )
+
+            if commit:
+                # Save the main UserPersonalDetails instance
+                datas.save()
+
+                # Handle photos
+                photos = self.files.getlist('photos', [])
+                print(photos,"&&&&&&&&&&&&&&&&&&&&&")
+                if photos:
+                    for photo in photos:
+                        Pictures.objects.create(user=datas, photos=photo).save()
+                        
+
+                # Handle interests
+                interests = self.cleaned_data.get('Intrestes', [])
+                if interests:
+                    for interest in interests:
+                        Intrestes.objects.create(user=datas, intrest=interest)
+
+                # Handle hobbies
+                hobbies = self.cleaned_data.get('hobbies', [])
+                if hobbies:
+                    for hobby in hobbies:
+                        Hobbies.objects.create(user=datas, hobby=hobby)
+
+            return datas    
+
+        except Exception as e:
+            # Log the exception or handle it as needed
+            raise forms.ValidationError(str(e))
+
+
+class JobDetailsForm(forms.ModelForm):
+
+    class Meta:
+        model = Job_Details
+        fields = ('job_title', 'company_name', 'location', 'designation', 'experiences_level')
+        # widgets = {
+        #     'experiences_level': forms.Select(attrs={
+        #         'class': 'form-control'
+        #     }),
+        # }
+
+    
+
+
+class AdditionalDetailsForm():
+    pass

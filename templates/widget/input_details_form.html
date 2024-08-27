@@ -1,9 +1,9 @@
 {% if type == 'checkbox' %}
-<div class="form-check mb-3">
-    <input class="form-check-input" type="checkbox" id="{{ label|slugify }}" name="{{ label|slugify }}">
-    <label class="form-check-label" for="{{ label|slugify }}">
-        {{ label }}
-    </label>
+<div class="form-check mb-3 ">
+        <input class="form-check-input" name="{{name}}" type="checkbox" id="{{ label|slugify }}">
+        <label class="form-check-label" for="{{ label|slugify }}">
+            {{ label }}
+        </label>
 </div>
 {% elif type == 'select' %}
 <div class="form-group mb-3">
@@ -13,14 +13,28 @@
         {% endfor %}
     </select>
 </div>
+{% elif type == 'gender_select' %}
+<div class="form-group mb-3">
+    <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+        <option value="gender">gender</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+        <option value="O">Others</option>
+
+    </select>
+</div>
 {% elif type == 'button' %}
 <div class="form-group mb-3">
     <button type="button" class="btn btn-primary w-100" id="{{ label|slugify }}" name="{{ label|slugify }}">
         {{ label }}
     </button>
 </div>
+{% elif multi == 'true'%}
+<div class="form-group mb-3">
+<input type="{{ type }}" name="{{name}}"  multiple class="form-control" id="{{ label|slugify }}" placeholder="{{ label }}" />
+</div>
 {% else %}
 <div class="form-group mb-3">
-    <input type="{{ type }}" class="form-control" id="{{ label|slugify }}" placeholder="{{ label }}" />
+    <input type="{{ type }}" name="{{name}}" class="form-control" id="{{ label|slugify }}" placeholder="{{ label }}" />
 </div>
 {% endif %}
