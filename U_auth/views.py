@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.urls import reverse
 from .otp import generate_otp, validate_otp
-from .models import AdditionalDetails, costume_user, OTP, UserPersonalDetails
+from .models import AdditionalDetails, CustomUser, OTP, UserPersonalDetails
 from .forms import *
 from django.views import View
 # Create your views here.
@@ -250,14 +250,14 @@ class ResendOTPView(FormView):
             return redirect(reverse('auth_page'))
 
         try:
-            current_user = costume_user.objects.get(email=user_email)  # Ensure you're using the correct model
+            current_user = CustomUser.objects.get(email=user_email)  # Ensure you're using the correct model
             # Generate OTP after the user is found
             otp_code = generate_otp(current_user)
             print(f"Generated OTP: {otp_code}")  # Debugging
             messages.success(self.request, "Resend OTP generated successfully")
             return super().get(request, *args, **kwargs)  # Call the parent's get method to render the form
 
-        except costume_user.DoesNotExist:
+        except CustomUser.DoesNotExist:
             # If the user does not exist, redirect to the login page (or any other page)
             messages.error(self.request, "User does not exist. Please try again.")
             return redirect(reverse('auth_page'))
@@ -308,7 +308,7 @@ class ForgotPassword(FormView):
 
     def form_valid(self, form):
         password = form.cleaned_data['current_password']
-        current_user = costume_user.objects.get(password=password)
+        current_user = CustomUser.objects.get(password=password)
         if check_password(password, current_user.password):
             messages.error(self.request, "Not Found..!!!")
         else:
@@ -334,9 +334,9 @@ class ResetPassword(RedirectAuthenticatedUserMixin, FormView):
         
         try:
             if '@' in email_or_phone:
-                user = costume_user.objects.get(email=email_or_phone)
+                user = CustomUser.objects.get(email=email_or_phone)
             else:
-                user = costume_user.objects.get(phone=email_or_phone)
+                user = CustomUser.objects.get(phone=email_or_phone)
             self.request.session['user'] = user.email
             otp_code = generate_otp(user)
             print(f"Generated OTP: {otp_code}")  # Debugging
@@ -345,7 +345,7 @@ class ResetPassword(RedirectAuthenticatedUserMixin, FormView):
             # Redirect to the OTP verification page
             return super().form_valid(form)
         
-        except costume_user.DoesNotExist:
+        except CustomUser.DoesNotExist:
             # Handle the case where the user does not exist
             messages.error(self.request, "User doesn't exist..!!")
             # Render the form with errors without redirecting
@@ -385,12 +385,12 @@ class ResetPassword_2(FormView):
         try:
             password = form.cleaned_data.get('password_2')
             user_email = self.request.session.pop('user', None)            
-            user = costume_user.objects.get(email=user_email)
+            user = CustomUser.objects.get(email=user_email)
             user.set_password(password)
             user.save()
             messages.success(self.request, "Password changed successfully")
             return super().form_valid(form)
-        except costume_user.DoesNotExist:
+        except CustomUser.DoesNotExist:
             # Handle the case where the user does not exist
             messages.error(self.request, "User doesn't exist..!!")
             # Render the form with errors without redirecting

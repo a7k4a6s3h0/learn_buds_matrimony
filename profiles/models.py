@@ -1,5 +1,5 @@
 from django.db import models
-from U_auth.models import costume_user
+from U_auth.models import CustomUser
 # Create your models here.
 
 

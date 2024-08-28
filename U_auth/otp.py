@@ -1,7 +1,7 @@
 import datetime
 import random
 from django.utils import timezone
-from .models import OTP, costume_user
+from .models import OTP, CustomUser
 
 
 def generate_otp(user):

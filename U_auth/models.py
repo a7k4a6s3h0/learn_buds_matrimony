@@ -19,7 +19,7 @@ class languages(models.Model):
         return self.language_name
 
 
-class costume_user(AbstractUser):
+class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, max_length=100)
     phone = models.CharField(
         max_length=10, 
@@ -50,7 +50,7 @@ class UserPersonalDetails(models.Model):
     ('O', 'Other'),
     ]
 
-    user = models.OneToOneField(costume_user, on_delete=models.CASCADE, related_name="user_details")
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="user_details")
     age = models.IntegerField(blank=False)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
     dob = models.DateField(auto_now=False, auto_now_add=False, blank=False)
@@ -120,7 +120,7 @@ class Job_Details(models.Model):
         ('senior', 'Senior Level'),
     ]
 
-    user = models.ForeignKey(costume_user, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=100, blank=False)
     job_title = models.CharField(max_length=100, blank=False)
     designation = models.CharField(max_length=50, blank=False)
@@ -131,7 +131,7 @@ class Job_Details(models.Model):
         return f"job_details_of_{self.user.username}"
 
 class Relationship_Goals(models.Model):
-    user = models.ForeignKey(costume_user, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     is_short = models.BooleanField(default=False, blank=False)
     is_long = models.BooleanField(default=False, blank=False)
 
@@ -139,7 +139,7 @@ class Relationship_Goals(models.Model):
         return f"relation_type_of_{self.user.username}"
 
 class AdditionalDetails(models.Model):
-    user = models.ForeignKey(costume_user, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     is_married = models.BooleanField(default=False)
     auual_income = models.BigIntegerField()
     family_type = models.CharField(max_length=50)
@@ -173,7 +173,7 @@ class UserDisabilities(models.Model):
 
 
 class OTP(models.Model):
-    user = models.OneToOneField(costume_user, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     otp_code = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_validated = models.BooleanField(default=False)

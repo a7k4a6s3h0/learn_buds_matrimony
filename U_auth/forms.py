@@ -29,7 +29,7 @@ class CreateUser(forms.ModelForm):
     )
 
     class Meta:
-        model = costume_user
+        model = CustomUser
         fields = ('username', 'email', 'password', 'phone', 'country_code')
         widgets = {
             'username': forms.TextInput(attrs={
@@ -52,7 +52,7 @@ class CreateUser(forms.ModelForm):
     
     def save(self, commit=True):
         # Call the custom create_user method
-        user = costume_user.objects.create_user(
+        user = CustomUser.objects.create_user(
             email=self.cleaned_data['email'],
             username=self.cleaned_data['username'],
             phone=self.cleaned_data['phone'],
