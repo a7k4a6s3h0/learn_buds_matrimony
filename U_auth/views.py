@@ -109,6 +109,7 @@ class SignupView(FormView):
 
         # Debugging: Print the extracted email
         print(f"Extracted email: {self.user_email}")
+        self.request.session['user'] = self.user_email
 
 
         print(kwargs, "***********************************")
@@ -119,15 +120,16 @@ class SignupView(FormView):
         if self.request.user.is_authenticated:
             obj = check_permissions(self.request, self.request.user.email)
             response_status = obj.get_model()
-            print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
-            for key, value in response_status.items():
-                if key != 'status':
-                    model_name = key
-                    print(model_name,"model name...................")
+            if response_status is not None:
+                print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
+                for key, value in response_status.items():
+                    if key != 'status':
+                        model_name = key
+                        print(model_name,"model name...................")
 
-            context = self.get_context_data()
-            context.update({model_name: True})  # Passing the context variable 
-            return self.render_to_response(context)
+                context = self.get_context_data()
+                context.update({model_name: True})  # Passing the context variable 
+                return self.render_to_response(context)
         
         return super().get(request, *args, **kwargs)
     
@@ -142,7 +144,7 @@ class SignupView(FormView):
             # Generate OTP after the user is created
             otp_code = generate_otp(user)
             print(f"Generated OTP: {otp_code}")  # Debugging
-            self.request.session['user'] = user.email
+            # self.request.session['user'] = user.email
             # Add a message to the context that OTP was generated successfully
             messages.success(self.request, "OTP generated successfully.")
 
@@ -164,7 +166,7 @@ class SignupView(FormView):
             response_status = obj.get_model()
             print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
 
-            if response_status:
+            if response_status is not None:
                 if response_status.get('model', None) == 'OTP':
                     # If OTP is already generated, trigger the OTP modal
                     messages.error(self.request, "User already exists. Please check your email for OTP.")
@@ -315,6 +317,8 @@ class ResendOTPView(FormView):
             return redirect(reverse('auth_page'))
 
 class LoginView(FormView):
+
+    
 
     template_name = 'auth/auth.html'
     form_class = LoginForm

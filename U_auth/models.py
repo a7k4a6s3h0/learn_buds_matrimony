@@ -33,7 +33,7 @@ class costume_user(AbstractUser):
     user_language = models.ForeignKey(languages, on_delete=models.SET_NULL, related_name="reverse_User_lang", null=True)
     country_details = models.ForeignKey(Country_codes, on_delete=models.SET_NULL, related_name="reverse_User_country", null=True)
     is_online = models.BooleanField(default=False)
-
+    is_completed = models.BooleanField(default=False)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
