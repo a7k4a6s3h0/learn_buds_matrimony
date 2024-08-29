@@ -378,17 +378,82 @@ class UserPersonalDetailsForm(forms.ModelForm):
 
 class JobDetailsForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        # Capture the user instance passed via kwargs
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
     class Meta:
         model = Job_Details
         fields = ('job_title', 'company_name', 'location', 'designation', 'experiences_level')
-        # widgets = {
-        #     'experiences_level': forms.Select(attrs={
-        #         'class': 'form-control'
-        #     }),
-        # }
 
+    
+    def save(self, commit : bool) -> Any:
+        job =  super().save(commit=False)
+        # Assign the user if it's available
+        if self.user:
+            job.user = self.user
+        if commit:
+            job.save()
+        return job
+
+
+class RelationShipGoalForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        # Capture the user instance passed via kwargs
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Relationship_Goals
+        fields = ('is_short', 'is_long')
+
+    def save(self, commit : bool) -> Any:
+        relation_type =  super().save(commit=False)
+        # Assign the user if it's available
+        if self.user:
+            print(self.cleaned_data.get('is_short', False), self.cleaned_data.get('is_long', False),"??????????????????????????///")
+            relation_type.user = self.user
+            relation_type.is_short = self.cleaned_data.get('is_short', False)
+            relation_type.is_long = self.cleaned_data.get('is_long', False)
+        if commit:
+            relation_type.save()
+            print("saved>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        return relation_type
+    
+
+class AdditionalDetailsForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        # Capture the user instance passed via kwargs
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    disabilitys = MultipleValueField(widget=forms.Textarea(attrs={'placeholder': 'Enter hobbies separated by commas'}),
+                  required=False)
+
+    class Meta:
+        model = AdditionalDetails
+        fields = ('is_married', 'auual_income', 'family_type', 'family_name','father_name', 'father_occupation','mother_name','mother_occupation',
+                  'total_siblings', 'total_siblings_married', 'height', 'weight', 'blood_group', 'religion' , 'caste_or_community', 'complexion')
+
+    def save(self, commit : bool) -> Any:
+        addition_datas =  super().save(commit=False)
+        # Assign the user if it's available
+        if self.user:
+            addition_datas.user = self.user
+            
+        if commit:
+            addition_datas.save()
+
+        disabilitys = self.cleaned_data.get('disabilitys', [])
+        for disability in disabilitys:
+            UserDisabilities.objects.create(user=addition_datas, disability_type=disability)
+            
+        return addition_datas
     
 
 
-class AdditionalDetailsForm():
-    pass
+
+

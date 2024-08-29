@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from profiles.views import user_accept_pg
 from . manager import UserManager
 
 
@@ -131,7 +132,7 @@ class Job_Details(models.Model):
         return f"job_details_of_{self.user.username}"
 
 class Relationship_Goals(models.Model):
-    user = models.ForeignKey(costume_user, on_delete=models.CASCADE)
+    user = models.OneToOneField(costume_user, on_delete=models.CASCADE)
     is_short = models.BooleanField(default=False, blank=False)
     is_long = models.BooleanField(default=False, blank=False)
 
@@ -139,23 +140,30 @@ class Relationship_Goals(models.Model):
         return f"relation_type_of_{self.user.username}"
 
 class AdditionalDetails(models.Model):
+
+    MARRIED_STATUS = [
+        ('single', 'single'),
+        ('married' , 'married'),
+        ('divocred', 'divocred')
+    ]
+
     user = models.ForeignKey(costume_user, on_delete=models.CASCADE)
-    is_married = models.BooleanField(default=False)
-    auual_income = models.BigIntegerField()
-    family_type = models.CharField(max_length=50)
-    family_name = models.CharField(max_length=50)
-    father_name = models.CharField(max_length=50)
-    father_occupation = models.CharField(max_length=50)
-    mother_name = models.CharField(max_length=50)
-    mother_occupation = models.CharField(max_length=50)
-    total_siblings = models.IntegerField()
-    total_siblings_married = models.IntegerField()
-    height = models.IntegerField()
-    weight = models.IntegerField()
-    blood_group = models.CharField(max_length=50)
-    religion = models.CharField(max_length=50)
-    caste_or_community = models.CharField(max_length=50)
-    complexion = models.CharField(null=True,max_length=50)
+    is_married = models.CharField(choices=MARRIED_STATUS, max_length=50,blank=False)
+    auual_income = models.BigIntegerField(blank=False)
+    family_type = models.CharField(max_length=50, blank=False)
+    family_name = models.CharField(max_length=50, blank=False)
+    father_name = models.CharField(max_length=50, blank=False)
+    father_occupation = models.CharField(max_length=50, blank=False)
+    mother_name = models.CharField(max_length=50, blank=False)
+    mother_occupation = models.CharField(max_length=50, blank=False)
+    total_siblings = models.IntegerField(blank=False)
+    total_siblings_married = models.IntegerField(blank=False)
+    height = models.IntegerField(blank=False)
+    weight = models.IntegerField(blank=False)
+    blood_group = models.CharField(max_length=50, blank=False)
+    religion = models.CharField(max_length=50, blank=False)
+    caste_or_community = models.CharField(max_length=50, blank=False)
+    complexion = models.CharField(null=True,max_length=50, blank=False)
 
 
     class Meta:
@@ -174,7 +182,7 @@ class UserDisabilities(models.Model):
 
 class OTP(models.Model):
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE)
-    otp_code = models.IntegerField()
+    otp_code = models.IntegerField(blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     is_validated = models.BooleanField(default=False)
 
@@ -183,4 +191,8 @@ class OTP(models.Model):
         return f"{self.user.username}_otpcode"
 
 
-# ................model for user profile view............................
+# ...............-.model for user profile view............................
+
+
+
+

@@ -30,6 +30,9 @@ urlpatterns = [
     path('pass_reset_2/',views.ResetPassword_2.as_view(),name="pass_reset_2"),
 
     path('user_details/',views.UserPersonalDetailsView.as_view(),name="user_details"),
-    path('job_details/', views.JobDetailsView.as_view(), name='job_details')
+    path('job_details/', views.JobDetailsView.as_view(), name='job_details'),
+    path('relation_type/', views.RelationShipGoalView.as_view(), name='relation_type'),
+    path('additional_datas/', views.AdditionalDetailsView.as_view(), name="additional_datas"),
+    path('check_type', views.UserType, name='check_type')
 
 ]
