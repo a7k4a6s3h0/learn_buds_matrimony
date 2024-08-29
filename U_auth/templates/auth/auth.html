@@ -53,6 +53,7 @@
             </div>
             {% if form.errors and show_login_modal%}
                 <div class="alert alert-danger" role="alert">
+                    {{show_login_modal}}
                     {% for field, errors in form.errors.items %}
                         {% if field and field != '__all__' %}
                         <div>
@@ -87,145 +88,214 @@
 
 {% block scripts %}
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('nextToJobStatus').addEventListener('click', function () {
-            
+                
             document.getElementById('step1').classList.add('d-none');
             document.getElementById('step2').classList.remove('d-none');
-    });
+        });
 
         document.getElementById('prevToPersonal').addEventListener('click', function () {
             document.getElementById('step2').classList.add('d-none');
-        document.getElementById('step1').classList.remove('d-none');
-    });
+            document.getElementById('step1').classList.remove('d-none');
+        });
 
         document.getElementById('nextToJobDetails').addEventListener('click', function () {
-            document.getElementById('step2').classList.add('d-none');
-        document.getElementById('step3').classList.remove('d-none');
-    });
+                document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.remove('d-none');
+        });
 
-        document.getElementById('prevToJobStatus').addEventListener('click', function () {
-            document.getElementById('step3').classList.add('d-none');
-        document.getElementById('step2').classList.remove('d-none');
-    });
+        // document.getElementById('prevToJobStatus').addEventListener('click', function () {
+        //     document.getElementById('step3').classList.add('d-none');
+        //     document.getElementById('step2').classList.remove('d-none');
+        // });
 
         document.getElementById('nextToRelationshipGoals').addEventListener('click', function () {
             document.getElementById('step3').classList.add('d-none');
-        document.getElementById('step4').classList.remove('d-none');
-    });
+            document.getElementById('step4').classList.remove('d-none');
+        });
 
         document.getElementById('prevToJobDetails').addEventListener('click', function () {
             document.getElementById('step4').classList.add('d-none');
-        document.getElementById('step3').classList.remove('d-none');
-    });
+            document.getElementById('step3').classList.remove('d-none');
+        });
 
         document.getElementById('nextToInterested').addEventListener('click', function () {
             document.getElementById('step4').classList.add('d-none');
-        document.getElementById('step5').classList.remove('d-none');
-    });
+            document.getElementById('step5').classList.remove('d-none');
+        });
 
         document.getElementById('prevToRelationshipGoals').addEventListener('click', function () {
             document.getElementById('step5').classList.add('d-none');
-        document.getElementById('step4').classList.remove('d-none');
-    });
+            document.getElementById('step4').classList.remove('d-none');
+        });
 
         document.getElementById('nextToAdditionalDetails').addEventListener('click', function () {
             document.getElementById('step5').classList.add('d-none');
-        document.getElementById('step6').classList.remove('d-none');
-    });
+            document.getElementById('step6').classList.remove('d-none');
+        });
 
         document.getElementById('prevToInterested').addEventListener('click', function () {
             document.getElementById('step6').classList.add('d-none');
-        document.getElementById('step5').classList.remove('d-none');
-    });
-
-        document.getElementById('submitForm').addEventListener('click', function () {
-            // Handle form submission here
-            alert('Form submitted!');
-        $('#PersonalModal').modal('hide');
-    });
-    
-    
-    function show_signup(){
-        // Show the modal using Bootstrap 5's Modal API
-        var myModal = new bootstrap.Modal(document.getElementById('signupModal'));
-        myModal.show();
-        
-    }
-    function show_login(){
-        // Show the modal using Bootstrap 5's Modal API
-        var myModal = new bootstrap.Modal(document.getElementById('loginModal'));
-        myModal.show();
-        
-    }
-    function show_restpass(){
-        var myModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
-        myModal.show();
-    }
-
-    function show_personaldetails(){
-        console.log("in pr 2")
-        var myModal = new bootstrap.Modal(document.getElementById('PersonalModal'));
-        myModal.show();
-    }
-
-    function hide_signup(){
-        var X = document.getElementById('sign');
-        X.style.display = 'none';
-        var loginModal = document.getElementById('loginModal');
-        // var signupModal = document.getElementById('signupModal');
-        loginModal.addEventListener('hidden.bs.modal', function () {
-            // Reset the URL without reloading the page
-            // history.replaceState(null, null, window.location.pathname);
-            // Redirect to the specified URL
-            var baseURL = window.location.origin;
-            var redirectURL = baseURL + '/auth/';
-
-            // Redirect to the constructed URL
-            window.location.href = redirectURL;
-            console.log("login worked..!!")
+            document.getElementById('step5').classList.remove('d-none');
         });
 
-    }
-    function reload_restpass(){
-        var resetpass = document.getElementById('resetPasswordModal');
-        resetpass.addEventListener('hidden.bs.modal', function () {
-            // Reset the URL without reloading the page
-            // history.replaceState(null, null, window.location.pathname);
-            // Redirect to the specified URL
-            var baseURL = window.location.origin;
-            var redirectURL = baseURL + '/auth/';
+        //     document.getElementById('submitForm').addEventListener('click', function () {
+        //         // Handle form submission here
+        //         alert('Form submitted!');
+        //     $('#PersonalModal').modal('hide');
+        // });
+        
+        
+        function show_signup(){
+            // Show the modal using Bootstrap 5's Modal API
+            var myModal = new bootstrap.Modal(document.getElementById('signupModal'));
+            myModal.show();
+            
+        }
+        function show_login(){
+            // Show the modal using Bootstrap 5's Modal API
+            var myModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            myModal.show();
+            
+        }
+        function show_restpass(){
+            var myModal = new bootstrap.Modal(document.getElementById('resetPasswordModal'));
+            myModal.show();
+        }
 
-            // Redirect to the constructed URL
-            window.location.href = redirectURL;
-            console.log("login worked..!!")
-        });
-    }
+        function show_personaldetails(){
+            var personalModalElement = document.getElementById('PersonalModal');
+            if (personalModalElement) {
+                var myModal = new bootstrap.Modal(personalModalElement);
+                myModal.show();
 
-    {% if show_signup_modal %}
-    show_signup()
-    {% endif %}
+                // Remove any existing event listener before adding a new one
+                personalModalElement.removeEventListener('hidden.bs.modal', handleModalHidden);
+                personalModalElement.addEventListener('hidden.bs.modal', handleModalHidden);
 
-    {% if show_login_modal %}
-    show_login()
-    hide_signup()
-    {% endif %}
+                function handleModalHidden() {
+                    var baseURL = window.location.origin;
+                    var redirectURL = baseURL + '/auth/';
+                    window.location.href = redirectURL;
+                    console.log("login worked..!!");
+                }
+            } else {
+                console.error("PersonalModal element not found");
+            }
+        }
+
+        function jobdetails_modal(){
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.remove('d-none');
+        }
+
+        function relationmodel(){
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.add('d-none');
+            document.getElementById('step4').classList.remove('d-none');
+        }
+
+        function  show_interst_model(){
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.add('d-none');
+            document.getElementById('step4').classList.add('d-none');
+            document.getElementById('step5').classList.remove('d-none');
+        }
+
+        function show_additionaldetails(){
+            document.getElementById('step1').classList.add('d-none');
+            document.getElementById('step2').classList.add('d-none');
+            document.getElementById('step3').classList.add('d-none');
+            document.getElementById('step4').classList.add('d-none');
+            document.getElementById('step5').classList.add('d-none');
+            document.getElementById('step6').classList.remove('d-none');
+        }
+
+        function hide_signup(){
+            var X = document.getElementById('sign');
+            X.style.display = 'none';
+            var loginModal = document.getElementById('loginModal');
+            // var signupModal = document.getElementById('signupModal');
+            loginModal.addEventListener('hidden.bs.modal', function () {
+                // Reset the URL without reloading the page
+                // history.replaceState(null, null, window.location.pathname);
+                // Redirect to the specified URL
+                var baseURL = window.location.origin;
+                var redirectURL = baseURL + '/auth/';
+
+                // Redirect to the constructed URL
+                window.location.href = redirectURL;
+                console.log("login worked..!!")
+            });
+
+        }
+        function reload_restpass(){
+            var resetpass = document.getElementById('resetPasswordModal');
+            resetpass.addEventListener('hidden.bs.modal', function () {
+                // Reset the URL without reloading the page
+                // history.replaceState(null, null, window.location.pathname);
+                // Redirect to the specified URL
+                var baseURL = window.location.origin;
+                var redirectURL = baseURL + '/auth/';
+
+                // Redirect to the constructed URL
+                window.location.href = redirectURL;
+                console.log("login worked..!!")
+            });
+        }
+
+        {% if show_signup_modal %}
+            console.log("in signup")
+            show_signup()
+        {% endif %}
+
+        {%if show_login_modal%}
+            console.log("yes...........")
+            show_login()
+            hide_signup()
+        {%endif%}
 
 
-    {% if show_resetPass_modal %}
-    show_restpass()
-    reload_restpass()
-    {% endif %}
+        {% if show_resetPass_modal %}
+        show_restpass()
+        reload_restpass()
+        {% endif %}
 
-    {% if show_personaldetails_modal %}
-        console.log("innnnnnn")
+        {% if show_personaldetails_modal %}
+            console.log("in")
+            show_personaldetails()
+        {% endif %}
+
+        {% if show_jobdetails_modal %}
+            show_personaldetails()
+            jobdetails_modal()
+        {% endif %}
+
+        {% if show_relationmodel_modal %}
         show_personaldetails()
-    {% endif %}
+        relationmodel()
+        {% endif %}
 
-    {% if messages %}    
-        {% for message in messages %}
-        swal("Alert..!", "{{ message}}", "{{message.tags}}");
-        {% endfor %}
-    {% endif %}
-    
+        {% if show_relationship_model %}
+        console.log("iiiii")
+        show_personaldetails()
+        show_interst_model()
+        {% endif %}
+
+        {% if show_additionaldetails_modal %}
+            show_personaldetails()
+            show_additionaldetails()
+        {% endif %}
+
+        {% if messages %}    
+            {% for message in messages %}
+            swal("Alert..!", "{{ message}}", "{{message.tags}}");
+            {% endfor %}
+        {% endif %}
+    });
 </script>
 {% endblock scripts %}

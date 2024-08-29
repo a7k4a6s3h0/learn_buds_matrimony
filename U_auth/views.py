@@ -7,6 +7,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from U_auth.permissions import RedirectNotAuthenticatedUserMixin, check_permissions
 from . permissions import RedirectAuthenticatedUserMixin
 from django.utils import timezone
 from datetime import timedelta
@@ -85,7 +86,9 @@ class SignupView(FormView):
     
     template_name = 'auth/auth.html'  # The template to render
     form_class = CreateUser
-    # success_url = reverse_lazy('signup')  # URL to redirect to after successful form submission
+    user_email = None
+
+    # html_model = ('show_personaldetails_modal', 'show_personaldetails_modal'), (Job_Details, 'show_jobdetails_modal'), (Relationship_Goals, 'show_relationmodel_modal'), (AdditionalDetails, 'show_additionaldetails_modal')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -101,14 +104,33 @@ class SignupView(FormView):
         # Get the default form kwargs
         kwargs = super().get_form_kwargs()
 
-        # Add the request data to the form kwargs
-        # kwargs['data'] = self.request.POST or None
-        # kwargs['files'] = self.request.FILES or None
+        # Extract email from the request's POST data
+        self.user_email = self.request.POST.get('email', None)
+
+        # Debugging: Print the extracted email
+        print(f"Extracted email: {self.user_email}")
+
 
         print(kwargs, "***********************************")
 
         return kwargs
+    
+    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
+        if self.request.user.is_authenticated:
+            obj = check_permissions(self.request, self.request.user.email)
+            response_status = obj.get_model()
+            print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
+            for key, value in response_status.items():
+                if key != 'status':
+                    model_name = key
+                    print(model_name,"model name...................")
 
+            context = self.get_context_data()
+            context.update({model_name: True})  # Passing the context variable 
+            return self.render_to_response(context)
+        
+        return super().get(request, *args, **kwargs)
+    
     def form_valid(self, form):
         # Handle form validation and user creation here
 
@@ -132,8 +154,37 @@ class SignupView(FormView):
     
 
     def form_invalid(self, form):
-        # Render the form with errors and trigger the signup modal
+        # Check if the specific error related to "user already exists" is present
+        if 'email' in form.errors:
+            # Handle the "user already exists" error
+            print(self.user_email, "in invalid_form")
+            print("User already exists error detected")
+
+            obj = check_permissions(self.request, self.user_email)
+            response_status = obj.get_model()
+            print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
+
+            if response_status:
+                if response_status.get('model', None) == 'OTP':
+                    # If OTP is already generated, trigger the OTP modal
+                    messages.error(self.request, "User already exists. Please check your email for OTP.")
+                    # Generate OTP after the user is created
+                    user = costume_user.objects.get(email=self.user_email)
+                    otp_code = generate_otp(user)
+                    print(f"Generated OTP: {otp_code}")  # Debugging
+                    return redirect(self.get_success_url())
+                
+                for key, value in response_status.items():
+                    if key != 'status':
+                        model_name = key
+                        print(model_name,"model name...................")
+
+                context = self.get_context_data(form=form)
+                context.update({model_name: True})  # Passing the context variable 
+                return self.render_to_response(context)
+
         return self.render_to_response(self.get_context_data(form=form, show_signup_modal=True))
+
 
     # Redirect to the CheckOTPView URL
     def get_success_url(self):
@@ -144,7 +195,7 @@ class SignupView(FormView):
         return reverse('check_otp')
     
 # code need to change remember
-class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
+class CheckOTPView(FormView):
     purpose_1 : str = ''
     template_name = 'auth/otp_input.html'  # The template to render
     form_class = GenerateOTP
@@ -152,7 +203,7 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
 
     def get_url(self, purpose):
         url_dict = {
-            'newuser_verification':'home',
+            'newuser_verification':'auth_page',
             'pass_verification':'auth_page',
             'reset_pass_verification': 'pass_reset_2'
         }
@@ -195,6 +246,7 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
                 login(self.request, current_user.user)
             # OTP is valid
             # messages.success(self.request, msg)
+            
             return super().form_valid(form)
         else:
             # OTP is invalid
@@ -208,7 +260,7 @@ class CheckOTPView(RedirectAuthenticatedUserMixin, FormView):
 
         # Get the URL name from the purpose
         url_name = self.get_url(purpose)
-
+        
         if url_name:
             # If the URL name is valid, reverse it
             return reverse_lazy(url_name)
@@ -445,16 +497,15 @@ class JobDetailsView(FormView):
         Passes the request data to the form.
         """
         kwargs = super().get_form_kwargs()
-        # Get the default form kwargs
-        # kwargs['user'] = self.request.user  # Pass the user to the form
+        # Pass the user to the form
+        kwargs['user'] = self.request.user
 
         print(kwargs, "***********************************")
 
         return kwargs
 
     def form_valid(self, form: Any) -> HttpResponse:
-        job = form.save(commit=False)
-        print(job,"jjjjjjjjjjjjjjjjjjjjjjjjjj")
+        job = form.save(commit=True)
         return super().form_valid(form)
     
     def form_invalid(self, form: Any) -> HttpResponse:
@@ -463,14 +514,86 @@ class JobDetailsView(FormView):
     
     def get_success_url(self) -> str:
         return reverse_lazy('auth_page')
+
+class RelationShipGoalView(FormView):
+
+    template_name = 'auth/auth.html'    
+    form_class = RelationShipGoalForm
+
+    def get_form_kwargs(self):
+        """
+        Passes the request data to the form.
+        """
+        kwargs = super().get_form_kwargs()
+        # Pass the user to the form
+        kwargs['user'] = self.request.user
     
+        print(kwargs, "***********************************")
+
+        return kwargs
+
+    def form_valid(self, form):
+        form.save(commit=True)
+
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form, show_relationmodel_modal=True))
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('auth_page')
+
+def UserType(request):
+    
+    choose_type = request.GET.get('type')
+    print(request.GET, choose_type)
+    choices = {}
+    context = {}
+    
+    if choose_type:
+        try:
+            relation_goal = Relationship_Goals.objects.get(user=request.user)
+            choices['Matrimony'] = ('is_long',relation_goal.is_long)
+            choices['Dating'] = ('is_short',relation_goal.is_short)
+            for value, iteam in choices.items():
+                if iteam[1] and iteam[0] == choose_type:
+                    # context['show_addition_details_model'] = True
+                    return render(request, 'auth/auth.html', context)    
+            messages.error(request, "Wrong type...!!")
+            context['show_relationship_model'] = True
+            return render(request, 'auth/auth.html', context)
+        except Relationship_Goals.DoesNotExist:
+            messages.error(request, "Relationship goals not found for this user.")
+            return render(request, 'auth/auth.html', context)
+        
+    context['show_relationship_model'] = True    
+    messages.error(request, "You Must choose correct one from above option")
+    return render(request, 'auth/auth.html', context)
 
 class AdditionalDetailsView(FormView):
     template_name = 'auth/auth.html'
     form_class = AdditionalDetailsForm
 
+    def get_form_kwargs(self):
+        """
+        Passes the request data to the form.
+        """
+        kwargs = super().get_form_kwargs()
+        # Pass the user to the form
+        kwargs['user'] = self.request.user
+        
+        print(kwargs, "***********************************")
+
+        return kwargs
+
+    
     def form_valid(self, form: Any) -> HttpResponse:
+        form.save(commit=True)
         return super().form_valid(form)
     
+    def form_invalid(self, form: Any) -> HttpResponse:
+        return self.render_to_response(self.get_context_data(form=form, show_additionaldetails_modal=True))
+
+    
     def get_success_url(self) -> str:
-        return super().get_success_url()
+        return reverse_lazy('auth_page')
