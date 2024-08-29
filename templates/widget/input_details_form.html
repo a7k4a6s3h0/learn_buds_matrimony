@@ -5,12 +5,27 @@
             {{ label }}
         </label>
 </div>
+{% elif type ==  'for_relationtype_check' %}
+<div class="form-check mb-3 ">
+    <input class="form-check-input" name="{{name}}" type="checkbox" id="{{ label|slugify }}" value={{value}}>
+    <label class="form-check-label" for="{{ label|slugify }}">
+        {{ label }}
+    </label>
+</div>
 {% elif type == 'select' %}
 <div class="form-group mb-3">
-    <select class="form-select" id="{{ label|slugify }}" name="{{ label|slugify }}">
+    <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
         {% for option in select_options %}
         <option value="{{ option }}">{{ option }}</option>
         {% endfor %}
+    </select>
+</div>
+{% elif type == 'static_select' %}
+<div class="form-group mb-3">
+    <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+        <option value="single">single</option>
+        <option value="married">married</option>
+        <option value="divocred">divocred</option>
     </select>
 </div>
 {% elif type == 'gender_select' %}
@@ -25,7 +40,7 @@
 </div>
 {% elif type == 'button' %}
 <div class="form-group mb-3">
-    <button type="button" class="btn btn-primary w-100" id="{{ label|slugify }}" name="{{ label|slugify }}">
+    <button type="button" class="btn btn-primary w-100" id="{{ label|slugify }}" name="{{ name }}">
         {{ label }}
     </button>
 </div>
