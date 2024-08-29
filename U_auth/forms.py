@@ -443,10 +443,13 @@ class AdditionalDetailsForm(forms.ModelForm):
         # Assign the user if it's available
         if self.user:
             addition_datas.user = self.user
+            self.user.is_completed = True
+            self.user.save()
             
         if commit:
             addition_datas.save()
 
+        
         disabilitys = self.cleaned_data.get('disabilitys', [])
         for disability in disabilitys:
             UserDisabilities.objects.create(user=addition_datas, disability_type=disability)
