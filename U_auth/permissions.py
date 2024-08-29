@@ -91,4 +91,6 @@ class check_permissions:
                 return self.model_dict
             
             else:
-                return None
+                self.model_dict['status'] = False
+                self.model_dict['model'] = 'OTP'
+                return self.model_dict
