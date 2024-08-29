@@ -52,7 +52,7 @@
                                 <button type="button" class="btn btn-dark w-100" id="prevToPersonal">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" id="">save</button>
+                                <button type="submit" class="btn btn-dark w-100" >save</button>
                             </div>
                             <button type="button" class="btn btn-dark w-100" id="nextToJobDetails">job</button>
                         </div>
@@ -67,8 +67,45 @@
                         {% include "widget/input_details_form.html" with type='text' label='company name' name='company_name' %}
                         {% include "widget/input_details_form.html" with type='text' label='location' name='location' %}
                         {% include "widget/input_details_form.html" with type='text' label='designation' name='designation' %}
-                        {% include "widget/input_details_form.html" with type='select' label='Experience Level' select_options=experance_level %}
-                        {% if form.errors%}
+                        {% include "widget/input_details_form.html" with type='select' label='Experience Level' name='experiences_level' select_options=experance_level %}
+                        {% if form.errors and show_jobdetails_modal%}
+                            <div class="alert alert-danger" role="alert">
+                                {% for field, errors in form.errors.items %}
+                                    {% if field and field != '__all__' %}
+                                    <div>
+                                        {{field }}: {{ errors|join:', ' }}
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        {{ errors|join:', ' }}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}   
+                        <div class="row">
+                            <!-- <div class="col-6">
+                                <button type="button" class="btn btn-dark w-100" id="prevToJobStatus">Previous</button>
+                            </div> -->
+                            <div class="col-12">
+                                <!--change to submit-->
+                                <button type="submit" class="btn btn-dark w-100">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- <a href="" id="nextToRelationshipGoals">nextToRelationshipGoals</a> -->
+                    <button type="button" class="btn btn-dark w-100" id="nextToRelationshipGoals">nextToRelationshipGoals</button>
+
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div id="step4" class="d-none">
+                        <h1>Relationship Goals</h1>
+                        <form action="{% url 'relation_type' %}" method="post">
+                            {% csrf_token %}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Long Term Relationship' name='is_long'%}
+                        {% include "widget/input_details_form.html" with type='checkbox' label='Short Term Relationship' name='is_short'%}
+                        {% if form.errors and show_relationmodel_modal%}
                             <div class="alert alert-danger" role="alert">
                                 {% for field, errors in form.errors.items %}
                                     {% if field and field != '__all__' %}
@@ -85,76 +122,86 @@
                         {% endif %}   
                         <div class="row">
                             <div class="col-6">
-                                <button type="button" class="btn btn-dark w-100" id="prevToJobStatus">Previous</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" id="nextToRelationshipGoals">Next</button>
-                            </div>
-                        </div>
-                    </form>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div id="step4" class="d-none">
-                        <h1>Relationship Goals</h1>
-                        {% include "widget/input_details_form.html" with type='checkbox' label='Long Term Relationship' %}
-                        {% include "widget/input_details_form.html" with type='checkbox' label='Short Term Relationship' %}
-                        <div class="row">
-                            <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToJobDetails">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-dark w-100" id="nextToInterested">Next</button>
+                                <button type="submit" class="btn btn-dark w-100" id="">Next</button>
                             </div>
                         </div>
+                    </form>
+                    <button type="submit" class="btn btn-dark w-100" id="nextToInterested">nextToInterested</button>
+                    <!-- <a href="" id="nextToInterested">nextToInterested</a> -->
                     </div>
 
                     <!-- Step 5 -->
                     <div id="step5" class="d-none">
                         <h1>Interested</h1>
-                        {% include "widget/input_details_form.html" with type='button' label='Matrimony' %}
-                        {% include "widget/input_details_form.html" with type='button' label='Dating' %}
+                        <form action="{% url 'check_type' %}" method="get">
+                        {% include "widget/input_details_form.html" with type='for_relationtype_check' label='Matrimony' name='type'  value='is_long'%}
+                        {% include "widget/input_details_form.html" with type='for_relationtype_check' label='Dating' name='type' value='is_short'%}
                         <div class="row">
                             <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToRelationshipGoals">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-dark w-100" id="nextToAdditionalDetails">Next</button>
+                                <button type="submit" class="btn btn-dark w-100" id="">Next</button>
                             </div>
                         </div>
+                        </form>
+                        <button type="button" class="btn btn-dark w-100" id="nextToAdditionalDetails">nextToAdditionalDetails</button>
+                        <!-- <a href="" id="nextToAdditionalDetails">nextToAdditionalDetails</a> -->
                     </div>
 
                     <!-- Step 6 -->
                     <div id="step6" class="d-none">
                         <h1>Additional Details</h1>
-                        {% include "widget/input_details_form.html" with type='select' label='Marital Status' select_options=marital_status %}
-                        {% include "widget/input_details_form.html" with type='text' label='Annual Income' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Family Type' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Smoking Habits' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Family Name' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Father\'s Name' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Father\'s Occupation' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Mother\'s Name' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Mother\'s Occupation' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Number Of Siblings Married' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Siblings Name & Details' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Height' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Weight' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Body Type' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Complexion' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Disabilities' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Religion' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Caste/Community' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Expectation from Partner' %}
+                        <form action="{% url 'additional_datas' %}" method="post">
+                            {% csrf_token %}
+                        {% include "widget/input_details_form.html" with type='static_select' label='Marital Status' name='is_married'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Annual Income' name='auual_income' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Family Type' name='family_type'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Family Name' name='family_name' %}
+                        <!-- {% include "widget/input_details_form.html" with type='text' label='Family Name' %} -->
+                        {% include "widget/input_details_form.html" with type='text' label='Father\'s Name' name='father_name' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Father\'s Occupation' name='father_occupation' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Mother\'s Name' name='mother_name'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Mother\'s Occupation' name='mother_occupation'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Total Siblings' name='total_siblings' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Number Of Siblings Married' name='total_siblings_married' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Height' name='height'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Weight' name='weight'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Body Type' name='blood_group' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Religion' name='religion'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Caste/Community' name='caste_or_community'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Complexion' name='complexion'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Disabilities' name='disabilitys'%}
+                        <!-- {% include "widget/input_details_form.html" with type='text' label='Siblings Name & Details' %} -->
+                        <!-- {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %} -->
+                        <!-- {% include "widget/input_details_form.html" with type='text' label='Expectation from Partner' %} -->
+                        {% if form.errors and show_additionaldetails_modal%}
+                            <div class="alert alert-danger" role="alert">
+                                {% for field, errors in form.errors.items %}
+                                    {% if field and field != '__all__' %}
+                                    <div>
+                                        {{field }}: {{ errors|join:', ' }}
+                                    </div>
+                                    {% else %}
+                                    <div>
+                                        {{ errors|join:', ' }}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}   
                         <div class="row">
                             <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToInterested">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="button" class="btn btn-dark w-100" id="submitForm">Submit</button>
+                                <button type="submit" class="btn btn-dark w-100" >Submit</button>
                             </div>
                         </div>
+                        </form>
                     </div>
                 
                 </div>
