@@ -81,8 +81,23 @@ class UserPersonalDetails(models.Model):
         if self.short_video:
             return f"{settings.MEDIA_URL}{self.short_video}"
         return ""
-
+    
+#edited this becz function profile_pic_url is returning(self.profile pic . instead it should return photos right ?)
 class Pictures(models.Model):
+    user = models.ForeignKey(UserPersonalDetails, verbose_name="reverse_user_pic", on_delete=models.CASCADE)
+    photos = models.ImageField(upload_to='images/', blank=True)
+    add_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def profile_pic_url(self):
+        if self.photos:
+            return f"{settings.MEDIA_URL}{self.photos}"
+        return ""
+
+    def __str__(self) -> str:
+        return super().__str__() + f" photos_of_{self.user.user.username}"
+
+""" class Pictures(models.Model):
 
     user = models.ForeignKey(UserPersonalDetails, verbose_name= "reverse_user_pic", on_delete=models.CASCADE)
     photos = models.ImageField(upload_to='images/', blank=True)
@@ -96,7 +111,7 @@ class Pictures(models.Model):
     
     def __str__(self) -> str:
         return super().__str__() + f"photos_of_{self.user.user.username}"
-
+ """
 class Hobbies(models.Model):
     user = models.ForeignKey(UserPersonalDetails, on_delete=models.CASCADE)
     hobby = models.CharField(max_length=100)

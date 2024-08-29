@@ -334,6 +334,117 @@
                     </div>
                 </div>
             </nav>
+
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for picture in pictures %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ picture.profile_pic_url }}" class="d-block img-fluid" alt="Profile Picture">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+            <div class="profile-name">
+                <label>
+                    <h2>{{ user.username }}</h2>
+                </label>
+                <label>
+                    <h4>{{ user.email }}</h4>
+                </label>
+                <button type="button" class="profile-button" data-mdb-ripple-init>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
+                        class="image-fluid" alt="">
+                    {{ user.is_online|yesno:"Online,Offline" }}
+                </button>
+            </div>
+
+            {% include "widget/updated_moveablenav.html" %}
+        </div>
+
+        <div class="user_details">
+            <div class="nav_button">
+                <div class="but_1" id="button_1">
+                    <a href="#">About</a>
+                </div>
+                <div class="but_2" id="button_2">
+                    <a onclick="show_popup()" href="#">Contact</a>
+                </div>
+            </div>
+
+            <div class="about_user mt-3 ps-2" id="show_details">
+                <label for="title" style="font-size:15px; font-weight: bold;">About : </label>
+                <p>{{ personal_details.about_me|default:"No details provided." }}</p>
+                <p>instert lies about yourself here so u can fool others </p>
+            </div>
+
+            <div class="about_user mt-3 ps-2" id="address" style="display: none;">
+                <label for="title" style="font-size:15px; font-weight: bold;">Address: </label>
+                <p>Placeholder address details</p>
+            </div>
+
+            <div class="family_details mt-3 ps-2">
+                <label for="title" style="font-size:15px; font-weight: bold;">Family Details : </label>
+                <p>Marital Status: {{ additional_details.is_married|yesno:"Married,Not Married" }}</p>
+                <p>Annual Income: {{ additional_details.auual_income }}</p>
+                <p>Family Type: {{ additional_details.family_type }}</p>
+                <p>Family Name: {{ additional_details.family_name }}</p>
+                <p>Father's Name: {{ additional_details.father_name }}</p>
+                <p>Father's Occupation: {{ additional_details.father_occupation }}</p>
+                <p>Mother's Name: {{ additional_details.mother_name }}</p>
+                <p>Mother's Occupation: {{ additional_details.mother_occupation }}</p>
+                <p>Total Siblings: {{ additional_details.total_siblings }}</p>
+                <p>Religion: {{ additional_details.religion }}</p>
+                <p>Caste/Community: {{ additional_details.caste_or_community }}</p>
+                <p>Complexion: {{ additional_details.complexion|default:"Not Specified" }}</p>
+            </div>
+
+            <div class="interest ps-2">
+                <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
+                <div class="interest_flex">
+                    {% for interest in interests %}
+                    <span>{{ interest.intrest }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="hobbies ps-2">
+                <label for="title" style="font-size:15px; font-weight: bold;">Hobbies : </label>
+                <div class="hobby_flex">
+                    {% for hobby in hobbies %}
+                    <span>{{ hobby.hobby }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% comment %} <div class="container-fluid custom-container">
+    <div class="profile-container">
+        <div class="carousel-container">
+            <nav class="navbar-custom">
+                <div class="nav-left">
+                    <i class='fas fa-angle-left' style='font-size:24px'></i>
+                </div>
+                <div class="nav-right">
+                    <div class="distance"><i class='fas fa-location-arrow' style='font-size:18px'></i>2.5 km
+                    </div>
+                </div>
+            </nav>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -364,10 +475,10 @@
             
             <div class="profile-name">
                 <label>
-                    <h2>User Name</h2>
+                    <h2>{{ user.username }}</h2>
                 </label>
                 <label>
-                    <h4>User Name</h4>
+                    <h4>{{ user.email }}</h4>
                 </label>
                 <button type="button" class="profile-button" data-mdb-ripple-init>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
@@ -392,29 +503,19 @@
 
             <div class="about_user mt-3 ps-2" id="show_details">
                 <label for="titile" style="font-size:15px; font-weight: bold;">About : </label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-                    obcaecati tenetur iure eius earum
-                </p>
+                <p>{{ personal_details.about_me|default:"No details provided." }}</p>
             </div>
 
             <div class="about_user mt-3 ps-2" id="address" style="display: none;">
                 <label for="titile" style="font-size:15px; font-weight: bold;">Address: </label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-                    obcaecati tenetur iure eius earum
-                </p>
+                <p>{{ additional_details.address|default:"No address available." }}</p>
             </div>
 
             <div class="interest ps-2">
                 <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
                 <div class="interest_flex">
-                    {% for i in 100|number_rangeobj %}
-                    <span>Interests</span>
+                    {% for interest in interests %}
+                    <span>{{ interest.intrest }}</span>
                     {% endfor %}
                 </div>
             </div>
@@ -446,7 +547,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
 
 {% endblock content %}
 
