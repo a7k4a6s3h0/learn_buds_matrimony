@@ -15,8 +15,8 @@
                         {% include "widget/input_details_form.html" with type='number' label='Age'  name='age'%}
                         {% include "widget/input_details_form.html" with type='gender_select' label='gender' name='gender' %}
                         {% include "widget/input_details_form.html" with type='date' label='DOB' name='dob'%}
-                        {% include "widget/input_details_form.html" with type='text' label='Hobbies' name='hobbies' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Intrestes' name='Intrestes' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Hobbies' name='hobbies' holder='Enter hobbies separated by commas' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Intrestes' name='Intrestes' holder='Enter interstes separated by commas'%}
                         {% include "widget/input_details_form.html" with type='checkbox' label='Smoking Habits' name='smoking_habits' %}
                         {% include "widget/input_details_form.html" with type='checkbox' label='Drinking Habits' name='drinking_habits' %}
                         {% include "widget/input_details_form.html" with type='text' label='Qualifications' name='qualification' %}
@@ -54,7 +54,7 @@
                             <div class="col-6">
                                 <button type="submit" class="btn btn-dark w-100" >save</button>
                             </div>
-                            <button type="button" class="btn btn-dark w-100" id="nextToJobDetails">job</button>
+                            <!-- <button type="button" class="btn btn-dark w-100" id="nextToJobDetails">job</button> -->
                         </div>
                     </div>
                 </form>
@@ -94,7 +94,7 @@
                         </div>
                     </form>
                     <!-- <a href="" id="nextToRelationshipGoals">nextToRelationshipGoals</a> -->
-                    <button type="button" class="btn btn-dark w-100" id="nextToRelationshipGoals">nextToRelationshipGoals</button>
+                    <!-- <button type="button" class="btn btn-dark w-100" id="nextToRelationshipGoals">nextToRelationshipGoals</button> -->
 
                     </div>
 
@@ -125,11 +125,11 @@
                                 <button type="button" class="btn btn-dark w-100" id="prevToJobDetails">Previous</button>
                             </div>
                             <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" id="">Next</button>
+                                <button type="submit" class="btn btn-dark w-100" id="">save</button>
                             </div>
                         </div>
                     </form>
-                    <button type="submit" class="btn btn-dark w-100" id="nextToInterested">nextToInterested</button>
+                    <!-- <button type="submit" class="btn btn-dark w-100" id="nextToInterested">nextToInterested</button> -->
                     <!-- <a href="" id="nextToInterested">nextToInterested</a> -->
                     </div>
 
@@ -140,15 +140,15 @@
                         {% include "widget/input_details_form.html" with type='for_relationtype_check' label='Matrimony' name='type'  value='is_long'%}
                         {% include "widget/input_details_form.html" with type='for_relationtype_check' label='Dating' name='type' value='is_short'%}
                         <div class="row">
-                            <div class="col-6">
+                            <!-- <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToRelationshipGoals">Previous</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="submit" class="btn btn-dark w-100" id="">Next</button>
+                            </div> -->
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-dark w-100" id="">submit</button>
                             </div>
                         </div>
                         </form>
-                        <button type="button" class="btn btn-dark w-100" id="nextToAdditionalDetails">nextToAdditionalDetails</button>
+                        <!-- <button type="button" class="btn btn-dark w-100" id="nextToAdditionalDetails">nextToAdditionalDetails</button> -->
                         <!-- <a href="" id="nextToAdditionalDetails">nextToAdditionalDetails</a> -->
                     </div>
 
@@ -170,11 +170,11 @@
                         {% include "widget/input_details_form.html" with type='text' label='Number Of Siblings Married' name='total_siblings_married' %}
                         {% include "widget/input_details_form.html" with type='text' label='Height' name='height'%}
                         {% include "widget/input_details_form.html" with type='text' label='Weight' name='weight'%}
-                        {% include "widget/input_details_form.html" with type='text' label='Body Type' name='blood_group' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Blood Type' name='blood_group' %}
                         {% include "widget/input_details_form.html" with type='text' label='Religion' name='religion'%}
                         {% include "widget/input_details_form.html" with type='text' label='Caste/Community' name='caste_or_community'%}
                         {% include "widget/input_details_form.html" with type='text' label='Complexion' name='complexion'%}
-                        {% include "widget/input_details_form.html" with type='text' label='Disabilities' name='disabilitys'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Disabilities' name='disabilitys' holder='Enter disabilitys separated by commas'%}
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Siblings Name & Details' %} -->
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %} -->
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Expectation from Partner' %} -->
@@ -194,10 +194,10 @@
                             </div>
                         {% endif %}   
                         <div class="row">
-                            <div class="col-6">
+                            <!-- <div class="col-6">
                                 <button type="button" class="btn btn-dark w-100" id="prevToInterested">Previous</button>
-                            </div>
-                            <div class="col-6">
+                            </div> -->
+                            <div class="col-12">
                                 <button type="submit" class="btn btn-dark w-100" >Submit</button>
                             </div>
                         </div>
