@@ -44,6 +44,7 @@ def validate_otp(user_otp_code ):
             # change user is_active to true
             user = otp_data.user
             user.is_active = True
+            user.is_verified = True
             user.save()
 
             return True, "OTP is valid."
