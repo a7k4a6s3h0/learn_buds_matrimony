@@ -99,45 +99,45 @@
             document.getElementById('step1').classList.remove('d-none');
         });
 
-        document.getElementById('nextToJobDetails').addEventListener('click', function () {
-                document.getElementById('step2').classList.add('d-none');
-            document.getElementById('step3').classList.remove('d-none');
-        });
+        // document.getElementById('nextToJobDetails').addEventListener('click', function () {
+        //         document.getElementById('step2').classList.add('d-none');
+        //     document.getElementById('step3').classList.remove('d-none');
+        // });
 
         // document.getElementById('prevToJobStatus').addEventListener('click', function () {
         //     document.getElementById('step3').classList.add('d-none');
         //     document.getElementById('step2').classList.remove('d-none');
         // });
 
-        document.getElementById('nextToRelationshipGoals').addEventListener('click', function () {
-            document.getElementById('step3').classList.add('d-none');
-            document.getElementById('step4').classList.remove('d-none');
-        });
+        // document.getElementById('nextToRelationshipGoals').addEventListener('click', function () {
+        //     document.getElementById('step3').classList.add('d-none');
+        //     document.getElementById('step4').classList.remove('d-none');
+        // });
 
         document.getElementById('prevToJobDetails').addEventListener('click', function () {
             document.getElementById('step4').classList.add('d-none');
             document.getElementById('step3').classList.remove('d-none');
         });
 
-        document.getElementById('nextToInterested').addEventListener('click', function () {
-            document.getElementById('step4').classList.add('d-none');
-            document.getElementById('step5').classList.remove('d-none');
-        });
+        // document.getElementById('nextToInterested').addEventListener('click', function () {
+        //     document.getElementById('step4').classList.add('d-none');
+        //     document.getElementById('step5').classList.remove('d-none');
+        // });
 
-        document.getElementById('prevToRelationshipGoals').addEventListener('click', function () {
-            document.getElementById('step5').classList.add('d-none');
-            document.getElementById('step4').classList.remove('d-none');
-        });
+        // document.getElementById('prevToRelationshipGoals').addEventListener('click', function () {
+        //     document.getElementById('step5').classList.add('d-none');
+        //     document.getElementById('step4').classList.remove('d-none');
+        // });
 
-        document.getElementById('nextToAdditionalDetails').addEventListener('click', function () {
-            document.getElementById('step5').classList.add('d-none');
-            document.getElementById('step6').classList.remove('d-none');
-        });
+        // document.getElementById('nextToAdditionalDetails').addEventListener('click', function () {
+        //     document.getElementById('step5').classList.add('d-none');
+        //     document.getElementById('step6').classList.remove('d-none');
+        // });
 
-        document.getElementById('prevToInterested').addEventListener('click', function () {
-            document.getElementById('step6').classList.add('d-none');
-            document.getElementById('step5').classList.remove('d-none');
-        });
+        // document.getElementById('prevToInterested').addEventListener('click', function () {
+        //     document.getElementById('step6').classList.add('d-none');
+        //     document.getElementById('step5').classList.remove('d-none');
+        // });
 
         //     document.getElementById('submitForm').addEventListener('click', function () {
         //         // Handle form submission here
@@ -219,7 +219,7 @@
             X.style.display = 'none';
             var loginModal = document.getElementById('loginModal');
             // var signupModal = document.getElementById('signupModal');
-            loginModal.addEventListener('hidden.bs.modal', function () {
+            loginModal.addEventListener(click,'hidden.bs.modal', function () {
                 // Reset the URL without reloading the page
                 // history.replaceState(null, null, window.location.pathname);
                 // Redirect to the specified URL
@@ -256,7 +256,6 @@
             show_login()
             hide_signup()
         {%endif%}
-
 
         {% if show_resetPass_modal %}
         show_restpass()
