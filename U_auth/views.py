@@ -157,9 +157,10 @@ class SignupView(FormView):
 
     def form_invalid(self, form):
         # Check if the specific error related to "user already exists" is present
-        if 'email' in form.errors:
+        print(self.user_email, "in invalid_form")
+        
+        if costume_user.objects.filter(email=self.user_email).exists():
             # Handle the "user already exists" error
-            print(self.user_email, "in invalid_form")
             print("User already exists error detected")
 
             obj = check_permissions(self.request, self.user_email)
@@ -169,7 +170,7 @@ class SignupView(FormView):
             if response_status is not None:
                 if response_status.get('model', None) == 'OTP':
                     # If OTP is already generated, trigger the OTP modal
-                    messages.error(self.request, "User already exists. Please check your email for OTP.")
+                    messages.error(self.request, response_status['message'])
                     # Generate OTP after the user is created
                     user = costume_user.objects.get(email=self.user_email)
                     otp_code = generate_otp(user)
@@ -181,7 +182,7 @@ class SignupView(FormView):
                         model_name = key
                         print(model_name,"model name...................")
 
-                context = self.get_context_data(form=form)
+                context = self.get_context_data()
                 context.update({model_name: True})  # Passing the context variable 
                 return self.render_to_response(context)
 
@@ -258,7 +259,7 @@ class CheckOTPView(FormView):
     
     def get_success_url(self):
         
-        purpose = self.request.session.get('purpose', None)  # Remove purpose from session
+        purpose = self.request.session.pop('purpose', None)  
 
         # Get the URL name from the purpose
         url_name = self.get_url(purpose)
@@ -318,11 +319,33 @@ class ResendOTPView(FormView):
 
 class LoginView(FormView):
 
-    
-
     template_name = 'auth/auth.html'
     form_class = LoginForm
     success_url = reverse_lazy('home')
+    user_email = None
+
+    def get_form_kwargs(self):
+        """
+        Passes the request data to the form.
+        """
+        # Get the default form kwargs
+        kwargs = super().get_form_kwargs()
+
+        # Extract email from the request's POST data
+        self.user_email = self.request.POST.get('email', None)
+
+        # Debugging: Print the extracted email
+        print(f"Extracted email: {self.user_email}")
+        self.request.session['user'] = self.user_email
+
+
+        print(kwargs, "***********************************")
+
+        return kwargs
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
+
+        return super().get(request, *args, **kwargs)  # Call the parent's get method to render the form
 
     def form_valid(self, form):
         """
@@ -343,9 +366,28 @@ class LoginView(FormView):
     
     def form_invalid(self, form):
         # Render the form with errors and trigger the login modal
+        if costume_user.objects.filter(email=self.user_email).exists():
+            user = costume_user.objects.get(email=self.user_email)
+            if not user.is_verified:
+                # Handle the "user already exists" error
+                print(self.user_email, "in invalid_form")
+                print("User is not verified error detected")
+
+                messages.error(self.request, "You Need to verify yourself. Please check your email for OTP.")
+                # Generate OTP after the user is created
+                user = costume_user.objects.get(email=self.user_email)
+                otp_code = generate_otp(user)
+                print(f"Generated OTP: {otp_code}")  # Debugging
+                self.request.session['purpose'] = 'newuser_verification'
+                return redirect('check_otp')
+                    
         return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
     
     def get_success_url(self):
+        # check user completed basic steps firest
+        if not self.request.user.is_completed:
+            messages.error(self.request, "First complete basic steps..")
+            return reverse('auth_page')
         # Redirect to a success URL after form submission
         return reverse_lazy('home')
     
@@ -508,6 +550,11 @@ class JobDetailsView(FormView):
 
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['experance_level'] = ['entry', 'mid', 'senior']
+        return context
+
     def form_valid(self, form: Any) -> HttpResponse:
         job = form.save(commit=True)
         return super().form_valid(form)
@@ -538,7 +585,7 @@ class RelationShipGoalView(FormView):
 
     def form_valid(self, form):
         form.save(commit=True)
-
+        self.request.session['check_type'] = True
         return super().form_valid(form)
     
     def form_invalid(self, form):
@@ -552,7 +599,6 @@ def UserType(request):
     choose_type = request.GET.get('type')
     print(request.GET, choose_type)
     choices = {}
-    context = {}
     
     if choose_type:
         try:
@@ -562,17 +608,21 @@ def UserType(request):
             for value, iteam in choices.items():
                 if iteam[1] and iteam[0] == choose_type:
                     # context['show_addition_details_model'] = True
-                    return render(request, 'auth/auth.html', context)    
+                    request.session.pop('check_type', None)
+                    return redirect('auth_page')
+                    
             messages.error(request, "Wrong type...!!")
-            context['show_relationship_model'] = True
-            return render(request, 'auth/auth.html', context)
+            # context['show_relationship_model'] = True
+            return redirect('auth_page')
+
         except Relationship_Goals.DoesNotExist:
             messages.error(request, "Relationship goals not found for this user.")
-            return render(request, 'auth/auth.html', context)
-        
-    context['show_relationship_model'] = True    
+            return redirect('auth_page')
+
+    # context['show_relationship_model'] = True    
     messages.error(request, "You Must choose correct one from above option")
-    return render(request, 'auth/auth.html', context)
+    return redirect('auth_page')
+
 
 class AdditionalDetailsView(FormView):
     template_name = 'auth/auth.html'
