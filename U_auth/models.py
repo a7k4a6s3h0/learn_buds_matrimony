@@ -34,6 +34,7 @@ class costume_user(AbstractUser):
     country_details = models.ForeignKey(Country_codes, on_delete=models.SET_NULL, related_name="reverse_User_country", null=True)
     is_online = models.BooleanField(default=False)
     is_completed = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

@@ -70,9 +70,8 @@
             <div class="modal-footer">
                 <p class="text-center w-100 mb-0">
                     <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">Reset password?</a><br>
-                    Don’t have an account? <a id="sign" href="#" data-bs-toggle="modal" data-bs-target="#signupModal"
-                        class="text-decoration-none">Sign Up</a>
-                </p>
+                    <p id="sign" >Don’t have an account? <a  href="#" data-bs-toggle="modal" data-bs-target="#signupModal"
+                        class="text-decoration-none">Sign Up</a><p>
             </div>
         </div>
     </div>
@@ -249,7 +248,6 @@
         }
 
         {% if show_signup_modal %}
-            console.log("in signup")
             show_signup()
         {% endif %}
 
@@ -266,7 +264,6 @@
         {% endif %}
 
         {% if show_personaldetails_modal %}
-            console.log("in")
             show_personaldetails()
         {% endif %}
 
