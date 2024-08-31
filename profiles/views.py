@@ -4,6 +4,9 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from U_auth.models import costume_user, UserPersonalDetails, Job_Details, AdditionalDetails, Pictures, Hobbies, Interests, Relationship_Goals
 
+from U_auth.models import CustomUser
+from .models import InterestRequest
+from django.db.models import Q  # Import Q for complex queries
 # Create your views here.
 def demo_pr(request, user_id):
     # Fetch the user and related data
@@ -44,20 +47,20 @@ def messages_pg(request):
     return render(request, 'messages.html')
 
 
-def user_send_pg(request):
-    return render(request, 'send.html')
+# def user_send_pg(request):
+#     return render(request, 'send.html')
 
 
-def user_accept_pg(request):
-    return render(request, 'accept.html')
+# def user_accept_pg(request):
+#     return render(request, 'accept.html')
 
 
-def user_reject_pg(request):
-    return render(request, 'reject.html')
+# def user_reject_pg(request):
+#     return render(request, 'reject.html')
 
 
-def user_recieved_pg(request):
-    return render(request, 'recieved.html')
+# def user_recieved_pg(request):
+#     return render(request, 'recieved.html')
 
 def user_chat_pg(request):
     return render(request, 'col_chat.html')
@@ -74,3 +77,63 @@ def user_contacted_pg(request):
 
 def user_viewed_pg(request):
     return render(request, 'pr_viewed.html')
+
+
+class SendRequestView(LoginRequiredMixin):
+    def post(self, request, *args, **kwargs) :
+        sender = request.user
+        receviver = get_object_or_404(CustomUser, id=self.kwargs['pk'])
+
+        InterestRequest.objects.create(sender=sender, receviver=receviver)
+        return redirect(reverse_lazy('send'))
+
+class SentedRequestView(LoginRequiredMixin,ListView):
+    model = 'InterestRequest'
+    template_name = 'send.html'
+    context_object_name = 'sented_requests'
+
+    def get_queryset(self):
+        return InterestRequest.objects.filter(sender=self.request.user)
+    
+class ReceivedRequestView(LoginRequiredMixin,ListView):
+    model = 'InterestRequest'
+    template_name = 'received.html'
+    context_object_name = 'recevied_requests'
+    
+    def get_queryset(self):
+        return InterestRequest.objects.filter(receiver=self.request.user)
+
+class RequestHandleView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        interest_request = get_object_or_404(InterestRequest, id=self.kwargs['pk'], receiver=request.user)
+        action = self.kwargs.get('action')  # This fetches the value of 'action' from the URL ('accept' or 'reject').
+
+        if action == 'accept':  # If 'action' is 'accept'
+            interest_request.status = 'accepted'  # Set the request's status to 'accepted'
+        elif action == 'reject':  # Otherwise, if 'action' is 'reject'
+            interest_request.status = 'rejected'  # Set the request's status to 'rejected'
+
+        interest_request.save()
+        return redirect(reverse_lazy('received_requests'))
+
+class AcceptedRequestView(LoginRequiredMixin, ListView):
+    model = 'InterestRequest'
+    template_name = 'accept'
+    context_object_name = 'accepted_requests'
+
+    def get_queryset(self):
+        return InterestRequest.objects.filter(
+            Q(sender=self.request.uesr, status='accepted')|
+            Q(receiver=self.request.user, status='accepted')
+        )
+
+class RejectedRequestView(LoginRequiredMixin, ListView):
+    model = 'InterestRequest'
+    template_name = 'accept'
+    context_object_name = 'accepted_requests'
+
+    def get_queryset(self):
+        return InterestRequest.objects.filter(
+            Q(sender=self.request.uesr, status='rejected')|
+            Q(receiver=self.request.user, status='rejected')
+        )
