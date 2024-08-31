@@ -180,6 +180,58 @@ class UserDisabilities(models.Model):
     disability_type = models.CharField(max_length=50)
 
 
+class Location(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    def _str_(self):
+        return self.name
+
+class PartnerPreference(models.Model):
+    GENDER_CHOICES = [
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    ]
+
+    SMOKING_CHOICES = [
+        ('NS', 'Non-Smoker'),
+        ('S', 'Smoker'),
+    ]
+
+    DRINKING_CHOICES = [
+        ('ND', 'Non-Drinker'),
+        ('D', 'Drinker'),
+    ]
+
+    RELIGION_CHOICES = [
+        ('CH', 'Christianity'),
+        ('IS', 'Islam'),
+        ('HI', 'Hinduism'),
+        ('BU', 'Buddhism'),
+        ('JE', 'Judaism'),
+        ('SI', 'Sikhism'),
+        ('OT', 'Other'),
+    ]
+
+    user = models.OneToOneField(costume_user, on_delete=models.CASCADE, related_name="partner_preference")
+    preferred_age = models.IntegerField(blank=False)
+    preferred_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
+    preferred_location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=False)  # ForeignKey for locations
+    interests_hobbies = models.TextField(blank=True)  # Free-text input
+    education_level = models.CharField(max_length=50, blank=False)  # Free-text input
+    preferred_height = models.DecimalField(max_digits=5, decimal_places=2, blank=False)  # Free-text input
+    preferred_weight = models.DecimalField(max_digits=5, decimal_places=2, blank=False)  # Free-text input
+    smoking_habits = models.CharField(max_length=2, choices=SMOKING_CHOICES, blank=False)
+    drinking_habits = models.CharField(max_length=2, choices=DRINKING_CHOICES, blank=False)
+    religion = models.CharField(max_length=2, choices=RELIGION_CHOICES, blank=False)
+    occupation = models.CharField(max_length=255, blank=False)  # Free-text input
+
+    def _str_(self):
+        return f"{self.user.username}'s partner preference"
+
+    class Meta:
+        verbose_name = "Partner Preference"
+        verbose_name_plural = "Partner Preferences"
 
 class OTP(models.Model):
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE)
