@@ -15,11 +15,13 @@
                         {% include "widget/input_details_form.html" with type='number' label='Age'  name='age'%}
                         {% include "widget/input_details_form.html" with type='gender_select' label='gender' name='gender' %}
                         {% include "widget/input_details_form.html" with type='date' label='DOB' name='dob'%}
-                        {% include "widget/input_details_form.html" with type='text' label='Hobbies' name='hobbies' holder='Enter hobbies separated by commas' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Intrestes' name='Intrestes' holder='Enter interstes separated by commas'%}
+                        {% comment %} {% include "widget/input_details_form.html" with type='text' label='Location' name='location' %} {% endcomment %}
+                        {% include "widget/input_details_form.html" with type='context_select' label='Hobbies'%}
+                        {% include "widget/input_details_form.html" with type='context_select' label='Intrestes'%}
+                        {% include "widget/input_details_form.html" with type='context_select' label='Qualifications'%}
                         {% include "widget/input_details_form.html" with type='checkbox' label='Smoking Habits' name='smoking_habits' %}
                         {% include "widget/input_details_form.html" with type='checkbox' label='Drinking Habits' name='drinking_habits' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Qualifications' name='qualification' %}
+                        <!-- {% include "widget/input_details_form.html" with type='text' label='Qualifications' name='qualification' %} -->
                         {% include "widget/input_details_form.html" with type='file' label='Profile Pic' name='profile_pic' %}
                         {% include "widget/input_details_form.html" with type='file' label='more Pic' name='photos' multi='true' %}
                         {% include "widget/input_details_form.html" with type='file' label='Short Reels' name='short_video' %}
@@ -65,7 +67,7 @@
                         <h1>Job Details</h1>
                         {% include "widget/input_details_form.html" with type='text' label='Title' name='job_title' %}
                         {% include "widget/input_details_form.html" with type='text' label='company name' name='company_name' %}
-                        {% include "widget/input_details_form.html" with type='text' label='location' name='location' %}
+                        {% include "widget/input_details_form.html" with type='text' label='Location' name='location' %}
                         {% include "widget/input_details_form.html" with type='text' label='designation' name='designation' %}
                         {% include "widget/input_details_form.html" with type='select' label='Experience Level' name='experiences_level' select_options=experance_level %}
                         {% if form.errors and show_jobdetails_modal%}
@@ -157,9 +159,9 @@
                         <h1>Additional Details</h1>
                         <form action="{% url 'additional_datas' %}" method="post">
                             {% csrf_token %}
-                        {% include "widget/input_details_form.html" with type='static_select' label='Marital Status' name='is_married'%}
-                        {% include "widget/input_details_form.html" with type='text' label='Annual Income' name='auual_income' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Family Type' name='family_type'%}
+                        {% include "widget/input_details_form.html" with type='select_married_status' label='Marital Status' name='married_status'%}
+                        {% include "widget/input_details_form.html" with type='text' label='Annual Income' name='annual_income' %}
+                        {% include "widget/input_details_form.html" with type='select_family_type' label='Family Type' name='family_type'%}
                         {% include "widget/input_details_form.html" with type='text' label='Family Name' name='family_name' %}
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Family Name' %} -->
                         {% include "widget/input_details_form.html" with type='text' label='Father\'s Name' name='father_name' %}
@@ -168,13 +170,13 @@
                         {% include "widget/input_details_form.html" with type='text' label='Mother\'s Occupation' name='mother_occupation'%}
                         {% include "widget/input_details_form.html" with type='text' label='Total Siblings' name='total_siblings' %}
                         {% include "widget/input_details_form.html" with type='text' label='Number Of Siblings Married' name='total_siblings_married' %}
+                        {% include "widget/input_details_form.html" with type='context_select' label='Disabilities' name='disabilitys'%}
                         {% include "widget/input_details_form.html" with type='text' label='Height' name='height'%}
                         {% include "widget/input_details_form.html" with type='text' label='Weight' name='weight'%}
                         {% include "widget/input_details_form.html" with type='text' label='Blood Type' name='blood_group' %}
-                        {% include "widget/input_details_form.html" with type='text' label='Religion' name='religion'%}
+                        {% include "widget/input_details_form.html" with type='select_religion' label='Religion' name='religion'%}
                         {% include "widget/input_details_form.html" with type='text' label='Caste/Community' name='caste_or_community'%}
                         {% include "widget/input_details_form.html" with type='text' label='Complexion' name='complexion'%}
-                        {% include "widget/input_details_form.html" with type='text' label='Disabilities' name='disabilitys' holder='Enter disabilitys separated by commas'%}
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Siblings Name & Details' %} -->
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Drinking Habits' %} -->
                         <!-- {% include "widget/input_details_form.html" with type='text' label='Expectation from Partner' %} -->

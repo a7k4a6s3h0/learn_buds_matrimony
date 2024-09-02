@@ -94,6 +94,8 @@ class check_permissions:
                     
 
         # If all models exist
-        return None
+        self.model_dict['status'] = False
+        self.model_dict['show_login_modal'] = True
+        return self.model_dict
             
            

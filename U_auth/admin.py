@@ -6,15 +6,16 @@ admin.site.register(costume_user)
 admin.site.register(Country_codes)
 admin.site.register(languages)
 admin.site.register(OTP)
-
+admin.site.register(Location)
 admin.site.register(UserPersonalDetails)
 admin.site.register(Pictures)
 admin.site.register(Hobbies)
-admin.site.register(Intrestes)
+admin.site.register(Qualifications)
+admin.site.register(Interests)
 admin.site.register(Job_Details)
 admin.site.register(Relationship_Goals)
 admin.site.register(AdditionalDetails)
-admin.site.register(UserDisabilities)
+admin.site.register(Disabilities)
 
 
 
