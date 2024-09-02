@@ -18,6 +18,8 @@ from .otp import generate_otp, validate_otp
 from .models import AdditionalDetails, costume_user, OTP, UserPersonalDetails
 from .forms import *
 from django.views import View
+import httpagentparser
+from .find_ip_details import find_details
 # Create your views here.
 
 # def demo(request):
@@ -69,7 +71,8 @@ def AuthPage(request):
     }
     return render(request, 'auth/auth.html',context)
 
-
+def multiselect(request):
+    return render(request, 'auth/MultiSelect.html')
 
 def error_404(request):
     return render(request, 'Errors/404.html')
@@ -88,10 +91,41 @@ class SignupView(FormView):
     form_class = CreateUser
     user_email = None
 
-    # html_model = ('show_personaldetails_modal', 'show_personaldetails_modal'), (Job_Details, 'show_jobdetails_modal'), (Relationship_Goals, 'show_relationmodel_modal'), (AdditionalDetails, 'show_additionaldetails_modal')
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        interest_list = []
+        hobbies_list = []
+        qualifications = [
+        'Bachelor of Science',
+        'Master of Arts',
+        'PhD in Computer Science',
+        'Diploma in Design',
+        'Certification in Data Science'
+        ]
+        disabilities_list = [
+            'Visual Impairment',
+            'Hearing Impairment',
+            'Speech Impairment',
+            'Physical Disability',
+            'Intellectual Disability',
+            'Learning Disability',
+            'Mental Health Condition',
+            'Autism Spectrum Disorder',
+            'Cerebral Palsy',
+            'Chronic Illness',
+            'Multiple Disabilities',
+            'Other'
+        ]
+        interests = Interests.objects.all()
+        hobbies = Hobbies.objects.all()
+        for interest in interests:
+            interest_list.append(interest.interest)
+        for hobbie in hobbies:
+            hobbies_list.append(hobbie.hobby)
+        context['interest_lists'] = interest_list
+        context['hobbie_lists'] = hobbies_list
+        context['qualifications'] = qualifications
+        context['disabilities_list'] = disabilities_list
         context['experance_level'] = ['entry', 'mid', 'senior']
         # context['experance_level'] = ['Beginner', 'Intermediate', 'Expert']
         context['marital_status'] = ['Unmarried', 'Divorced']
@@ -137,16 +171,19 @@ class SignupView(FormView):
         # Handle form validation and user creation here
 
         
-        user = form.save()  # Save the form data to create a new user
+        user = form.save(commit=True)  # Save the form data to create a new user
         print(f"User created: {user}")  # Debugging
 
         if user:
             # Generate OTP after the user is created
             otp_code = generate_otp(user)
             print(f"Generated OTP: {otp_code}")  # Debugging
-            # self.request.session['user'] = user.email
+            
             # Add a message to the context that OTP was generated successfully
             messages.success(self.request, "OTP generated successfully.")
+
+            print(self.get_device_name(self.request))
+            # find_details(self.request)
 
 
         response = super().form_valid(form)
@@ -154,7 +191,19 @@ class SignupView(FormView):
         print(response, "response...................!!!!!!!!!!!!!")  # Debugging
         return response
     
-
+    def get_device_name(self, request):
+            user_agent = request.META.get('HTTP_USER_AGENT', '')
+            parsed_agent = httpagentparser.detect(user_agent)
+            if 'platform' in parsed_agent and 'browser' in parsed_agent:
+                device_name = f"{parsed_agent['platform']['name']} - {parsed_agent['browser']['name']} {parsed_agent['browser']['version']}"
+            elif 'platform' in parsed_agent:
+                device_name = f"{parsed_agent['platform']['name']}"
+            elif 'browser' in parsed_agent:
+                device_name = f"{parsed_agent['browser']['name']} {parsed_agent['browser']['version']}"
+            else:
+                device_name = "Unknown Device"
+            return device_name
+    
     def form_invalid(self, form):
         # Check if the specific error related to "user already exists" is present
         print(self.user_email, "in invalid_form")
@@ -339,7 +388,7 @@ class LoginView(FormView):
         self.request.session['user'] = self.user_email
 
 
-        print(kwargs, "***********************************")
+        print(kwargs, "**********************************")
 
         return kwargs
 
@@ -505,7 +554,28 @@ class UserPersonalDetailsView(FormView):
     template_name = 'auth/auth.html'
     form_class = UserPersonalDetailsForm
 
-
+    def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        interest_list = []
+        hobbies_list = []
+        qualifications = [
+        'Bachelor of Science',
+        'Master of Arts',
+        'PhD in Computer Science',
+        'Diploma in Design',
+        'Certification in Data Science'
+        ]
+        interests = Interests.objects.all()
+        hobbies = Hobbies.objects.all()
+        for interest in interests:
+            interest_list.append(interest.interest)
+        for hobbie in hobbies:
+            hobbies_list.append(hobbie.hobby)
+        context['interest_lists'] = interest_list
+        context['hobbie_lists'] = hobbies_list
+        context['qualifications'] = qualifications
+        return context
+    
     def get_form_kwargs(self):
         """
         Passes the request data to the form.
@@ -521,7 +591,7 @@ class UserPersonalDetailsView(FormView):
 
     def form_valid(self, form):
         photos = form.files.getlist('photos', None)
-        print(photos,"****************************************")
+        print(photos,"***************************************")
         details = form.save()
         print(details,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         return super().form_valid(form)
@@ -627,6 +697,25 @@ def UserType(request):
 class AdditionalDetailsView(FormView):
     template_name = 'auth/auth.html'
     form_class = AdditionalDetailsForm
+
+    def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        disabilities_list = [
+            'Visual Impairment',
+            'Hearing Impairment',
+            'Speech Impairment',
+            'Physical Disability',
+            'Intellectual Disability',
+            'Learning Disability',
+            'Mental Health Condition',
+            'Autism Spectrum Disorder',
+            'Cerebral Palsy',
+            'Chronic Illness',
+            'Multiple Disabilities',
+            'Other'
+        ]
+        context['disabilities_list'] = disabilities_list
+        return context
 
     def get_form_kwargs(self):
         """

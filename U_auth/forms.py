@@ -1,3 +1,4 @@
+import json
 import django.views.generic.edit
 import os
 import random
@@ -7,7 +8,13 @@ from datetime import date
 from .models import *
 import re
 
-
+class MultipleValueField(forms.CharField):
+    def clean(self, value):
+        # Split the input value into a list based on a delimiter
+        value = super().clean(value)
+        if value:
+            return [item.strip() for item in value.split(',')]
+        return []
 
 class CreateUser(forms.ModelForm):
     country_code = forms.ModelChoiceField(
@@ -27,6 +34,7 @@ class CreateUser(forms.ModelForm):
         label="Confirm Password", 
         required=True
     )
+
 
     class Meta:
         model = costume_user
@@ -50,24 +58,21 @@ class CreateUser(forms.ModelForm):
             }),
         }
     
-    def save(self, commit=True):
+    def save(self, commit):
+        
         # Call the custom create_user method
         user = costume_user.objects.create_user(
             email=self.cleaned_data['email'],
             username=self.cleaned_data['username'],
             phone=self.cleaned_data['phone'],
             password=self.cleaned_data['password'],
-            
-            country_details =Country_codes.objects.get(country_name=self.cleaned_data['country_code'])
+            country_details =Country_codes.objects.get(country_code=self.cleaned_data['country_code']),
+
         )
         if commit:
             user.save()
-        return user
 
-    # def __init__(self, *args, **kwargs):
-    #     super(CreateUser, self).__init__(*args, **kwargs)
-    #     self.fields['password'].widget = forms.PasswordInput()  # Ensure password is inputted securely
-    #     self.fields['confirm_password'].widget = forms.PasswordInput()  # Secure input for confirm password
+        return user
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -227,13 +232,7 @@ class ResetPasswordForm_2(forms.Form):
 
         return cleaned_data
 
-class MultipleValueField(forms.CharField):
-    def clean(self, value):
-        # Split the input value into a list based on a delimiter
-        value = super().clean(value)
-        if value:
-            return [item.strip() for item in value.split(',')]
-        return []
+
 
 class UserPersonalDetailsForm(forms.ModelForm):
 
@@ -244,17 +243,31 @@ class UserPersonalDetailsForm(forms.ModelForm):
 
     photos = forms.FileField(required=False)
     hobbies = MultipleValueField(
-        widget=forms.Textarea(attrs={'placeholder': 'Enter hobbies separated by commas'}),
-        required=False
+        widget=forms.Textarea(),
+        required=True
     )
     Intrestes = MultipleValueField(
-        widget=forms.Textarea(attrs={'placeholder': 'Enter interstes separated by commas'}),
-        required=False
+        widget=forms.Textarea(),
+        required=True
+    )
+    qualifications = MultipleValueField(
+        widget=forms.Textarea(),
+        required=True
     )
 
+    location = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    address_details = forms.CharField(
+        required=True,
+        widget=forms.Textarea()
+    )
+    
     class Meta:
         model = UserPersonalDetails
-        fields = ['age', 'gender', 'dob', 'smoking_habits', 'drinking_habits', 'qualification', 'profile_pic', 'short_video', 'is_employer', 'is_employee', 'is_jobseeker']
+        fields = ['age', 'gender', 'dob', 'smoking_habits', 'drinking_habits', 'profile_pic', 'short_video', 'is_employer', 'is_employee', 'is_jobseeker']
 
     allowed_image_extensions = ['jpg', 'jpeg', 'png', 'webp', 'svg']
     allowed_video_extensions = ['mp4', 'mov']
@@ -291,8 +304,7 @@ class UserPersonalDetailsForm(forms.ModelForm):
         cleaned_data = super().clean()
 
         # check the required fields are not empty 
-        # print(self.fields)
-        required_fields = ['age', 'gender', 'dob', 'qualification']
+        required_fields = ['age', 'gender', 'dob', 'qualifications', 'Intrestes', 'hobbies']
     
         for field in required_fields:
             if not cleaned_data.get(field):
@@ -337,7 +349,6 @@ class UserPersonalDetailsForm(forms.ModelForm):
                 dob=self.cleaned_data['dob'],
                 smoking_habits=self.cleaned_data['smoking_habits'],
                 drinking_habits=self.cleaned_data['drinking_habits'],
-                qualification=self.cleaned_data['qualification'],
                 profile_pic=self.files.get('profile_pic'),
                 short_video=self.files.get('short_video'),
                 is_employer=self.cleaned_data['is_employer'],
@@ -345,30 +356,55 @@ class UserPersonalDetailsForm(forms.ModelForm):
                 is_jobseeker=self.cleaned_data['is_jobseeker']
             )
 
+            # Parse location
+            locations = self.cleaned_data['location'].split(',')  # Split the single string into a list of lat and lng
+            longitude = float(locations[1].strip())  # Extract and convert longitude
+            latitude = float(locations[0].strip())   # Extract and convert latitude
+
+            # Parse address_details
+            address_details_str = self.cleaned_data['address_details']  # Extract the single string
+            address_details_json = {
+                "address": address_details_str.strip()  # Wrap it in a JSON object with a key
+            }
+
+            # Create Location instance
+            location_details = Location.objects.create(
+                longitude=longitude,
+                latitude=latitude,
+                address_details=address_details_json
+            )
+
+            # Assign to UserPersonalDetails
+            datas.user_location = location_details
             if commit:
+
                 # Save the main UserPersonalDetails instance
                 datas.save()
 
-                # Handle photos
-                photos = self.files.getlist('photos', [])
-                print(photos,"&&&&&&&&&&&&&&&&&&&&&")
-                if photos:
-                    for photo in photos:
-                        Pictures.objects.create(user=datas, photos=photo).save()
-                        
-
                 # Handle interests
-                interests = self.cleaned_data.get('Intrestes', [])
+                interests = self.cleaned_data.get('interests', [])
                 if interests:
-                    for interest in interests:
-                        Intrestes.objects.create(user=datas, intrest=interest)
+                    interests_objects = Interests.objects.filter(interest__in=interests)
+                    datas.interests.set(interests_objects)  # Assign the interests to the UserPersonalDetails instance
 
                 # Handle hobbies
                 hobbies = self.cleaned_data.get('hobbies', [])
                 if hobbies:
-                    for hobby in hobbies:
-                        Hobbies.objects.create(user=datas, hobby=hobby)
+                    hobby_objects = Hobbies.objects.filter(hobby__in=hobbies)
+                    datas.hobbies.set(hobby_objects)  # Assign the hobbies to the UserPersonalDetails instance
 
+                # Handle qualifications
+                qualifications = self.cleaned_data.get('qualifications', [])
+                if qualifications:
+                    qualification_objects = Qualifications.objects.filter(qualification__in=qualifications)
+                    datas.qualifications.set(qualification_objects)  # Assign the qualifications to the UserPersonalDetails instance
+
+                # Handle photos
+                photos = self.files.getlist('photos', [])
+                if photos:
+                    for photo in photos:
+                        Pictures.objects.create(user=datas, photos=photo)
+                        
             return datas    
 
         except Exception as e:
@@ -382,10 +418,20 @@ class JobDetailsForm(forms.ModelForm):
         # Capture the user instance passed via kwargs
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        
+    
+    location = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+    address_details = forms.CharField(
+        required=True,
+        widget=forms.Textarea()
+    )
+    
     class Meta:
         model = Job_Details
-        fields = ('job_title', 'company_name', 'location', 'designation', 'experiences_level')
+        fields = ('job_title', 'company_name', 'designation', 'experiences_level')
 
     
     def save(self, commit : bool) -> Any:
@@ -393,6 +439,26 @@ class JobDetailsForm(forms.ModelForm):
         # Assign the user if it's available
         if self.user:
             job.user = self.user
+            # Parse location
+            locations = self.cleaned_data['location'].split(',')  # Split the single string into a list of lat and lng
+            longitude = float(locations[1].strip())  # Extract and convert longitude
+            latitude = float(locations[0].strip())   # Extract and convert latitude
+
+            # Parse address_details
+            address_details_str = self.cleaned_data['address_details']  # Extract the single string
+            address_details_json = {
+                "address": address_details_str.strip()  # Wrap it in a JSON object with a key
+            }
+
+            # Create Location instance
+            location_details = Location.objects.create(
+                longitude=longitude,
+                latitude=latitude,
+                address_details=address_details_json
+            )
+
+            # Assign to UserPersonalDetails
+            job.job_location = location_details
         if commit:
             job.save()
         return job
@@ -404,7 +470,7 @@ class RelationShipGoalForm(forms.ModelForm):
         # Capture the user instance passed via kwargs
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-
+    
     class Meta:
         model = Relationship_Goals
         fields = ('is_short', 'is_long')
@@ -413,13 +479,11 @@ class RelationShipGoalForm(forms.ModelForm):
         relation_type =  super().save(commit=False)
         # Assign the user if it's available
         if self.user:
-            print(self.cleaned_data.get('is_short', False), self.cleaned_data.get('is_long', False),"??????????????????????????///")
             relation_type.user = self.user
             relation_type.is_short = self.cleaned_data.get('is_short', False)
             relation_type.is_long = self.cleaned_data.get('is_long', False)
         if commit:
             relation_type.save()
-            print("saved>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         return relation_type
     
 
@@ -430,12 +494,12 @@ class AdditionalDetailsForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-    disabilitys = MultipleValueField(widget=forms.Textarea(attrs={'placeholder': 'Enter hobbies separated by commas'}),
-                  required=False)
+    disabilitys = MultipleValueField(widget=forms.Textarea(),
+                  required=True)
 
     class Meta:
         model = AdditionalDetails
-        fields = ('is_married', 'auual_income', 'family_type', 'family_name','father_name', 'father_occupation','mother_name','mother_occupation',
+        fields = ('married_status', 'annual_income', 'family_type', 'family_name','father_name', 'father_occupation','mother_name','mother_occupation',
                   'total_siblings', 'total_siblings_married', 'height', 'weight', 'blood_group', 'religion' , 'caste_or_community', 'complexion')
 
     def save(self, commit : bool) -> Any:
@@ -443,17 +507,16 @@ class AdditionalDetailsForm(forms.ModelForm):
         # Assign the user if it's available
         if self.user:
             addition_datas.user = self.user
-            self.user.is_completed = True
-            self.user.save()
             
         if commit:
             addition_datas.save()
-
+            self.user.is_completed = True
+            self.user.save()
         
-        disabilitys = self.cleaned_data.get('disabilitys', [])
-        for disability in disabilitys:
-            UserDisabilities.objects.create(user=addition_datas, disability_type=disability)
-            
+            disabilitys = self.cleaned_data.get('disabilitys', [])
+            types = Disabilities.objects.filter(disability_type__in=disabilitys)
+            addition_datas.user_disabilities.set(types)  
+
         return addition_datas
     
 
