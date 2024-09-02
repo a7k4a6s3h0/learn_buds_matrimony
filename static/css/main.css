@@ -1,0 +1,90 @@
+@media (min-width: 769px) {
+  .log-icon {
+    margin-top: 300px;
+    /* Push logout to the bottom */
+    margin-bottom: 0;
+    /* Remove extra space at the bottom */
+  }
+
+  .sidebar {
+    width: 5%;
+  }
+
+}
+
+/* For mobile screens */
+@media (max-width: 768px) {
+  .sidebar-flex {
+    position: relative;
+  }
+
+  #sidebarToggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1050;
+    width: 10%;
+  }
+
+  .sidebar {
+    position: absolute;
+    left: -60px;
+    /* Hide the sidebar by default */
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    transition: left 0.3s ease;
+    background-color: #fff;
+    z-index: 1040;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .sidebar ul.nav {
+    flex-grow: 1;
+    padding-top: 60px;
+    /* Space for the toggle button */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar .nav-item {
+    margin-bottom: 20px;
+    /* Add some space between icons */
+  }
+
+  .sidebar .log-icon {
+    margin-top: auto;
+    /* Push logout to the bottom */
+    margin-bottom: 20px;
+    /* Add some space at the bottom */
+  }
+
+  .col.bg-body-secondary {
+    width: 100%;
+    padding-left: 0px;
+    /* Space for the sidebar */
+  }
+
+  .custom-nav {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .search {
+    width: 50%;
+    margin-left: 40px;
+  }
+
+  .no-flex-warp {
+    flex-wrap: nowrap !important;
+  }
+}
+
+.active-icon-color {
+  color: #6039ff;
+}
