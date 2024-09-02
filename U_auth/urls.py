@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('error_404/', views.error_404,name="error_404"),
     path('error_403/', views.error_403,name="error_403"),
+    path('select/', views.multiselect,name="select"),
 
 
     path('', views.SignupView.as_view(), name='auth_page'),

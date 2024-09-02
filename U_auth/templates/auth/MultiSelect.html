@@ -1,0 +1,253 @@
+{% extends 'base_files/base.html' %}
+{% block meta %}
+<title>select</title>
+{% endblock meta %}
+{% load static %}
+
+{% block style %}
+<style>
+    .multiselect-divgroup {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .selctbox_div {
+        display: flex;
+        width: 300px;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        color: black;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        padding: 10px;
+        background-color: #c2bfbf;
+        cursor: pointer;
+    }
+
+    .show_iteam {
+        display: none;
+        width: 300px;
+        height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        background-color: #b6dae6;
+        color: rgb(31, 27, 27);
+        padding: 10px;
+    }
+
+    .add_iteam {
+        display: none;
+        width: 300px;
+        height: 100px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        background-color: #b6dae6;
+        color: rgb(31, 27, 27);
+        padding: 10px;
+    }
+
+    .item-class {
+        padding: 5px;
+        margin: 5px 0;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+    .add-item-btn {
+        display: inline-block;
+        height: fit-content;
+        padding: 5px 10px;
+        margin: 5px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    .add-item-btn .remove-icon {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #dc3545;
+        border-radius: 50%;
+        padding: 2px 5px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .mb-2 {
+        margin-bottom: 8px;
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="container-fluid bg-dark text-white vh-100">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="interests">Interests</label>
+            <div class="add_iteam" id="add_elements_interests"></div>
+            <div class="multiselect-divgroup">
+                <button type="button" class="selctbox_div" id="show_all_interests">
+                    <i class="fa-solid fa-caret-down"></i> Select Interests
+                </button>
+                <div class="show_iteam" id="show_elements_interests"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label for="hobbies">Hobbies</label>
+            <div class="add_iteam" id="add_elements_hobbies"></div>
+            <div class="multiselect-divgroup">
+                <button type="button" class="selctbox_div" id="show_all_hobbies">
+                    <i class="fa-solid fa-caret-down"></i> Select Hobbies
+                </button>
+                <div class="show_iteam" id="show_elements_hobbies"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6', 'Item 7'];
+
+    const sections = {
+        interests: {
+            showElementsDiv: document.getElementById('show_elements_interests'),
+            addElementsDiv: document.getElementById('add_elements_interests'),
+            button: document.getElementById('show_all_interests'),
+            selectedItems: JSON.parse(localStorage.getItem('selectedItemsInterests')) || []
+        },
+        hobbies: {
+            showElementsDiv: document.getElementById('show_elements_hobbies'),
+            addElementsDiv: document.getElementById('add_elements_hobbies'),
+            button: document.getElementById('show_all_hobbies'),
+            selectedItems: JSON.parse(localStorage.getItem('selectedItemsHobbies')) || []
+        }
+    };
+
+    function displayItems(section, filteredItems) {
+        const itemsContainer = section.showElementsDiv.querySelector('.items-container');
+        
+        if (!itemsContainer) {
+            console.error('Items container is not found!');
+            return;
+        }
+        
+        itemsContainer.innerHTML = ''; // Clear the container
+
+        if (filteredItems.length === 0) {
+            const noResults = document.createElement('div');
+            noResults.textContent = 'No items found';
+            noResults.className = 'item-class text-muted';
+            itemsContainer.appendChild(noResults);
+        } else {
+            filteredItems.forEach(item => {
+                const newItem = document.createElement('div');
+                newItem.textContent = item;
+                newItem.className = 'item-class'; // Add class for styling
+                newItem.addEventListener('click', () => {
+                    moveToSelected(section, item);
+                });
+                itemsContainer.appendChild(newItem);
+            });
+        }
+    }
+
+    function updateUI(section) {
+        const availableItems = items.filter(item => !section.selectedItems.includes(item));
+        displayItems(section, availableItems);
+        renderSelectedItems(section);
+    }
+
+    function moveToSelected(section, item) {
+        if (section.selectedItems.includes(item)) return;
+
+        section.selectedItems.push(item);
+        updateLocalStorage(section);
+        updateUI(section);
+    }
+
+    function renderSelectedItems(section) {
+        section.addElementsDiv.innerHTML = ''; // Clear the container
+
+        section.selectedItems.forEach(item => {
+            const selectedItem = document.createElement('div');
+            selectedItem.className = 'add-item-btn';
+            selectedItem.innerHTML = item + ' <span class="remove-icon">&times;</span>';
+
+            selectedItem.querySelector('.remove-icon').addEventListener('click', () => {
+                removeSelectedItem(section, item);
+            });
+
+            section.addElementsDiv.appendChild(selectedItem);
+        });
+
+        section.addElementsDiv.style.display = section.selectedItems.length > 0 ? 'flex' : 'none';
+        section.addElementsDiv.style.flexWrap = section.selectedItems.length > 0 ? 'wrap' : 'nowrap';
+    }
+
+    function removeSelectedItem(section, item) {
+        section.selectedItems = section.selectedItems.filter(i => i !== item);
+        updateLocalStorage(section);
+        updateUI(section);
+    }
+
+    function updateLocalStorage(section) {
+        localStorage.setItem(section === sections.interests ? 'selectedItemsInterests' : 'selectedItemsHobbies', JSON.stringify(section.selectedItems));
+    }
+
+    Object.values(sections).forEach(section => {
+        section.button.addEventListener('click', () => {
+            section.showElementsDiv.style.display = 'block';
+
+            section.showElementsDiv.innerHTML = '';
+
+            const searchBox = document.createElement('input');
+            searchBox.setAttribute('type', 'text');
+            searchBox.setAttribute('placeholder', 'Search items...');
+            searchBox.className = 'form-control mb-2';
+            section.showElementsDiv.appendChild(searchBox);
+
+            const itemsContainer = document.createElement('div');
+            itemsContainer.className = 'items-container'; // Add class for styling
+            section.showElementsDiv.appendChild(itemsContainer);
+
+            updateUI(section);
+
+            searchBox.addEventListener('input', () => {
+                const searchTerm = searchBox.value.toLowerCase();
+                const filteredItems = items.filter(item => item.toLowerCase().includes(searchTerm) && !section.selectedItems.includes(item));
+                displayItems(section, filteredItems);
+            });
+        });
+
+        section.showElementsDiv.addEventListener('click', event => {
+            event.stopPropagation();
+        });
+    });
+
+    document.addEventListener('click', event => {
+        Object.values(sections).forEach(section => {
+            if (!section.showElementsDiv.contains(event.target) && !event.target.matches(`#${section.button.id}`)) {
+                section.showElementsDiv.style.display = 'none';
+            }
+        });
+    });
+
+    Object.values(sections).forEach(section => updateUI(section));
+});
+</script>
+{% endblock scripts %}
