@@ -4,7 +4,7 @@ from . import views
 
 
 urlpatterns = [
-    path('profile',views.demo_pr, name="profile"),
+    path('profile/<int:user_id>/',views.demo_pr, name="profile"),
     path('msg_pg',views.messages_pg, name="msg_pg"),
     path('send',views.user_send_pg, name="send"),
     path('accept',views.user_accept_pg, name="accept"),
