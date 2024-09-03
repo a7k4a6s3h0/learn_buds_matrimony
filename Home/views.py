@@ -64,35 +64,6 @@ class Home(RedirectNotAuthenticatedUserMixin,SuccessMessageMixin, ListView):
 
 class Matches(LoginRequiredMixin, TemplateView):
     template_name = 'Home/matches.html'
-
-    # def get_queryset(self, request):
-    #     queryset = costume_user.objects.exclude(id=request.user.id).exclude(is_superuser=True)
-    #     queryset = queryset.select_related('user_details')
-    #     # Sorting
-    #     if 'newest_member' in request.GET:
-    #         queryset = queryset.order_by('-date_joined')
-    #     elif 'last_active' in request.GET:
-    #         queryset = queryset.order_by('-last_login')
-    #     elif 'distance' in request.GET:
-    #         queryset = sorted(queryset, key=lambda user: self.calculate_distance(request.user.country_details, user.country_details))
-    #     elif 'age' in request.GET:
-    #         queryset = queryset.order_by('user_details__age')
-    #     elif 'gender' in request.GET:
-    #         queryset = queryset.filter(user_details__gender=request.GET.get('gender'))
-
-    #     # Filtering
-    #     if 'interests_hobbies' in request.GET:
-    #         interests = request.GET.getlist('interests_hobbies')
-    #         queryset = queryset.filter(user_details__interests_hobbies__name__in=interests).distinct()
-    #     if 'languages_spoken' in request.GET:
-    #         languages = request.GET.getlist('languages_spoken')
-    #         queryset = queryset.filter(user_details__languages_spoken__name__in=languages).distinct()
-    #     if 'relationship_goals' in request.GET:
-    #         goals = request.GET.getlist('relationship_goals')
-    #         queryset = queryset.filter(user_details__relationship_goals__name__in=goals).distinct()
-
-    #     return queryset
-
     
     def dispatch(self, request, *args, **kwargs):
         user = self.request.user
@@ -109,6 +80,7 @@ class Matches(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
+        sorted_users = None
         
         if not isinstance(user, costume_user):
             context['matches'] = []
@@ -124,22 +96,20 @@ class Matches(LoginRequiredMixin, TemplateView):
         # Initial QuerySet based on preferred gender
         users = costume_user.objects.exclude(id=user.id).exclude(is_superuser=True)
         users = users.select_related('user_details').filter(user_details__gender=preferred_gender)
-        
-
         # Apply Sorting
         if 'newest_member' in self.request.GET:
             users = users.order_by('-date_joined')
         elif 'last_active' in self.request.GET:
             users = users.order_by('-last_login')
         # Inside your view or method
+
         elif 'distance' in self.request.GET:
             # Order by some criteria, if needed
-            users = users.order_by('-date_joined')  # or another ordering criteria
             sorted_users = sort_users_by_distance(user, users)
-            
             # Iterate over sorted list and process
-            for other_user, distance in sorted_users:
-                print(f"Distance to user {other_user}: {distance:.2f} km")
+            # for other_user, distance in sorted_users:
+            #     print(f"Distance to user {other_user}: {distance:.2f}km")
+
         elif 'age' in self.request.GET:
             users = users.order_by('-user_details__age')
         elif 'gender' in self.request.GET:
@@ -165,14 +135,11 @@ class Matches(LoginRequiredMixin, TemplateView):
                 selected_ids = set(matching_users.values_list('user', flat=True))
                 users = users.filter(id__in=selected_ids)
             except UserPersonalDetails.DoesNotExist:
-                # Handle the case where a UserPersonalDetails instance does not exist
                 pass
 
         if 'languages_spoken' in self.request.GET:
             user_language = user.user_language
             users = users.filter(user_language=user_language)
-            print(users)
-            
 
         if 'relationship_goals' in self.request.GET:
             user_goal = get_object_or_404(Relationship_Goals, user=user)
@@ -184,9 +151,9 @@ class Matches(LoginRequiredMixin, TemplateView):
             selected_ids = set(matching_users.values_list('user', flat=True))
             users = users.filter(id__in=selected_ids)
 
-        matches = []
+        matches = [
 
-            
+        ]
 
         for other_user in users:
             score, max_score = self.calculate_match_score(user, other_user)
@@ -195,12 +162,14 @@ class Matches(LoginRequiredMixin, TemplateView):
                 'user': other_user,
                 'score': score,
                 'max_score': max_score,
-                'distance': distance
+                'distance': distance,
+                
             })
             
         # matches = sorted(matches, key=lambda x: x['score'], reverse=True)
         context['match_count'] = users.count()
         context['matches'] = matches
+        context['sorted_users'] = sorted_users
         return context
 
     def calculate_match_score(self, user, other_user):

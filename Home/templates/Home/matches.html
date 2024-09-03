@@ -14,14 +14,34 @@
             <h3 class="match-message">Your matches<span class="match-count ms-2"> {{ match_count }} </span></h3>
         </div>
     </div>
+<div class="row">
+{% if sorted_users %}
+    {% for user, distance in sorted_users %}
+        {% for match in matches %}
+            {% if match.user.id == user.id %}
+                {% include "widget/filter-profile-card.html" with image=match.user.user_details.profile_pic.url name=match.user.username match_per=match.score location=match.user.user_details.user_location.address_details.city age=match.user.user_details.age distance=match.distance|floatformat:2 %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    {% if matches %}
+        {% for match in matches %}
+            {% include "widget/filter-profile-card.html" with image=match.user.user_details.profile_pic.url name=match.user.username match_per=match.score location=match.user.user_details.user_location.address_details.city age=match.user.user_details.age distance=match.distance|floatformat:2 %}
+        {% endfor %}
+    {% else %}
+        <p>No matches found.</p>
+    {% endif %}
+{% endif %}
 
-    <div class="row">
+
+</div>
+    <!-- <div class="row">
         {% for match in matches %}
         {% include "widget/filter-profile-card.html" with image=match.user.user_details.profile_pic.url name=match.user.username match_per=match.score location=match.user.user_details.user_location.address_details.city age=match.user.user_details.age distance=match.distance|floatformat:2 %}
         {% empty %}
         <p>No matches found.</p>
         {% endfor %}
-    </div>
+    </div> -->
 </div>
 
 {% include "widget/menu.html" %}
