@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404
 from U_auth.models import costume_user, UserPersonalDetails, Job_Details, AdditionalDetails, Pictures, Hobbies, Interests, Relationship_Goals
 
-from U_auth.models import CustomUser
+from U_auth.models import costume_user
 from .models import InterestRequest
 from django.db.models import Q  # Import Q for complex queries
 # Create your views here.
@@ -82,7 +82,7 @@ def user_viewed_pg(request):
 class SendRequestView(LoginRequiredMixin):
     def post(self, request, *args, **kwargs) :
         sender = request.user
-        receviver = get_object_or_404(CustomUser, id=self.kwargs['pk'])
+        receviver = get_object_or_404(costume_user, id=self.kwargs['pk'])
 
         InterestRequest.objects.create(sender=sender, receviver=receviver)
         return redirect(reverse_lazy('send'))
