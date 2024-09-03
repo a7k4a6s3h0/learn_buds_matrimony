@@ -8,6 +8,8 @@ from U_auth.models import *
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.messages.views import SuccessMessageMixin
+import math
+from .find_distance import find_distance,sort_users_by_distance
 
 # Create your views here.
 
@@ -56,6 +58,9 @@ class Home(RedirectNotAuthenticatedUserMixin,SuccessMessageMixin, ListView):
         except UserPersonalDetails.DoesNotExist:
             context['user_details'] = None
         return context
+
+
+
 
 class Matches(LoginRequiredMixin, TemplateView):
     template_name = 'Home/matches.html'
@@ -126,8 +131,15 @@ class Matches(LoginRequiredMixin, TemplateView):
             users = users.order_by('-date_joined')
         elif 'last_active' in self.request.GET:
             users = users.order_by('-last_login')
+        # Inside your view or method
         elif 'distance' in self.request.GET:
-            users = users.order_by('-date_joined')
+            # Order by some criteria, if needed
+            users = users.order_by('-date_joined')  # or another ordering criteria
+            sorted_users = sort_users_by_distance(user, users)
+            
+            # Iterate over sorted list and process
+            for other_user, distance in sorted_users:
+                print(f"Distance to user {other_user}: {distance:.2f} km")
         elif 'age' in self.request.GET:
             users = users.order_by('-user_details__age')
         elif 'gender' in self.request.GET:
@@ -173,16 +185,19 @@ class Matches(LoginRequiredMixin, TemplateView):
             users = users.filter(id__in=selected_ids)
 
         matches = []
+
+            
+
         for other_user in users:
             score, max_score = self.calculate_match_score(user, other_user)
-            distance = 100
+            distance = find_distance(user,other_user)
             matches.append({
                 'user': other_user,
                 'score': score,
                 'max_score': max_score,
                 'distance': distance
             })
-
+            
         # matches = sorted(matches, key=lambda x: x['score'], reverse=True)
         context['match_count'] = users.count()
         context['matches'] = matches
@@ -191,7 +206,6 @@ class Matches(LoginRequiredMixin, TemplateView):
     def calculate_match_score(self, user, other_user):
         score = 0
         max_score = 100
-
         try:
             # Retrieve the partner preferences
             user_preference = PartnerPreference.objects.get(user=user)
