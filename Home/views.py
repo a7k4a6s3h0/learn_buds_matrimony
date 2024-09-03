@@ -45,8 +45,6 @@ class Home(RedirectNotAuthenticatedUserMixin,SuccessMessageMixin, ListView):
 
         # Exclude the logged-in user from the queryset
         queryset = queryset.exclude(user=user)
-        for i in queryset:
-            print(i.user)
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -99,22 +97,22 @@ class Matches(LoginRequiredMixin, TemplateView):
         # Apply Sorting
         if 'newest_member' in self.request.GET:
             users = users.order_by('-date_joined')
-        elif 'last_active' in self.request.GET:
+        if 'last_active' in self.request.GET:
             users = users.order_by('-last_login')
         # Inside your view or method
 
-        elif 'distance' in self.request.GET:
+        if 'distance' in self.request.GET:
             # Order by some criteria, if needed
             sorted_users = sort_users_by_distance(user, users)
             # Iterate over sorted list and process
             # for other_user, distance in sorted_users:
             #     print(f"Distance to user {other_user}: {distance:.2f}km")
 
-        elif 'age' in self.request.GET:
+        if 'age' in self.request.GET:
             users = users.order_by('-user_details__age')
-        elif 'gender' in self.request.GET:
+        if 'gender' in self.request.GET:
             users = users.order_by('-user_details__gender')
-        elif 'location' in self.request.GET:
+        if 'location' in self.request.GET:
             users = users.order_by('-country_details')
 
         # Apply Filtering
@@ -175,6 +173,7 @@ class Matches(LoginRequiredMixin, TemplateView):
     def calculate_match_score(self, user, other_user):
         score = 0
         max_score = 100
+
         try:
             # Retrieve the partner preferences
             user_preference = PartnerPreference.objects.get(user=user)
@@ -187,55 +186,60 @@ class Matches(LoginRequiredMixin, TemplateView):
 
             # Gender Preference
             if user_preference.preferred_gender == other_user_personal.gender:
-                score += 10
+                score += 9.09
 
             # Age Range
             if user_preference.age_min <= other_user_personal.age <= user_preference.age_max:
-                score += 10
+                score += 9.09
 
             # Location Preference
             preferred_locations = [location for location in user_preference.preferred_location.all()]
-
             if str(other_user.country_details) in preferred_locations:
-                score += 10
+                score += 9.09
 
             # Education Level
             if user_preference.education_level == other_user_personal.qualifications:
-                score += 10
+                score += 9.09
 
-            # # Hobbies
+            # Hobbies
             user_hobbies = set(user_preference.interests_hobbies.values_list('name', flat=True))
             other_user_hobbies = set(hobby.hobby for hobby in other_user_personal.hobbies.all())
             common_hobbies = user_hobbies.intersection(other_user_hobbies)
-            score += min(len(common_hobbies) * 5, len(user_hobbies) * 5)
+            if len(user_hobbies) > 0:
+                hobby_score = (len(common_hobbies) / len(user_hobbies)) * 9.09
+                score += min(hobby_score, 9.09)
 
-            # # Interests
+            # Interests
             user_interests = set(user_preference.interests_hobbies.values_list('name', flat=True))
             other_user_interests = set(Interests.objects.filter(userpersonaldetails=other_user_personal).values_list('interest', flat=True))
             common_interests = user_interests.intersection(other_user_interests)
-            score += min(len(common_interests) * 5, len(user_interests) * 5)
+            if len(user_interests) > 0:
+                interest_score = (len(common_interests) / len(user_interests)) * 9.09
+                score += min(interest_score, 9.09)
 
-            # # Lifestyle Choices
+            # Lifestyle Choices
             user_lifestyle_choices = set(user_preference.lifestyle_choices.all())
             other_user_lifestyle_choices = set(other_user_preference.lifestyle_choices.all())
             common_lifestyle_choices = user_lifestyle_choices.intersection(other_user_lifestyle_choices)
-            score += min(len(common_lifestyle_choices) * 5, len(user_lifestyle_choices) * 5)
+            if len(user_lifestyle_choices) > 0:
+                lifestyle_score = (len(common_lifestyle_choices) / len(user_lifestyle_choices)) * 9.09
+                score += min(lifestyle_score, 9.09)
 
             # Religion
             if user_preference.religion == other_users_additionals.religion:
-                score += 10
+                score += 9.09
 
             # Height
             if user_preference.height_min <= other_users_additionals.height <= user_preference.height_max:
-                score += 10
+                score += 9.09
 
             # Weight
             if user_preference.weight_min <= other_users_additionals.weight <= user_preference.weight_max:
-                score += 10
+                score += 9.09
 
             # Occupation
             if user_preference.occupation == other_user_jobs.designation:
-                score += 10
+                score += 9.09
 
         except (PartnerPreference.DoesNotExist, AdditionalDetails.DoesNotExist, 
                 UserPersonalDetails.DoesNotExist, Job_Details.DoesNotExist):
@@ -244,10 +248,7 @@ class Matches(LoginRequiredMixin, TemplateView):
         # Ensure the score does not exceed the maximum
         score = min(score, max_score)
         percentage = (score / max_score) * 100
-        return score, percentage
-
-
-
+        return round(score, 2), round(percentage, 2)
 
 
 class Qualification(TemplateView):
