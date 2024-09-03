@@ -15,26 +15,101 @@
 {% elif type == 'select' %}
 <div class="form-group mb-3">
     <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+        <option>Select Experience Level</option>
         {% for option in select_options %}
         <option value="{{ option }}">{{ option }}</option>
         {% endfor %}
     </select>
 </div>
-{% elif type == 'static_select' %}
+
+{% elif type == 'context_select' %}
+<div class="form-group mb-3">
+    {% if label == 'Intrestes' %}
+        <label for="interests">Interests</label>
+        <div class="add_iteam" id="add_elements_interests"></div>
+        <div class="multiselect-divgroup">
+            <button type="button" class="selctbox_div" id="show_all_interests">
+                <i class="fa-solid fa-caret-down"></i> Select Interests
+            </button>
+            <div class="show_iteam" id="show_elements_interests"></div>
+        </div>
+        <!-- Hidden input to store selected interests -->
+        <input type="hidden" name="Intrestes" id="interests_input">
+    {% elif label == 'Hobbies' %}
+        <label for="hobbies">Hobbies</label>
+        <div class="add_iteam" id="add_elements_hobbies"></div>
+        <div class="multiselect-divgroup">
+            <button type="button" class="selctbox_div" id="show_all_hobbies">
+                <i class="fa-solid fa-caret-down"></i> Select Hobbies
+            </button>
+            <div class="show_iteam" id="show_elements_hobbies"></div>
+        </div>
+        <!-- Hidden input to store selected hobbies -->
+        <input type="hidden" name="hobbies" id="hobbies_input">
+    {% elif label == 'Qualifications' %}
+        <label for="hobbies">Qualification</label>
+        <div class="add_iteam" id="add_elements_qualifications"></div>
+        <div class="multiselect-divgroup">
+            <button type="button" class="selctbox_div" id="show_all_qualifications">
+                <i class="fa-solid fa-caret-down"></i> Select Qualification
+            </button>
+            <div class="show_iteam" id="show_elements_qualifications"></div>
+        </div>
+        <!-- Hidden input to store selected qualifications -->
+        <input type="hidden" name="qualifications" id="qualification_input"> 
+    {% else %}
+    <label for="disabilitys">Disabilities</label>
+    <div class="add_iteam" id="add_elements_disabilities"></div>
+    <div class="multiselect-divgroup">
+        <button type="button" class="selctbox_div" id="show_all_disabilities">
+            <i class="fa-solid fa-caret-down"></i> Select Disabilities
+        </button>
+        <div class="show_iteam" id="show_elements_disabilities"></div>
+    </div>
+    <!-- Hidden input to store selected qualifications -->
+    <input type="hidden" name="disabilitys" id="disabilities_input"> 
+    {% endif %}
+</div>
+{% elif type == 'select_married_status' %}
 <div class="form-group mb-3">
     <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
-        <option value="single">single</option>
-        <option value="married">married</option>
-        <option value="divocred">divocred</option>
+        <option >select marriage status</option>
+        <option value="single">Single</option>
+        <option value="divorced">Divorced</option>
+        <option value="widowed">Widowed</option>
     </select>
 </div>
 {% elif type == 'gender_select' %}
 <div class="form-group mb-3">
     <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
-        <option value="gender">gender</option>
+        <option >select Gender</option>
         <option value="M">Male</option>
         <option value="F">Female</option>
         <option value="O">Others</option>
+
+    </select>
+</div>
+{% elif type == 'select_family_type' %}
+<div class="form-group mb-3">
+    <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+        <option >select Family Type</option>
+        <option value="joint">Joint</option>
+        <option value="nuclear">Nuclear</option>
+        <option value="extended">Extended</option>
+
+    </select>
+</div>
+{% elif type == 'select_religion' %}
+<div class="form-group mb-3">
+    <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+        <option >select Religion</option>
+        <option value="CH">Christianity</option>
+        <option value="IS">Islam</option>
+        <option value="HI">Hinduism</option>
+        <option value="BU">Buddhism</option>
+        <option value="SI">Sikhism</option>
+        <option value="JE">Judaism</option>
+        <option value="OT">Others</option>
 
     </select>
 </div>
@@ -50,8 +125,16 @@
 </div>
 {% else %}
 <div class="form-group mb-3">
-    {% if holder %}
-    <input type="{{ type }}" name="{{name}}" class="form-control" id="{{ label|slugify }}" placeholder="{{ holder }}" />
+    {% if label == 'Location' %}
+    <div class="form-group mb-3">
+        <h3>Pick Your Location</h3>
+        <div id="map"></div>
+        <br>
+        <input type="text" id="location_lat" readonly>
+        <input type="text" id="location_lng" readonly>
+        </div>
+        <input type="hidden" id="locationInput" name="location">
+        <textarea id="location_address" name="address_details" cols="50"></textarea>
     {% else %}
     <input type="{{ type }}" name="{{name}}" class="form-control" id="{{ label|slugify }}" placeholder="{{ label }}" />
     {% endif %}
