@@ -6,6 +6,97 @@
 
 {% block style %}
 <!-- Custom styles can be added here -->
+ <style>
+
+    .multiselect-divgroup {
+        position: relative;
+    }
+
+    .selctbox_div {
+        display: flex;
+        width: 300px;
+        height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 15px;
+        color: black;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+        padding: 10px;
+        background-color: #c2bfbf;
+        cursor: pointer;
+    }
+
+    .show_iteam {
+        display: none;
+        position: absolute;
+        top: 40px;
+        z-index: 1;
+        width: 300px;
+        height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        background-color: #b6dae6;
+        color: rgb(31, 27, 27);
+        padding: 10px;
+    }
+
+    .add_iteam {
+        display: none;
+        overflow-y: auto;
+        color: rgb(31, 27, 27);
+        padding: 10px;
+    }
+
+    .item-class {
+        padding: 5px;
+        margin: 5px 0;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+    .add-item-btn {
+        display: inline-block;
+        width: 95px;
+        height: fit-content;
+        padding: 5px 10px;
+        margin: 5px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    .add-item-btn .remove-icon {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #dc3545;
+        border-radius: 50%;
+        padding: 2px 5px;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .mb-2 {
+        margin-bottom: 8px;
+    }
+    #map {
+        height: 400px;
+        width: 100%;
+    }
+    #location_address{
+        display: none;
+    }
+ </style>
 {% endblock style %}
 
 {% block content %}
@@ -145,7 +236,8 @@
         //     $('#PersonalModal').modal('hide');
         // });
         
-        
+
+
         function show_signup(){
             // Show the modal using Bootstrap 5's Modal API
             var myModal = new bootstrap.Modal(document.getElementById('signupModal'));
@@ -214,30 +306,36 @@
             document.getElementById('step6').classList.remove('d-none');
         }
 
-        function hide_signup(){
+        function hide_signup() {
             var X = document.getElementById('sign');
             X.style.display = 'none';
+            
             var loginModal = document.getElementById('loginModal');
-            // var signupModal = document.getElementById('signupModal');
-            loginModal.addEventListener(click,'hidden.bs.modal', function () {
-                // Reset the URL without reloading the page
-                // history.replaceState(null, null, window.location.pathname);
-                // Redirect to the specified URL
+
+            // Define the event listener function
+            function redirectToAuthPage() {
                 var baseURL = window.location.origin;
                 var redirectURL = baseURL + '/auth/';
-
-                // Redirect to the constructed URL
                 window.location.href = redirectURL;
-                console.log("login worked..!!")
-            });
+                console.log("login worked..!!");
+            }
 
+            // Add the event listener to the login modal
+            loginModal.addEventListener('hidden.bs.modal', redirectToAuthPage);
+
+            // Attach an event listener to the "Reset password?" link
+            var resetPasswordLink = document.querySelector('a[data-bs-target="#resetPasswordModal"]');
+            resetPasswordLink.addEventListener('click', function() {
+                // Remove the event listener from the login modal
+                loginModal.removeEventListener('hidden.bs.modal', redirectToAuthPage);
+                console.log("Event listener removed from login modal.");
+            });
         }
+
         function reload_restpass(){
             var resetpass = document.getElementById('resetPasswordModal');
             resetpass.addEventListener('hidden.bs.modal', function () {
-                // Reset the URL without reloading the page
-                // history.replaceState(null, null, window.location.pathname);
-                // Redirect to the specified URL
+        
                 var baseURL = window.location.origin;
                 var redirectURL = baseURL + '/auth/';
 
@@ -246,6 +344,195 @@
                 console.log("login worked..!!")
             });
         }
+
+
+        const hobbiesInput = document.getElementById('hobbies_input');
+        const interestsInput = document.getElementById('interests_input');
+        const qualificationInput = document.getElementById('qualification_input');
+        const disabilitiesInput = document.getElementById('disabilities_input');
+
+        // console.log('hobbiesInput:', hobbiesInput);
+        // console.log('interestsInput:', interestsInput);
+        // console.log('qualificationInput:', qualificationInput);
+        // console.log('disabilitiesInput:', disabilitiesInput);
+
+        const hobbies = {{ hobbie_lists|default:"[]"|safe }};
+        const interests = {{ interest_lists|default:"[]"|safe }};
+        const qualifications = {{ qualifications|default:"[]"|safe }};
+        const disabilities = {{ disabilities_list|default:"[]"|safe }};
+        console.log(disabilities)
+        const sections = {
+            interests: {
+                showElementsDiv: document.getElementById('show_elements_interests'),
+                addElementsDiv: document.getElementById('add_elements_interests'),
+                button: document.getElementById('show_all_interests'),
+                items: interests,
+                selectedItems: JSON.parse(localStorage.getItem('selectedItemsInterests')) || [],
+                inputField: interestsInput
+            },
+            hobbies: {
+                showElementsDiv: document.getElementById('show_elements_hobbies'),
+                addElementsDiv: document.getElementById('add_elements_hobbies'),
+                button: document.getElementById('show_all_hobbies'),
+                items: hobbies,
+                selectedItems: JSON.parse(localStorage.getItem('selectedItemsHobbies')) || [],
+                inputField: hobbiesInput
+            },
+            qualifications: {
+                showElementsDiv: document.getElementById('show_elements_qualifications'),
+                addElementsDiv: document.getElementById('add_elements_qualifications'),
+                button: document.getElementById('show_all_qualifications'),
+                items: qualifications,
+                selectedItems: JSON.parse(localStorage.getItem('selectedItemsQualifications')) || [],
+                inputField: qualificationInput
+            },
+            disabilities: {
+                showElementsDiv: document.getElementById('show_elements_disabilities'),
+                addElementsDiv: document.getElementById('add_elements_disabilities'),
+                button: document.getElementById('show_all_disabilities'),
+                items: disabilities,
+                selectedItems: JSON.parse(localStorage.getItem('selectedItemsDisabilities')) || [],
+                inputField: disabilitiesInput
+            }
+        };
+
+        function displayItems(section, filteredItems) {
+            const itemsContainer = section.showElementsDiv?.querySelector('.items-container');
+
+            if (!itemsContainer) {
+                console.error('Items container is not found or showElementsDiv is null!');
+                return;
+            }
+
+            itemsContainer.innerHTML = ''; // Clear the container
+
+            if (filteredItems.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.textContent = 'No items found';
+                noResults.className = 'item-class text-muted';
+                itemsContainer.appendChild(noResults);
+            } else {
+                filteredItems.forEach(item => {
+                    const newItem = document.createElement('div');
+                    newItem.textContent = item;
+                    newItem.className = 'item-class';
+                    newItem.addEventListener('click', () => {
+                        moveToSelected(section, item);
+                    });
+                    itemsContainer.appendChild(newItem);
+                });
+            }
+        }
+
+        function updateUI(section) {
+            if (!section.showElementsDiv) {
+                console.error('showElementsDiv is null for section:', section);
+                return;
+            }
+
+            const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
+            displayItems(section, availableItems);
+            renderSelectedItems(section);
+            updateInputField(section);
+        }
+
+        function moveToSelected(section, item) {
+            if (section.selectedItems.includes(item)) return;
+
+            section.selectedItems.push(item);
+            updateLocalStorage(section);
+            updateUI(section);
+        }
+
+        function renderSelectedItems(section) {
+            if (!section.addElementsDiv) {
+                console.error('addElementsDiv is null for section:', section);
+                return;
+            }
+
+            section.addElementsDiv.innerHTML = ''; // Clear the container
+
+            section.selectedItems.forEach(item => {
+                const selectedItem = document.createElement('div');
+                selectedItem.className = 'add-item-btn';
+                selectedItem.innerHTML = item + ' <span class="remove-icon">&times;</span>';
+
+                selectedItem.querySelector('.remove-icon').addEventListener('click', () => {
+                    removeSelectedItem(section, item);
+                });
+
+                section.addElementsDiv.appendChild(selectedItem);
+            });
+
+            section.addElementsDiv.style.display = section.selectedItems.length > 0 ? 'flex' : 'none';
+            section.addElementsDiv.style.flexWrap = section.selectedItems.length > 0 ? 'wrap' : 'nowrap';
+        }
+
+        function removeSelectedItem(section, item) {
+            section.selectedItems = section.selectedItems.filter(i => i !== item);
+            updateLocalStorage(section);
+            updateUI(section);
+        }
+
+        function updateLocalStorage(section) {
+            const storageKey = section === sections.interests ? 'selectedItemsInterests' :
+                section === sections.hobbies ? 'selectedItemsHobbies' :
+                section === sections.qualifications ? 'selectedItemsQualifications' :
+                'selectedItemsDisabilities';
+            localStorage.setItem(storageKey, JSON.stringify(section.selectedItems));
+        }
+
+        function updateInputField(section) {
+            section.inputField.value = section.selectedItems.map(item => item.trim()).join(', ');
+        }
+
+        Object.values(sections).forEach(section => {
+            if (section.button && section.showElementsDiv) {
+                section.button.addEventListener('click', () => {
+                    section.showElementsDiv.style.display = 'block';
+
+                    section.showElementsDiv.innerHTML = '';
+
+                    const searchBox = document.createElement('input');
+                    searchBox.setAttribute('type', 'text');
+                    searchBox.setAttribute('placeholder', 'Search items...');
+                    searchBox.className = 'form-control mb-2';
+                    section.showElementsDiv.appendChild(searchBox);
+
+                    const itemsContainer = document.createElement('div');
+                    itemsContainer.className = 'items-container';
+                    section.showElementsDiv.appendChild(itemsContainer);
+
+                    updateUI(section);
+
+                    searchBox.addEventListener('input', () => {
+                        const searchTerm = searchBox.value.toLowerCase();
+                        const filteredItems = section.items.filter(item => item.toLowerCase().includes(searchTerm) && !section.selectedItems.includes(item));
+                        displayItems(section, filteredItems);
+                    });
+                });
+
+                section.showElementsDiv.addEventListener('click', event => {
+                    event.stopPropagation();
+                });
+            } else {
+                console.warn('Section elements missing for section:', section);
+            }
+        });
+
+        document.addEventListener('click', event => {
+            Object.values(sections).forEach(section => {
+                if (section.showElementsDiv && !section.showElementsDiv.contains(event.target) && !event.target.matches(`#${section.button.id}`)) {
+                    section.showElementsDiv.style.display = 'none';
+                }
+            });
+        });
+
+        Object.values(sections).forEach(section => updateUI(section));
+
+
+
+
 
         {% if show_signup_modal %}
             show_signup()
@@ -263,6 +550,7 @@
         {% endif %}
 
         {% if show_personaldetails_modal %}
+            console.log("in per")
             show_personaldetails()
         {% endif %}
 
@@ -294,4 +582,156 @@
         {% endif %}
     });
 </script>
+<!-- Google Maps JavaScript API with defer -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFKn0Obpalgv0TZq3eBf7k3IgkVZ05g80&callback=initMap&libraries=places" defer></script>
+<script>
+    let map;
+    let marker;
+    let defaultLocation = { lat: 40.7128, lng: -74.0060 }; // Fallback location (New York City)
+    let location_address = document.getElementById('location_address');
+
+    // Get the user's current location
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+            initMap(); // Initialize map with fallback location
+        }
+    }
+
+    // Show the user's position on the map
+    function showPosition(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        defaultLocation = { lat: latitude, lng: longitude };
+
+        initMap(); // Initialize the map with the user's location
+    }
+
+    // Handle geolocation errors
+    function showError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                alert("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                alert("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                alert("An unknown error occurred.");
+                break;
+        }
+        initMap(); // Initialize map with fallback location
+    }
+
+    // Initialize the map
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: defaultLocation,
+            zoom: 10,
+        });
+
+        // Place a draggable marker on the map
+        marker = new google.maps.Marker({
+            position: defaultLocation,
+            map: map,
+            draggable: true,
+        });
+
+        // Update latitude and longitude fields when marker is dragged
+        google.maps.event.addListener(marker, 'dragend', function () {
+            const lat = marker.getPosition().lat();
+            const lng = marker.getPosition().lng();
+            document.getElementById('location_lat').value = lat;
+            document.getElementById('location_lng').value = lng;
+
+            // Set the locationInput value in the desired format
+            const locationInput = document.getElementById('locationInput');
+            // locationInput.value = `'${lat}', '${lng}'`;
+            locationInput.value = [lat, lng];
+            console.log(locationInput)
+        });
+
+        // Set initial values
+        document.getElementById('location_lat').value = defaultLocation.lat;
+        document.getElementById('location_lng').value = defaultLocation.lng;
+
+        // Add a listener to the map to place the marker at the clicked location
+        map.addListener('click', (event) => {
+            placeMarker(event.latLng);
+        });
+    }
+
+    function getAddressFromLatLng(lat, lng) {
+        const geocoder = new google.maps.Geocoder();
+        const latLng = new google.maps.LatLng(lat, lng);
+
+        geocoder.geocode({ 'location': latLng }, function(results, status) {
+            if (status === 'OK') {
+                if (results[0]) {
+                    const address = results[0].formatted_address;
+                    console.log('Address:', address);
+
+                    // You can set this address in an input field or display it on the page
+                    location_address.value = address;
+                } else {
+                    console.log('No results found');
+                }
+            } else {
+                console.log('Geocoder failed due to: ' + status);
+            }
+        });
+    }
+
+    function getAddressFromLatLng(lat, lng) {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    const address = data.display_name;
+                    console.log('Address:', address);
+
+                    // You can set this address in an input field or display it on the page
+                    location_address.value = address;
+
+                } else {
+                    console.log('No address found');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Function to place a marker at a specified location
+    function placeMarker(location) {
+        marker.setPosition(location);
+        map.panTo(location);
+
+        document.getElementById('location_lat').value = location.lat();
+        document.getElementById('location_lng').value = location.lng();
+        // Set the locationInput value in the desired format
+        const locationInput = document.getElementById('locationInput');
+        // locationInput.value = `'${location.lat()}', '${location.lng()}'`;
+        locationInput.value = [location.lat(), location.lng()];
+        console.log(locationInput)
+
+
+        // Get the address from latitude and longitude
+        // getAddressFromLatLng(location.lat(), location.lng());
+        getAddressFromLatLng(location.lat(), location.lng())
+        location_address.style.display = 'block';
+    }
+
+    
+
+    // Initialize the process
+    window.onload = getLocation; // Call getLocation when the window loads
+</script>
+
+
 {% endblock scripts %}
