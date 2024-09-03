@@ -15,7 +15,9 @@
                         {% include "widget/input_details_form.html" with type='number' label='Age'  name='age'%}
                         {% include "widget/input_details_form.html" with type='gender_select' label='gender' name='gender' %}
                         {% include "widget/input_details_form.html" with type='date' label='DOB' name='dob'%}
-                        {% comment %} {% include "widget/input_details_form.html" with type='text' label='Location' name='location' %} {% endcomment %}
+                        {% if  show_personaldetails_modal%}
+                        {% include "widget/input_details_form.html" with type='text' label='Location' name='location' %}
+                        {% endif %}
                         {% include "widget/input_details_form.html" with type='context_select' label='Hobbies'%}
                         {% include "widget/input_details_form.html" with type='context_select' label='Intrestes'%}
                         {% include "widget/input_details_form.html" with type='context_select' label='Qualifications'%}
@@ -67,7 +69,9 @@
                         <h1>Job Details</h1>
                         {% include "widget/input_details_form.html" with type='text' label='Title' name='job_title' %}
                         {% include "widget/input_details_form.html" with type='text' label='company name' name='company_name' %}
+                        {% if  show_jobdetails_modal%}
                         {% include "widget/input_details_form.html" with type='text' label='Location' name='location' %}
+                        {% endif %}
                         {% include "widget/input_details_form.html" with type='text' label='designation' name='designation' %}
                         {% include "widget/input_details_form.html" with type='select' label='Experience Level' name='experiences_level' select_options=experance_level %}
                         {% if form.errors and show_jobdetails_modal%}
