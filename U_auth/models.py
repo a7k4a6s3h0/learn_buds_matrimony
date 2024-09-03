@@ -69,8 +69,8 @@ class Location(models.Model):
     latitude = models.FloatField()
     address_details = models.JSONField(null=True, blank=True)
 
-    def _str_(self):
-        return self.longitude
+    def __str__(self):
+        return f"{self.id}Longitude: {self.longitude}, Latitude: {self.latitude}"
 
 class UserPersonalDetails(models.Model):
 
