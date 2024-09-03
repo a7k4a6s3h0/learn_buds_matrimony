@@ -15,7 +15,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.urls import reverse
 from .otp import generate_otp, validate_otp
-from .models import AdditionalDetails, costume_user, OTP, UserPersonalDetails
+from .models import AdditionalDetails, costume_user, Disabilities, OTP, UserPersonalDetails
 from .forms import *
 from django.views import View
 import httpagentparser
@@ -95,39 +95,25 @@ class SignupView(FormView):
         context = super().get_context_data(**kwargs)
         interest_list = []
         hobbies_list = []
-        qualifications = [
-        'Bachelor of Science',
-        'Master of Arts',
-        'PhD in Computer Science',
-        'Diploma in Design',
-        'Certification in Data Science'
-        ]
-        disabilities_list = [
-            'Visual Impairment',
-            'Hearing Impairment',
-            'Speech Impairment',
-            'Physical Disability',
-            'Intellectual Disability',
-            'Learning Disability',
-            'Mental Health Condition',
-            'Autism Spectrum Disorder',
-            'Cerebral Palsy',
-            'Chronic Illness',
-            'Multiple Disabilities',
-            'Other'
-        ]
+        qualifications_list = []
+        disabilities_list = []
         interests = Interests.objects.all()
         hobbies = Hobbies.objects.all()
         for interest in interests:
             interest_list.append(interest.interest)
         for hobbie in hobbies:
             hobbies_list.append(hobbie.hobby)
+        qualifications_obj = Qualifications.objects.all()
+        for qualification in qualifications_obj:
+            qualifications_list.append(qualification.qualification)
+        disabilities_obj = Disabilities.objects.all()
+        for disabilitie in disabilities_obj:
+            disabilities_list.append(disabilitie)    
         context['interest_lists'] = interest_list
         context['hobbie_lists'] = hobbies_list
-        context['qualifications'] = qualifications
+        context['qualifications'] = qualifications_list
         context['disabilities_list'] = disabilities_list
         context['experance_level'] = ['entry', 'mid', 'senior']
-        # context['experance_level'] = ['Beginner', 'Intermediate', 'Expert']
         context['marital_status'] = ['Unmarried', 'Divorced']
         return context
     
@@ -558,13 +544,10 @@ class UserPersonalDetailsView(FormView):
         context = super().get_context_data(**kwargs)
         interest_list = []
         hobbies_list = []
-        qualifications = [
-        'Bachelor of Science',
-        'Master of Arts',
-        'PhD in Computer Science',
-        'Diploma in Design',
-        'Certification in Data Science'
-        ]
+        qualifications_list = []
+        qualifications_obj = Qualifications.objects.all()
+        for qualification in qualifications_obj:
+            qualifications_list.append(qualification.qualification)
         interests = Interests.objects.all()
         hobbies = Hobbies.objects.all()
         for interest in interests:
@@ -573,7 +556,7 @@ class UserPersonalDetailsView(FormView):
             hobbies_list.append(hobbie.hobby)
         context['interest_lists'] = interest_list
         context['hobbie_lists'] = hobbies_list
-        context['qualifications'] = qualifications
+        context['qualifications'] = qualifications_list
         return context
     
     def get_form_kwargs(self):
@@ -700,20 +683,10 @@ class AdditionalDetailsView(FormView):
 
     def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        disabilities_list = [
-            'Visual Impairment',
-            'Hearing Impairment',
-            'Speech Impairment',
-            'Physical Disability',
-            'Intellectual Disability',
-            'Learning Disability',
-            'Mental Health Condition',
-            'Autism Spectrum Disorder',
-            'Cerebral Palsy',
-            'Chronic Illness',
-            'Multiple Disabilities',
-            'Other'
-        ]
+        disabilities_list = []
+        disabilities_obj = Disabilities.objects.all()
+        for disabilitie in disabilities_obj:
+            disabilities_list.append(disabilitie)   
         context['disabilities_list'] = disabilities_list
         return context
 
