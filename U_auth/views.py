@@ -108,7 +108,7 @@ class SignupView(FormView):
             qualifications_list.append(qualification.qualification)
         disabilities_obj = Disabilities.objects.all()
         for disabilitie in disabilities_obj:
-            disabilities_list.append(disabilitie.disability_type)   
+            disabilities_list.append(disabilitie.disability_type)    
         context['interest_lists'] = interest_list
         context['hobbie_lists'] = hobbies_list
         context['qualifications'] = qualifications_list
@@ -686,7 +686,7 @@ class AdditionalDetailsView(FormView):
         disabilities_list = []
         disabilities_obj = Disabilities.objects.all()
         for disabilitie in disabilities_obj:
-            disabilities_list.append(disabilitie)   
+            disabilities_list.append(disabilitie.disability_type)   
         context['disabilities_list'] = disabilities_list
         return context
 
