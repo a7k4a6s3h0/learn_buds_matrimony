@@ -13,3 +13,8 @@ def random_range(_=None):
 def number_rangeobj(value : int):
     print(f"user given value = {value} range_obj = {range(value)}")
     return range(value)
+
+@register.filter(name='replace')
+def replace(value, args):
+    old, new = args.split(',')
+    return value.replace(old, new)
