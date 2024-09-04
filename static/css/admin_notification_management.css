@@ -1,0 +1,30 @@
+.notification-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  -webkit-box-shadow: 0px 0px 0px -12px gray;
+  -moz-box-shadow: 0px 0px 44px -12px gray;
+  box-shadow: 0px 0px 44px -12px gray;
+}
+
+.notification-card-title{
+    color: #FF5400;
+}
+
+.notification-con{
+    padding-left: 2rem;
+}
+.notification-dot{
+    color: #FF5400;
+    font-size: 1.5rem;
+}
+
+.form-check-input:checked {
+    background-color: black;
+    border-color: black;
+}
+
+@media (max-width: 576px) {
+.notification-con{
+    padding: 1rem;
+}
+}
