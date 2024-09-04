@@ -16,6 +16,10 @@ admin.site.register(Job_Details)
 admin.site.register(Relationship_Goals)
 admin.site.register(AdditionalDetails)
 admin.site.register(Disabilities)
+admin.site.register(PartnerPreference)
+admin.site.register(LifestyleChoice)
+admin.site.register(Interest_and_Hobbie)
+
 
 
 
