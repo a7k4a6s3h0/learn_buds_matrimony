@@ -69,8 +69,8 @@ class Location(models.Model):
     latitude = models.FloatField()
     address_details = models.JSONField(null=True, blank=True)
 
-    def _str_(self):
-        return self.longitude
+    def __str__(self):
+        return f"{self.id}Longitude: {self.longitude}, Latitude: {self.latitude}"
 
 class UserPersonalDetails(models.Model):
 
@@ -217,13 +217,13 @@ class AdditionalDetails(models.Model):
 class Interest_and_Hobbie(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class LifestyleChoice(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class PartnerPreference(models.Model):
@@ -271,8 +271,7 @@ class PartnerPreference(models.Model):
     religion = models.CharField(max_length=2, choices=RELIGION_CHOICES, blank=False)
     occupation = models.CharField(max_length=255, blank=False)
 
-
-    def _str_(self):
+    def __str__(self):
         return f"{self.user.username}"
 
 class OTP(models.Model):
