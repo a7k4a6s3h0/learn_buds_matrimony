@@ -16,12 +16,11 @@
     </div>
     <div class="row flex-grow-1 filter-row text-center">
         <div class="col-12 col-md-8 col-lg-6 d-flex flex-column p-3 mx-auto">
-            <form action="">
+            <form action="{% url 'matches' %}" method="get">
                 <h3 class="my-3 text-start">Sort by</h3>
                 {% include "widget\filter-item.html" with filtername='Newest Member' %}
                 {% include "widget\filter-item.html" with filtername='Last Active' %}
                 {% include "widget\filter-item.html" with filtername='Distance' %}
-                {% include "widget\filter-item.html" with filtername='Popularity' %}
                 {% include "widget\filter-item.html" with filtername='Age' %}
                 {% include "widget\filter-item.html" with filtername='Gender' %}
                 {% include "widget\filter-item.html" with filtername='Location' %}
@@ -31,13 +30,15 @@
                 {% include "widget\filter-item.html" with filtername='Relationship Goals' %}
                 <div class="m-5">
                     <button class="border-0 outline-0 bg-danger text-light py-1 px-3 rounded-3">Cancel</button>
-                    <button class="border-0 outline-0 text-light py-1 px-3 rounded-3"
+                    <button type="submit" class="border-0 outline-0 text-light py-1 px-3 rounded-3"
                         style="background-color:var(--russian-violet)">Apply</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<br><br><br>
 
 {% include "widget/menu.html" %}
 {% endblock content %}
