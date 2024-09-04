@@ -251,6 +251,7 @@ class Matches(LoginRequiredMixin, TemplateView):
         return round(score, 2), round(percentage, 2)
 
 
+#ignore
 class Qualification(TemplateView):
     template_name='Home/qualification.html'
 
