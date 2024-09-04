@@ -208,15 +208,15 @@
                     </form>
                 </nav>
             </div>
-
-            {% for k in ""|random_range%}
+            {% if received_requests %}
+            {% for request in received_requests %}
             <div class="view_user" style="border-top: inset; border-color:darkgray ;">
                 <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                 <div class="view_user_img">
                     <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
                 </div>
                 <div class="msg">
-                    <span style="text-transform: capitalize;">Username</span><br>
+                    <span style="text-transform: capitalize;">{{ request.sender.username }}</span><br>
                     <span style="text-transform: capitalize;">hello how are you</span>
                 </div>
                 <div class="cross_icon">
@@ -228,6 +228,11 @@
                 <!-- </a> -->
             </div>
             {% endfor %}
+            {% else %}
+            <div class="text-white">
+                currently no requests recieved
+            </div>
+            {% endif %}
             <div class="footer_nav">
                 {% include "widget/menu.html" %}
             </div>

@@ -6,8 +6,8 @@ from U_auth.models import costume_user
 # ..............Target user profile flow model here.............................
 
 class InterestRequest(models.Model):
-    sender=models.ForeignKey(costume_user, related_name="sented_requests", on_delete=models.CASCADE)
-    receiver=models.ForeignKey(costume_user, related_name="recevied_requests", on_delete=models.CASCADE)
+    sender=models.ForeignKey(costume_user, related_name="sent_requests", on_delete=models.CASCADE)
+    receiver=models.ForeignKey(costume_user, related_name="received_requests", on_delete=models.CASCADE)
     created_at=models.DateField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[
         ('pending', 'Pending'),

@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 #profile display imports :
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
 from U_auth.models import costume_user, UserPersonalDetails, Job_Details, AdditionalDetails, Pictures, Hobbies, Interests, Relationship_Goals
 
 from U_auth.models import costume_user
 from .models import InterestRequest
+from django.views.generic import ListView, View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q  # Import Q for complex queries
 # Create your views here.
 def demo_pr(request, user_id):
@@ -82,23 +85,23 @@ def user_viewed_pg(request):
 class SendRequestView(LoginRequiredMixin):
     def post(self, request, *args, **kwargs) :
         sender = request.user
-        receviver = get_object_or_404(costume_user, id=self.kwargs['pk'])
+        receiver = get_object_or_404(costume_user, id=self.kwargs['pk'])
 
-        InterestRequest.objects.create(sender=sender, receviver=receviver)
-        return redirect(reverse_lazy('send'))
+        InterestRequest.objects.create(sender=sender, receiver=receiver)
+        return redirect(reverse_lazy('send.html'))
 
 class SentedRequestView(LoginRequiredMixin,ListView):
-    model = 'InterestRequest'
+    model = InterestRequest
     template_name = 'send.html'
-    context_object_name = 'sented_requests'
+    context_object_name = 'sent_requests'
 
     def get_queryset(self):
         return InterestRequest.objects.filter(sender=self.request.user)
     
 class ReceivedRequestView(LoginRequiredMixin,ListView):
-    model = 'InterestRequest'
+    model = InterestRequest
     template_name = 'received.html'
-    context_object_name = 'recevied_requests'
+    context_object_name = 'received_requests'
     
     def get_queryset(self):
         return InterestRequest.objects.filter(receiver=self.request.user)
@@ -117,8 +120,8 @@ class RequestHandleView(LoginRequiredMixin, View):
         return redirect(reverse_lazy('received_requests'))
 
 class AcceptedRequestView(LoginRequiredMixin, ListView):
-    model = 'InterestRequest'
-    template_name = 'accept'
+    model = InterestRequest
+    template_name = 'accept.html'
     context_object_name = 'accepted_requests'
 
     def get_queryset(self):
@@ -128,9 +131,9 @@ class AcceptedRequestView(LoginRequiredMixin, ListView):
         )
 
 class RejectedRequestView(LoginRequiredMixin, ListView):
-    model = 'InterestRequest'
-    template_name = 'accept'
-    context_object_name = 'accepted_requests'
+    model = InterestRequest
+    template_name = 'reject.html'
+    context_object_name = 'rejected_requests'
 
     def get_queryset(self):
         return InterestRequest.objects.filter(
