@@ -203,7 +203,7 @@ class AdditionalDetails(models.Model):
     blood_group = models.CharField(max_length=50, blank=False)
     religion = models.CharField(choices=RELIGION_CHOICES, max_length=50, blank=False)
     caste_or_community = models.CharField(max_length=50, blank=False)
-    user_disabilities = models.ManyToManyField(Disabilities, verbose_name='disabilities')  # Corrected typo from 'user_disabilitys'
+    user_disabilities = models.ManyToManyField(Disabilities, verbose_name='disabilities') 
     complexion = models.CharField(null=True, max_length=50, blank=False)
 
     class Meta:
