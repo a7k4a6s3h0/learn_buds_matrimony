@@ -321,7 +321,6 @@
 {% endblock header %}
 
 {% block content %}
-
 <div class="container-fluid custom-container">
     <div class="profile-container">
         <div class="carousel-container">
@@ -334,20 +333,14 @@
                     </div>
                 </div>
             </nav>
+
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://img.freepik.com/premium-vector/anonymous-man-black-silhouette-with-question-mark-incognito-male-person-vector-illustration_261737-806.jpg"
-                            class="d-block img-fluid" alt="...">
+                    {% for picture in pictures %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ picture.photos.url|default_if_none:'default_image_url_here' }}" class="d-block img-fluid" alt="Profile Picture">
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://img.freepik.com/premium-vector/anonymous-man-black-silhouette-with-question-mark-incognito-male-person-vector-illustration_261737-806.jpg"
-                            class="d-block img-fluid" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="https://img.freepik.com/premium-vector/anonymous-man-black-silhouette-with-question-mark-incognito-male-person-vector-illustration_261737-806.jpg"
-                            class="d-block img-fluid" alt="...">
-                    </div>
+                    {% endfor %}
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
                     data-bs-slide="prev">
@@ -360,142 +353,135 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
-
             
             <div class="profile-name">
                 <label>
-                    <h2>User Name</h2>
+                    <h2>{{ user.username }}</h2>
                 </label>
                 <label>
-                    <h4>User Name</h4>
+                    <h4>{{ user.email }}</h4>
                 </label>
                 <button type="button" class="profile-button" data-mdb-ripple-init>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
                         class="image-fluid" alt="">
-                    Success
+                    {{ user.is_online|yesno:"Online,Offline" }}
                 </button>
             </div>
-                {% include "widget/updated_moveablenav.html" %}
+
+            {% include "widget/updated_moveablenav.html" %}
         </div>
-
+        
         <div class="user_details">
-
             <div class="nav_button">
                 <div class="but_1" id="button_1">
-                    <a href="#">About</a>
+                    <a href="#" onclick="showAbout()">About</a>
                 </div>
-
                 <div class="but_2" id="button_2">
-                    <a onclick="show_popup()" href="#">Contact</a>
+                    <a href="#" onclick="showContact()">Contact</a>
                 </div>
             </div>
 
-            <div class="about_user mt-3 ps-2" id="show_details">
-                <label for="titile" style="font-size:15px; font-weight: bold;">About : </label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-                    obcaecati tenetur iure eius earum
-                </p>
-            </div>
+            <!-- About Section (default visible) -->
+            <div class="about_user mt-3 ps-2" id="about_section">
+                <label for="title" style="font-size:15px; font-weight: bold;">About : </label>
+                <p>{{ personal_details.about_me|default:"No details provided." }}</p>
 
-            <div class="about_user mt-3 ps-2" id="address" style="display: none;">
-                <label for="titile" style="font-size:15px; font-weight: bold;">Address: </label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-                    obcaecati tenetur iure eius earum
-                </p>
-            </div>
+                <div class="interest ps-2">
+                    <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
+                    <div class="interest_flex">
+                        {% for interest in interests %}
+                        <span>{{ interest.interest }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
 
-            <div class="interest ps-2">
-                <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
-                <div class="interest_flex">
-                    {% for i in 100|number_rangeobj %}
-                    <span>Interests</span>
-                    {% endfor %}
+                <div class="hobbies ps-2">
+                    <label for="title" style="font-size:15px; font-weight: bold;">Hobbies : </label>
+                    <div class="hobby_flex">
+                        {% for hobby in hobbies %}
+                        <span>{{ hobby.hobby }}</span>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
+
+            <!-- Contact Section (initially hidden) -->
+            <div class="about_user mt-3 ps-2" id="contact_section" style="display: none;">
+                <label for="title" style="font-size:15px; font-weight: bold;">Contact Info : </label>
+                <p>Address: {{ personal_details.user_location.address_details|default:"No address provided." }}</p>
+                <p>Phone: {{ user.phone }}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Marital Status: {{ additional_details.married_status|yesno:"Married,Not Married" }}</p>
+                <p>Annual Income: {{ additional_details.annual_income }}</p>
+                <p>Family Type: {{ additional_details.family_type }}</p>
+                <!-- Other contact-related details can be added here -->
+            </div>
         </div>
     </div>
-</div>
+{% endblock %}
 
-
-<!-- Background overlay -->
-<div class="overlay" id="background-overlay"></div>
-
-
-<!-- Modal structure -->
-<div class="modal fade" id="exampleModalToggle1" aria-hidden="true" aria-labelledby="exampleModalToggleLabel1" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalToggleLabel1">Modal 1</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          Show a second modal and hide this one with the button below.
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalToggle22">
-            Open second modal
-          </button>
-          <!-- Optionally add a "Go Back" button here if needed -->
-        </div>
-      </div>
-    </div>
-  </div>
-
-{% endblock content %}
 
 {% block footer %}
 {% endblock footer %}
 
 {% block scripts %}
-
 <script>
-// Ensure the DOM is fully loaded before attaching the event listeners
-document.addEventListener('DOMContentLoaded', function () {
-
-    // Define the show_popup function
-    function show_popup() {
-        but_on = document.getElementById('button_2');
-        but_on.style.backgroundColor = 'white';
-        but_on = document.getElementById('button_1');
-        but_on.style.backgroundColor = 'pink';
-        var x = document.getElementById("show_details");
-        x.style.display = "none";
-        var y = document.getElementById("address");
-        y.style.display = "block";
-
-        // Show the overlay and apply blur effect
-        document.getElementById('background-overlay').style.display = 'block';
-        document.querySelector('.container-fluid').classList.add('blur-background');
-
-        // Show the modal using Bootstrap 5's Modal API
-        var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle1'));
-        myModal.show();
-    }
-
-    // Attach the show_popup function to the "Contact" button click event
-    document.querySelector('.but_2 a').addEventListener('click', function(event) {
-        event.preventDefault(); // Prevent default link behavior
-        show_popup();
+    // Ensure the DOM is fully loaded before attaching the event listeners
+    document.addEventListener('DOMContentLoaded', function () {
+    
+        // Function to show the About section and hide Contact
+        function showAbout() {
+            document.getElementById('about_section').style.display = 'block';
+            document.getElementById('contact_section').style.display = 'none';
+    
+            // Update button background colors
+            document.getElementById('button_1').style.backgroundColor = 'pink';
+            document.getElementById('button_2').style.backgroundColor = 'white';
+        }
+    
+        // Function to show the Contact section and hide About
+        function showContact() {
+            document.getElementById('about_section').style.display = 'none';
+            document.getElementById('contact_section').style.display = 'block';
+    
+            // Update button background colors
+            document.getElementById('button_1').style.backgroundColor = 'white';
+            document.getElementById('button_2').style.backgroundColor = 'pink';
+    
+            // Show the overlay and apply blur effect
+            document.getElementById('background-overlay').style.display = 'block';
+            document.querySelector('.container-fluid').classList.add('blur-background');
+    
+            // Show the modal using Bootstrap 5's Modal API
+            var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle1'));
+            myModal.show();
+        }
+    
+        // Attach the showAbout and showContact functions to the buttons
+        document.querySelector('.but_1 a').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            showAbout();
+        });
+    
+        document.querySelector('.but_2 a').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default link behavior
+            showContact();
+        });
+    
+        // Remove blur, hide overlay, and refresh page when modal is closed
+        document.getElementById('exampleModalToggle1').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('background-overlay').style.display = 'none';
+            document.querySelector('.container-fluid').classList.remove('blur-background');
+    
+            // Refresh the page
+            location.reload();
+        });
+    
+        // Show the About section by default on page load
+        showAbout();
+    
     });
-
-    // Remove blur, hide overlay, and refresh page when modal is closed
-    document.getElementById('exampleModalToggle1').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('background-overlay').style.display = 'none';
-        document.querySelector('.container-fluid').classList.remove('blur-background');
-
-        // Refresh the page
-        location.reload();
-    });
-
-});
-
-</script>
+    
+    </script>
 
 {% endblock scripts %}
