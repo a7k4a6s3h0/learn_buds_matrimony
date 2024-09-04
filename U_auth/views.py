@@ -85,7 +85,7 @@ def error_403(request):
 # ................................backend code starting..............................................
 
 
-class SignupView(FormView):
+class SignupView(RedirectAuthenticatedUserMixin, FormView):
     
     template_name = 'auth/auth.html'  # The template to render
     form_class = CreateUser
@@ -140,8 +140,8 @@ class SignupView(FormView):
         if self.request.user.is_authenticated:
             obj = check_permissions(self.request, self.request.user.email)
             response_status = obj.get_model()
+            print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
             if response_status is not None:
-                print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
                 for key, value in response_status.items():
                     if key != 'status':
                         model_name = key
@@ -150,7 +150,7 @@ class SignupView(FormView):
                 context = self.get_context_data()
                 context.update({model_name: True})  # Passing the context variable 
                 return self.render_to_response(context)
-        
+            
         return super().get(request, *args, **kwargs)
     
     def form_valid(self, form):
@@ -352,7 +352,7 @@ class ResendOTPView(FormView):
             messages.error(self.request, "User does not exist. Please try again.")
             return redirect(reverse('auth_page'))
 
-class LoginView(FormView):
+class LoginView(RedirectAuthenticatedUserMixin, FormView):
 
     template_name = 'auth/auth.html'
     form_class = LoginForm
@@ -378,9 +378,6 @@ class LoginView(FormView):
 
         return kwargs
 
-    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
-
-        return super().get(request, *args, **kwargs)  # Call the parent's get method to render the form
 
     def form_valid(self, form):
         """

@@ -363,10 +363,9 @@ class UserPersonalDetailsForm(forms.ModelForm):
 
             # Parse address_details
             address_details_str = self.cleaned_data['address_details']  # Extract the single string
-            address_details_json = {
-                "address": address_details_str.strip()  # Wrap it in a JSON object with a key
-            }
-
+            # Parse the JSON string into a Python dictionary
+            address_details_json = json.loads(address_details_str)
+            
             # Create Location instance
             location_details = Location.objects.create(
                 longitude=longitude,
@@ -446,9 +445,8 @@ class JobDetailsForm(forms.ModelForm):
 
             # Parse address_details
             address_details_str = self.cleaned_data['address_details']  # Extract the single string
-            address_details_json = {
-                "address": address_details_str.strip()  # Wrap it in a JSON object with a key
-            }
+            # Parse the JSON string into a Python dictionary
+            address_details_json = json.loads(address_details_str)
 
             # Create Location instance
             location_details = Location.objects.create(
@@ -494,8 +492,7 @@ class AdditionalDetailsForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-    disabilitys = MultipleValueField(widget=forms.Textarea(),
-                  required=True)
+    disabilitys = MultipleValueField(widget=forms.Textarea(), required=False)
 
     class Meta:
         model = AdditionalDetails
@@ -514,8 +511,10 @@ class AdditionalDetailsForm(forms.ModelForm):
             self.user.save()
         
             disabilitys = self.cleaned_data.get('disabilitys', [])
-            types = Disabilities.objects.filter(disability_type__in=disabilitys)
-            addition_datas.user_disabilities.set(types)  
+            if disabilitys:
+                print("yes..in..disabilities")
+                types = Disabilities.objects.filter(disability_type__in=disabilitys)
+                addition_datas.user_disabilities.set(types)  
 
         return addition_datas
     

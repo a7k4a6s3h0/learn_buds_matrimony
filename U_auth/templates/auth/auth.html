@@ -144,7 +144,6 @@
             </div>
             {% if form.errors and show_login_modal%}
                 <div class="alert alert-danger" role="alert">
-                    {{show_login_modal}}
                     {% for field, errors in form.errors.items %}
                         {% if field and field != '__all__' %}
                         <div>
@@ -589,6 +588,7 @@
     let marker;
     let defaultLocation = { lat: 40.7128, lng: -74.0060 }; // Fallback location (New York City)
     let location_address = document.getElementById('location_address');
+    let adressinput = document.getElementById('adressInput');
 
     // Get the user's current location
     function getLocation() {
@@ -694,11 +694,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data && data.display_name) {
-                    const address = data.display_name;
+                    const address = data.address;
                     console.log('Address:', address);
 
                     // You can set this address in an input field or display it on the page
-                    location_address.value = address;
+                    location_address.value = data.display_name;
+                    // Convert the address object to a JSON string
+                    adressinput.value = JSON.stringify(address);
 
                 } else {
                     console.log('No address found');
