@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+import django.db.models
 from . manager import UserManager
 
 
@@ -90,7 +91,7 @@ class UserPersonalDetails(models.Model):
     interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
-    profile_pic = models.ImageField(upload_to='images/', default='img/default_pic.png', blank=True)
+    profile_pic = models.ImageField(upload_to='images/', default='default/default_pic.png', blank=True)
     short_video = models.FileField(upload_to='videos/', null=True, blank=True)
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
@@ -103,11 +104,11 @@ class UserPersonalDetails(models.Model):
         verbose_name = "User Personal Detail"
         verbose_name_plural = "User Personal Details"
 
-    @property
-    def profile_pic_url(self):
-        if self.profile_pic:
-            return f"{settings.MEDIA_URL}{self.profile_pic}"
-        return ""
+    # @property
+    # def profile_pic_url(self):
+    #     if self.profile_pic:
+    #         return f"{settings.MEDIA_URL}{self.profile_pic}"
+    #     return ""
 
     @property
     def short_video_url(self):
@@ -242,12 +243,7 @@ class PartnerPreference(models.Model):
         ('SI', 'Sikhism'),
         ('OT', 'Other'),
     ]
-    EDUCATION_LEVEL_CHOICES = [
-        ('High School', 'High School'),
-        ('Bachelors', 'Bachelors'),
-        ('Masters', 'Masters'),
-        ('Doctorate', 'Doctorate'),
-    ]
+
 
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE, related_name="partner_preference")
 
@@ -257,7 +253,7 @@ class PartnerPreference(models.Model):
     preferred_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
     preferred_location = models.ManyToManyField(Location)  # ForeignKey for locations
     interests_hobbies = models.ManyToManyField(Interest_and_Hobbie)
-    education_level = models.CharField(max_length=50, choices=EDUCATION_LEVEL_CHOICES)
+    education_level = models.ManyToManyField(Qualifications)
    
     height_min = models.IntegerField(default=100)  # in cm
     height_max = models.IntegerField(default=220)
