@@ -272,6 +272,88 @@
     background-color: #f1f1f1;
   }
 
+  .multiselect-divgroup {
+    position: relative;
+  }
+
+  .selctbox_div {
+      display: flex;
+      width: 300px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 15px;
+      color: black;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      padding: 10px;
+      background-color: #c2bfbf;
+      cursor: pointer;
+  }
+
+  .show_iteam {
+      display: none;
+      position: absolute;
+      top: 40px;
+      z-index: 1;
+      width: 300px;
+      height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      background-color: #b6dae6;
+      color: rgb(31, 27, 27);
+      padding: 10px;
+  }
+
+  .add_iteam {
+      display: none;
+      overflow-y: auto;
+      color: rgb(31, 27, 27);
+      padding: 10px;
+  }
+
+  .item-class {
+      padding: 5px;
+      margin: 5px 0;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+  }
+
+  .add-item-btn {
+      display: inline-block;
+      width: 95px;
+      height: fit-content;
+      padding: 5px 10px;
+      margin: 5px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+  }
+
+  .add-item-btn .remove-icon {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #dc3545;
+      border-radius: 50%;
+      padding: 2px 5px;
+      color: #fff;
+      cursor: pointer;
+  }
+
+  .form-control {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+  }
+
+  .mb-2 {
+      margin-bottom: 8px;
+  }
+
   @media (max-width: 576px) {
     .main_div {
       flex-direction: column;
@@ -442,12 +524,12 @@
                         <div class="title_row_2">
                             <label for="">Age Range</label>
                         </div>
-                        <select name="gender" id="gender" class="form-control">
-                            <option value="">Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                          </select>
+                        <select class="form-select" id="{{ label|slugify }}" name="gender">
+                          <option >select Gender</option>
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
+                          <option value="O">Others</option>
+                      </select>
                     </div>
 
                     <div>
@@ -455,15 +537,16 @@
                             <div class="title_row_2">
                                 <label for="">location</label>
                             </div>
-                        <div class="multi-selector-container">
-                            <div class="multi-selector" onclick="toggleDropdown()">Select Location</div>
-                            <div class="location-dropdown">
-                                {% for i in 5|number_rangeobj%}
-                                <div class="location-item" onclick="selectLocation(this)">Location {{i}}</div>
-                                {% endfor %}
-                              </div>
-                        </div>
-                        <div class="selected-items" style="display: none;"></div>   
+                            
+                            <div class="add_iteam" id="add_elements_location"></div>
+                            <div class="multiselect-divgroup">
+                                <button type="button" class="selctbox_div" id="show_all_location">
+                                    <i class="fa-solid fa-caret-down"></i> Select Locations
+                                </button>
+                                <div class="show_iteam" id="show_elements_location"></div>
+                            </div>
+                            <!-- Hidden input to store selected hobbies -->
+                            <input type="hidden" name="locations" id="location_input"> 
 
                     </div>
                     </div>
@@ -473,15 +556,16 @@
                             <div class="title_row_2">
                                 <label for="">hobbies & Habbits</label>
                             </div>
-                            <div class="multi-selector-container">
-                                <div class="multi-selector" onclick="toggleDropdown()">Select Location</div>
-                                <div class="location-dropdown">
-                                    {% for i in 5|number_rangeobj%}
-                                    <div class="location-item" onclick="selectLocation(this)">Location {{i}}</div>
-                                    {% endfor %}
-                                  </div>
+ 
+                            <div class="add_iteam" id="add_elements_interest_hobbies"></div>
+                            <div class="multiselect-divgroup">
+                                <button type="button" class="selctbox_div" id="show_all_interest_hobbies">
+                                    <i class="fa-solid fa-caret-down"></i> Select Hobbies&interests
+                                </button>
+                                <div class="show_iteam" id="show_elements_interest_hobbies"></div>
                             </div>
-                            <div class="selected-items" style="display: none;"></div>   
+                            <!-- Hidden input to store selected hobbies -->
+                            <input type="hidden" name="hobbies" id="interest_hobbies_input">
     
                         </div>
                     </div>
@@ -490,12 +574,16 @@
                         <div class="title_row_2">
                             <label for="">Education level</label>
                         </div>
-                        <select name="gender" id="gender" class="form-control">
-                            <option value="">Select Education</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                          </select>
+                    
+                    <div class="add_iteam" id="add_elements_qualifications"></div>
+                    <div class="multiselect-divgroup">
+                        <button type="button" class="selctbox_div" id="show_all_qualifications">
+                            <i class="fa-solid fa-caret-down"></i> Select Education
+                        </button>
+                        <div class="show_iteam" id="show_elements_qualifications"></div>
+                    </div>
+                    <!-- Hidden input to store selected hobbies -->
+                    <input type="hidden" name="qualifications" id="qualification_input">
                     </div>
 
 
@@ -524,28 +612,48 @@
                             </div>
                         </div>                                          
                     </div>
-                    
+                    <div class="right_row">
+                      <div class="title_row_2">
+                          <label for="">LifestyleChoice level</label>
+                      </div>
+                  
+                  <div class="add_iteam" id="add_elements_LifestyleChoice"></div>
+                  <div class="multiselect-divgroup">
+                      <button type="button" class="selctbox_div" id="show_all_LifestyleChoice">
+                          <i class="fa-solid fa-caret-down"></i> Select LifestyleChoice
+                      </button>
+                      <div class="show_iteam" id="show_elements_LifestyleChoice"></div>
+                  </div>
+                  <!-- Hidden input to store selected hobbies -->
+                  <input type="hidden" name="LifestyleChoice" id="LifestyleChoice_input">
+                  </div>
+
                     <div class="right_row">
                         <div class="title_row_2">
                             <label for="">religion</label>
                         </div>
-                        <select name="gender" id="gender" class="form-control">
-                            <option value="">Select religion</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                          </select>
+                        <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+                          <option >select Religion</option>
+                          <option value="CH">Christianity</option>
+                          <option value="IS">Islam</option>
+                          <option value="HI">Hinduism</option>
+                          <option value="BU">Buddhism</option>
+                          <option value="SI">Sikhism</option>
+                          <option value="JE">Judaism</option>
+                          <option value="OT">Others</option>
+                  
+                      </select>
                     </div>
 
                     <div class="right_row">
                         <div class="title_row_2">
                             <label for="">occupation</label>
                         </div>
-                        <select name="gender" id="gender" class="form-control">
+                        <select name="occupation" id="occupation" class="form-control">
                             <option value="">Select occupation</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
+                            {% for job in occupation %}
+                            <option value="{{job}}">{{job}}</option>
+                            {% endfor %}
                           </select>
                     </div>
     
@@ -618,6 +726,144 @@
             dropdown.classList.remove('open');
         }
     });
+
+
+
+
+    const sections = {
+      interest_hobbies: {
+          showElementsDiv: document.getElementById('show_elements_interest_hobbies'),
+          addElementsDiv: document.getElementById('add_elements_interest_hobbies'),
+          button: document.getElementById('show_all_interest_hobbies'),
+          items: {{ interest_hobbies_list|default:"[]"|safe }},
+          selectedItems: JSON.parse(localStorage.getItem('selectedItemsInterestHobbies')) || [],
+          inputField: document.getElementById('interest_hobbies_input')
+      },
+      qualifications: {
+          showElementsDiv: document.getElementById('show_elements_qualifications'),
+          addElementsDiv: document.getElementById('add_elements_qualifications'),
+          button: document.getElementById('show_all_qualifications'),
+          items: {{ qualifications_list|default:"[]"|safe }},
+          selectedItems: JSON.parse(localStorage.getItem('selectedItemsQualifications')) || [],
+          inputField: document.getElementById('qualification_input')
+      },
+      location: {
+          showElementsDiv: document.getElementById('show_elements_location'),
+          addElementsDiv: document.getElementById('add_elements_location'),
+          button: document.getElementById('show_all_location'),
+          items: {{ location_list|default:"[]"|safe }},
+          selectedItems: JSON.parse(localStorage.getItem('selectedItemsLocation')) || [],
+          inputField: document.getElementById('location_input')
+      },
+      LifestyleChoice: {
+        showElementsDiv: document.getElementById('show_elements_LifestyleChoice'),
+        addElementsDiv: document.getElementById('add_elements_LifestyleChoice'),
+        button: document.getElementById('show_all_LifestyleChoice'),
+        items: {{ LifestyleChoice_list|default:"[]"|safe }},
+        selectedItems: JSON.parse(localStorage.getItem('selectedItemsLocation')) || [],
+        inputField: document.getElementById('LifestyleChoice_input')
+    }
+  };
+  
+  function displayItems(section, filteredItems) {
+      const itemsContainer = section.showElementsDiv.querySelector('.items-container');
+      itemsContainer.innerHTML = '';
+  
+      if (filteredItems.length === 0) {
+          const noResults = document.createElement('div');
+          noResults.textContent = 'No items found';
+          noResults.className = 'item-class text-muted';
+          itemsContainer.appendChild(noResults);
+      } else {
+          filteredItems.forEach(item => {
+              const newItem = document.createElement('div');
+              newItem.textContent = item;
+              newItem.className = 'item-class';
+              newItem.addEventListener('click', () => {
+                  moveToSelected(section, item);
+              });
+              itemsContainer.appendChild(newItem);
+          });
+      }
+  }
+  
+  function updateUI(section) {
+      const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
+      displayItems(section, availableItems);
+      renderSelectedItems(section);
+      updateInputField(section);
+  }
+  
+  function moveToSelected(section, item) {
+      if (section.selectedItems.includes(item)) return;
+      section.selectedItems.push(item);
+      updateLocalStorage(section);
+      updateUI(section);
+  }
+  
+  function renderSelectedItems(section) {
+      section.addElementsDiv.innerHTML = '';
+      section.selectedItems.forEach(item => {
+          const selectedItem = document.createElement('div');
+          selectedItem.className = 'add-item-btn';
+          selectedItem.innerHTML = `${item} <span class="remove-icon">&times;</span>`;
+          selectedItem.querySelector('.remove-icon').addEventListener('click', () => {
+              removeSelectedItem(section, item);
+          });
+          section.addElementsDiv.appendChild(selectedItem);
+      });
+      section.addElementsDiv.style.display = section.selectedItems.length > 0 ? 'flex' : 'none';
+  }
+  
+  function removeSelectedItem(section, item) {
+      section.selectedItems = section.selectedItems.filter(i => i !== item);
+      updateLocalStorage(section);
+      updateUI(section);
+  }
+  
+  function updateLocalStorage(section) {
+      const storageKey = section.inputField.id.replace('_input', ''); // Example: interest_hobbies -> selectedItemsInterestHobbies
+      localStorage.setItem(storageKey, JSON.stringify(section.selectedItems));
+  }
+  
+  function updateInputField(section) {
+      section.inputField.value = section.selectedItems.join(', ');
+  }
+  
+  Object.values(sections).forEach(section => {
+      section.button.addEventListener('click', () => {
+          section.showElementsDiv.style.display = 'block';
+          section.showElementsDiv.innerHTML = '';
+          const searchBox = document.createElement('input');
+          searchBox.setAttribute('type', 'text');
+          searchBox.setAttribute('placeholder', 'Search items...');
+          searchBox.className = 'form-control mb-2';
+          section.showElementsDiv.appendChild(searchBox);
+          const itemsContainer = document.createElement('div');
+          itemsContainer.className = 'items-container';
+          section.showElementsDiv.appendChild(itemsContainer);
+          updateUI(section);
+          searchBox.addEventListener('input', () => {
+              const searchTerm = searchBox.value.toLowerCase();
+              const filteredItems = section.items.filter(item => item.toLowerCase().includes(searchTerm) && !section.selectedItems.includes(item));
+              displayItems(section, filteredItems);
+          });
+      });
+      section.showElementsDiv.addEventListener('click', event => {
+          event.stopPropagation();
+      });
+  });
+  
+  document.addEventListener('click', event => {
+      Object.values(sections).forEach(section => {
+          if (!section.showElementsDiv.contains(event.target) && !event.target.matches(`#${section.button.id}`)) {
+              section.showElementsDiv.style.display = 'none';
+          }
+      });
+  });
+  
+  Object.values(sections).forEach(section => updateUI(section));
+  
 
 </script>
 {% endblock scripts %}
