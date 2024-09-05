@@ -465,8 +465,8 @@
             <label for="">Partner Preference</label><br />
           </div>
         </div>
-
-
+        <form action="{% url 'privacy_setting_sec' %}" method="post">
+          {% csrf_token %}
         <div class="content_flex">
             <div class="inner_flex_1">
 
@@ -508,23 +508,26 @@
             </div>
 
             <div class="inner_flex_2">
-                <div class="second_row">
+                <div class="first_row">
                     <div class="title_row_2">
                         <label for="">Age Range</label>
                     </div>
                     <div class="slider-container">
-                        <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
-                        <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
-                        <div class="slider-values">
-                            <span id="minValue">20</span> - <span id="maxValue">80</span>
-                        </div>
+                      <!-- Use class or data-* attribute instead of relying on id -->
+                    <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                    <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+                    <div class="slider-values">
+                        <span  class="minValue">20</span> - <span class="maxValue">80</span>
+                        <input type="hidden" name="age_min" class="mininputs">
+                        <input type="hidden" name="age_max" class="maxinputs">
+                    </div>
                     </div>                                          
                 </div>
                     <div class="right_row">
                         <div class="title_row_2">
-                            <label for="">Age Range</label>
+                            <label for="">Gender</label>
                         </div>
-                        <select class="form-select" id="{{ label|slugify }}" name="gender">
+                        <select class="form-select" id="{{ label|slugify }}" name="preferred_gender">
                           <option >select Gender</option>
                           <option value="M">Male</option>
                           <option value="F">Female</option>
@@ -546,7 +549,7 @@
                                 <div class="show_iteam" id="show_elements_location"></div>
                             </div>
                             <!-- Hidden input to store selected hobbies -->
-                            <input type="hidden" name="locations" id="location_input"> 
+                            <input type="hidden" name="preferred_location" id="location_input"> 
 
                     </div>
                     </div>
@@ -565,7 +568,7 @@
                                 <div class="show_iteam" id="show_elements_interest_hobbies"></div>
                             </div>
                             <!-- Hidden input to store selected hobbies -->
-                            <input type="hidden" name="hobbies" id="interest_hobbies_input">
+                            <input type="hidden" name="interests_hobbies" id="interest_hobbies_input">
     
                         </div>
                     </div>
@@ -583,7 +586,7 @@
                         <div class="show_iteam" id="show_elements_qualifications"></div>
                     </div>
                     <!-- Hidden input to store selected hobbies -->
-                    <input type="hidden" name="qualifications" id="qualification_input">
+                    <input type="hidden" name="education_level" id="qualification_input">
                     </div>
 
 
@@ -592,24 +595,30 @@
                             <label for="">height</label>
                         </div>
                         <div class="slider-container">
-                            <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
-                            <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
-                            <div class="slider-values">
-                                <span id="minValue">20</span> - <span id="maxValue">80</span>
-                            </div>
+                          <!-- Use class or data-* attribute instead of relying on id -->
+                        <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+                        <div class="slider-values">
+                            <span name='height_min' class="minValue">20</span> - <span name='height_max' class="maxValue">80</span>
+                            <input type="hidden" name="height_min" class="mininputs">
+                            <input type="hidden" name="height_max" class="maxinputs">
+                          </div>
                         </div>                                          
                     </div>
 
                     <div class="first_row">
                         <div class="title_row_2">
-                            <label for="">weight</label>
+                            <label  for="">weight</label>
                         </div>
                         <div class="slider-container">
-                            <input type="range" id="minRange" min="0" max="100" value="20" step="1" oninput="updateRange()">
-                            <input type="range" id="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange()">
-                            <div class="slider-values">
-                                <span id="minValue">20</span> - <span id="maxValue">80</span>
-                            </div>
+                          <!-- Use class or data-* attribute instead of relying on id -->
+                        <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+                        <div class="slider-values">
+                            <span name="weight_min" class="minValue">20</span> - <span name="weight_max" class="maxValue">80</span>
+                            <input type="hidden" name="weight_min" class="mininputs">
+                            <input type="hidden" name="weight_max" class="maxinputs">
+                          </div>
                         </div>                                          
                     </div>
                     <div class="right_row">
@@ -625,14 +634,14 @@
                       <div class="show_iteam" id="show_elements_LifestyleChoice"></div>
                   </div>
                   <!-- Hidden input to store selected hobbies -->
-                  <input type="hidden" name="LifestyleChoice" id="LifestyleChoice_input">
+                  <input type="hidden" name="lifestyle_choices" id="LifestyleChoice_input">
                   </div>
 
                     <div class="right_row">
                         <div class="title_row_2">
                             <label for="">religion</label>
                         </div>
-                        <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+                        <select class="form-select" id="{{ label|slugify }}" name="religion">
                           <option >select Religion</option>
                           <option value="CH">Christianity</option>
                           <option value="IS">Islam</option>
@@ -650,16 +659,33 @@
                             <label for="">occupation</label>
                         </div>
                         <select name="occupation" id="occupation" class="form-control">
-                            <option value="">Select occupation</option>
+                            <option >Select occupation</option>
                             {% for job in occupation %}
                             <option value="{{job}}">{{job}}</option>
                             {% endfor %}
                           </select>
                     </div>
-    
+                    <div class="right_row">  
+                      <button class="btn btn-primary w-100" type="submit">Save</button>
+                    </div>
             </div>
-
+            {% if form.errors%}
+                <div class="alert alert-danger" role="alert">
+                    {% for field, errors in form.errors.items %}
+                        {% if field and field != '__all__' %}
+                        <div>
+                            {{field }}: {{ errors|join:', ' }}
+                        </div>
+                        {% else %}
+                        <div>
+                            {{ errors|join:', ' }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}       
         </div>
+      </form>
 
       </div>
     </div>
@@ -668,67 +694,47 @@
 {% endblock content %}
 {% block scripts %}
 <script>
-    // Range Slider Script
-    function updateRange() {
-        const minRange = document.getElementById("minRange");
-        const maxRange = document.getElementById("maxRange");
-        const minValue = document.getElementById("minValue");
-        const maxValue = document.getElementById("maxValue");
+  document.addEventListener('DOMContentLoaded', function() {
+      let sliders = document.querySelectorAll('.first_row');
 
-        if (parseInt(minRange.value) > parseInt(maxRange.value)) {
-            minRange.value = maxRange.value;
-        }
+      sliders.forEach((slider, index) => {
+          let minRange = slider.querySelector('.minRange');
+          let maxRange = slider.querySelector('.maxRange');
+          let minValue = slider.querySelector('.minValue');
+          let maxValue = slider.querySelector('.maxValue');
+          let minInput = slider.querySelector('.mininputs');
+          let maxInput = slider.querySelector('.maxinputs');
 
-        minValue.innerText = minRange.value;
-        maxValue.innerText = maxRange.value;
-    }
+          // Assign unique IDs
+          minRange.id = `minRange_${index}`;
+          maxRange.id = `maxRange_${index}`;
+          minValue.id = `minValue_${index}`;
+          maxValue.id = `maxValue_${index}`;
+          minInput.id = `mininputs_${index}`;
+          maxInput.id = `maxinputs_${index}`;
+      });
+  });
 
-    // Multi-Selector Script
-    function toggleDropdown() {
-        const dropdown = document.querySelector('.location-dropdown');
-        dropdown.classList.toggle('open');
-    }
+  function updateRange(inputElement) {
+      let parent = inputElement.closest('.first_row');
+      let minRange = parent.querySelector('.minRange');
+      let maxRange = parent.querySelector('.maxRange');
+      let minValue = parent.querySelector('.minValue');
+      let maxValue = parent.querySelector('.maxValue');
+      let minInput = parent.querySelector('.mininputs');
+      let maxInput = parent.querySelector('.maxinputs');
 
-    function selectLocation(element) {
-        const selectedItemsContainer = document.querySelector('.selected-items');
-        selectedItemsContainer.style.display = 'block'
-        const location = element.innerText;
+      if (parseInt(minRange.value) > parseInt(maxRange.value)) {
+          minRange.value = maxRange.value;
+      }
 
-        // Create a selected item element
-        const selectedItem = document.createElement('div');
-        selectedItem.classList.add('selected-item');
-        selectedItem.innerText = location;
+      minValue.innerText = minRange.value;
+      maxValue.innerText = maxRange.value;
+      minInput.value = minRange.value;
+      maxInput.value = maxRange.value;
+  }
 
-        // Create a remove icon
-        const removeIcon = document.createElement('i');
-        removeIcon.classList.add('fas', 'fa-times');
-        removeIcon.onclick = function () {
-            selectedItemsContainer.removeChild(selectedItem);
-            element.style.display = 'block'; // Show the location back in the dropdown
-            if (selectedItemsContainer.children.length === 0) {
-                console.log('The div is empty.');
-                selectedItemsContainer.style.display = 'none'
-            } 
-        };
-
-        selectedItem.appendChild(removeIcon);
-        selectedItemsContainer.appendChild(selectedItem);
-
-        // Hide the selected location from the dropdown
-        element.style.display = 'none';
-    }
-
-    // Close dropdown when clicking outside of it
-    window.addEventListener('click', function (event) {
-        const dropdown = document.querySelector('.location-dropdown');
-        const multiSelector = document.querySelector('.multi-selector');
-        if (!multiSelector.contains(event.target) && !dropdown.contains(event.target)) {
-            dropdown.classList.remove('open');
-        }
-    });
-
-
-
+    
 
     const sections = {
       interest_hobbies: {

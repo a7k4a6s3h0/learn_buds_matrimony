@@ -523,7 +523,14 @@ class AdditionalDetailsForm(forms.ModelForm):
 
 class UserPartnerPreferenceForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        # Capture the user instance passed via kwargs
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
 
     class Meta:
         model = PartnerPreference
-        fields = ()
+        fields = ('age_min', 'age_max', 'preferred_gender', 'preferred_location', 'interests_hobbies', 'education_level', 'height_min',
+                  'height_max', 'weight_min', 'weight_max', 'lifestyle_choices', 'religion', 'occupation' )
+    
+    
