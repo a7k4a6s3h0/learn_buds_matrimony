@@ -1,8 +1,13 @@
 
 <!-- Desktop Navbar -->
 <div class="menu-bar-desktop">
-    <div class="menu-item"><a href="{% url 'send_request' user.pk %}">
-        <i class="fas fa-home"></i></a>
+    <div class="menu-item">
+        <form method="post" action="{% url 'send_request' user.pk %}">
+            {% csrf_token %}
+            <button type="submit">
+                <i class="fas fa-home"></i>
+            </button>
+        </form>
     </div>
     <div class="menu-item"> 
         <i class="fas fa-envelope"></i>

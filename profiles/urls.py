@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     path('profile/<int:user_id>/',views.demo_pr, name="profile"),
     path('msg_pg',views.messages_pg, name="msg_pg"),
-    path('sent/<int:pk>/',views.SendRequestView.as_view(), name="send_request"),
+    path('send/<int:pk>/',views.SendRequestView.as_view(), name="send_request"),
     path('sent/',views.SentedRequestView.as_view(), name="sented_request"),
     path('accept/',views.AcceptedRequestView.as_view(), name="accepted_request"),
     path('received/',views.ReceivedRequestView.as_view(), name="received_request"),
@@ -22,13 +22,4 @@ urlpatterns = [
     path('shortlist',views.user_shortlist_pg, name="shortlist"),
     path('pr_viewed',views.user_viewed_pg, name="pr_viewed"),
     
-
-
-
-
-
-
-
-
-
 ]

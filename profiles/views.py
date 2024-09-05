@@ -11,6 +11,7 @@ from .models import InterestRequest
 from django.views.generic import ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q  # Import Q for complex queries
+from django.contrib import messages
 # Create your views here.
 def demo_pr(request, user_id):
     # Fetch the user and related data
@@ -83,12 +84,23 @@ def user_viewed_pg(request):
     return render(request, 'pr_viewed.html')
 
 
-class SendRequestView(LoginRequiredMixin,View):
-    def post(self, request, *args, **kwargs) :
+class SendRequestView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
         sender = request.user
         receiver = get_object_or_404(costume_user, id=self.kwargs['pk'])
-
-        InterestRequest.objects.create(sender=sender, receiver=receiver)
+        
+        # Check if a request already exists
+        existing_request = InterestRequest.objects.filter(sender=sender, receiver=receiver).exists()
+        
+        if existing_request:
+            messages.warning(request, "You have already sent a request to this user.")
+        else:
+            try:
+                InterestRequest.objects.create(sender=sender, receiver=receiver)
+                messages.success(request, "Interest request sent successfully!")
+            except Exception as e:
+                messages.error(request, f"Failed to send interest request: {str(e)}")
+            
         return redirect(reverse_lazy('sented_request'))
 
 class SentedRequestView(LoginRequiredMixin,ListView):
