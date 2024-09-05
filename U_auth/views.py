@@ -59,8 +59,8 @@ def user_details_4(request):
 def user_details_5(request):
     return render(request, 'User_profile_templates/user_pr_5.html')
 
-def user_details_6(request):
-    return render(request, 'User_profile_templates/user_pr_6.html')
+# def user_details_6(request):
+#     return render(request, 'User_profile_templates/user_pr_6.html')
 
 
 def AuthPage(request):
@@ -85,7 +85,7 @@ def error_403(request):
 # ................................backend code starting..............................................
 
 
-class SignupView(FormView):
+class SignupView(RedirectAuthenticatedUserMixin, FormView):
     
     template_name = 'auth/auth.html'  # The template to render
     form_class = CreateUser
@@ -140,8 +140,8 @@ class SignupView(FormView):
         if self.request.user.is_authenticated:
             obj = check_permissions(self.request, self.request.user.email)
             response_status = obj.get_model()
+            print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
             if response_status is not None:
-                print(response_status, "response_status...................!!!!!!!!!!!!!")  # Debugging
                 for key, value in response_status.items():
                     if key != 'status':
                         model_name = key
@@ -150,7 +150,7 @@ class SignupView(FormView):
                 context = self.get_context_data()
                 context.update({model_name: True})  # Passing the context variable 
                 return self.render_to_response(context)
-        
+            
         return super().get(request, *args, **kwargs)
     
     def form_valid(self, form):
@@ -352,7 +352,7 @@ class ResendOTPView(FormView):
             messages.error(self.request, "User does not exist. Please try again.")
             return redirect(reverse('auth_page'))
 
-class LoginView(FormView):
+class LoginView(RedirectAuthenticatedUserMixin, FormView):
 
     template_name = 'auth/auth.html'
     form_class = LoginForm
@@ -378,9 +378,6 @@ class LoginView(FormView):
 
         return kwargs
 
-    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
-
-        return super().get(request, *args, **kwargs)  # Call the parent's get method to render the form
 
     def form_valid(self, form):
         """
@@ -713,3 +710,53 @@ class AdditionalDetailsView(FormView):
     
     def get_success_url(self) -> str:
         return reverse_lazy('auth_page')
+    
+
+class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
+    template_name = 'User_profile_templates/privacy_setting_2.html'
+    form_class = UserPartnerPreferenceForm
+
+    def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
+        context =  super().get_context_data(**kwargs)
+        interst_hobbies_list = []
+        qualification_list = []
+        locations_list = []
+        LifestyleChoice_list = []
+        interst_obj = Interests.objects.all()
+        hobbies_obj = Hobbies.objects.all()
+        qualification_obj = Qualifications.objects.all()
+        locations_obj = Location.objects.all()
+        LifestyleChoice_obj =  LifestyleChoice.objects.all()
+        for Lifestyle in LifestyleChoice_obj:
+            LifestyleChoice_list.append(Lifestyle.name)
+        for interst in interst_obj:
+            interst_hobbies_list.append(interst.interest)
+        for hobbie in hobbies_obj:
+            interst_hobbies_list.append(hobbie.hobby)
+        for qualifiction in qualification_obj:
+            qualification_list.append(qualifiction.qualification)
+        for location in locations_obj:
+            if location.address_details['state_district'] not in locations_list :
+                locations_list.append(location.address_details['state_district'])
+        print(interst_hobbies_list, qualification_list, locations_list)
+        context['interest_hobbies_list'] = interst_hobbies_list
+        context['qualifications_list'] = qualification_list
+        context['location_list'] = locations_list
+        context['LifestyleChoice_list'] = LifestyleChoice_list
+        context['occupation'] = [occupation.job_title for occupation in Job_Details.objects.all()]
+        return context
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        print(kwargs,"datas............!!!!!!!!!!!!!!11")
+        return kwargs
+    
+    def form_invalid(self, form: Any) -> HttpResponse:
+        details = form.save()
+        print(details)
+        return super().form_invalid(form)
+    
+
+    def get_success_url(self) -> str:
+        return redirect('privacy_setting_sec')

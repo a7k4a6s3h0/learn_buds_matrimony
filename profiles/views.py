@@ -1,3 +1,4 @@
+
 from django.shortcuts import redirect, render
 
 #profile display imports :
@@ -140,3 +141,4 @@ class RejectedRequestView(LoginRequiredMixin, ListView):
             Q(sender=self.request.uesr, status='rejected')|
             Q(receiver=self.request.user, status='rejected')
         )
+

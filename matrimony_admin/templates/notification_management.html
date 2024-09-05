@@ -1,0 +1,21 @@
+{% extends 'base_files/admin_base.html' %}
+{% block admin_title %}
+Notification Management
+{% endblock admin_title %}
+
+{% block admin_content %}
+<div class="container pb-5">
+    <div class="notification-con">
+        <div class="row">
+            <div class="col  p-5">
+                <h4>Notification Management</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {% include 'widget\admin\admin_notification_card.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

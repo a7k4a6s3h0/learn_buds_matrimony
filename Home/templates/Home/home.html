@@ -5,9 +5,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- Fixed Sidebar -->
-    <div
-      class="col-3 col-lg-2 d-none d-md-flex justify-content-center align-items-center leftside-bar p-0"
-    >
+    <div class="col-3 col-lg-2 d-none d-md-flex justify-content-center align-items-center leftside-bar p-0">
       <ul class="list-unstyled w-100 text-center py-3">
         <li class="py-4"><a href="#">Dating</a></li>
         <li class="py-4"><a href="#">Matrimony</a></li>
@@ -17,93 +15,62 @@
       </ul>
     </div>
     <!-- Scrollable Content Area -->
+
     <div class="col-12 col-md-9 col-lg-10 offset-md-3 offset-lg-2">
       <div class="row">
-        {% include 'widget/base_navbar.html' with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="lara jion" %}
+        {% include 'widget/base_navbar.html' with image=user_details.profile_pic.url name=user_details.user.username %}
         <div class="container filter-btn-container rounded-pill">
           <div class="row d-flex justify-content-around">
             <div class="col">
-              <a href="{% url 'loaction' %}"
-                ><button class="btn btn-sm btn-container rounded-pill">
+              <a href="?filter=Location">
+                <button class="btn btn-sm btn-container rounded-pill">
                   Location
-                </button></a
-              >
+                </button>
+              </a>
             </div>
             <div class="col">
-              <a href="{% url 'designation' %}"
-                ><button class="btn btn-sm btn-container rounded-pill">
+              <a href="?filter=Designation">
+                <button class="btn btn-sm btn-container rounded-pill">
                   Designation
-                </button></a
-              >
+                </button>
+              </a>
             </div>
             <div class="col">
-              <a href="{% url 'qualification' %}"
-                ><button class="btn btn-sm btn-container rounded-pill">
+              <a href="?filter=Qualification">
+                <button class="btn btn-sm btn-container rounded-pill">
                   Qualification
-                </button></a
-              >
+                </button>
+              </a>
             </div>
           </div>
         </div>
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rumi tha" job='Developer' location='Kozhikode' status='online' gender='F' age='34'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="Clara jonh" job='Developer' location='Kozhikode' status='online' gender='F' age='25'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="dig" job='Developer' location='Kozhikode' status='offline' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="lahibha" job='Developer' location='Kozhikode' status='offline' gender='F' age='18'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="rumi tha" job='Developer' location='Kozhikode' status='online' gender='F' age='34'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="Clara jonh" job='Developer' location='Kozhikode' status='online' gender='F' age='25'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="dig" job='Developer' location='Kozhikode' status='offline' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="lahibha" job='Developer' location='Kozhikode' status='offline' gender='F' age='18'%} 
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/8Xqgtvq/profile.jpg" name="theresa" job='Developer' location='Kozhikode' status='online' gender='F' age='35'%}
-    {% include "widget/home-profle-card.html" with image="https://i.ibb.co/pyzvp1M/profile2.jpg" name="th" job='Developer' location='Kozhikode' status='online' gender='F' age='54'%}
+
+        {% for user in users %}
+        {% if user.user.job_details %}
+        {% include "widget/home-profle-card.html" with image=user.profile_pic_url name=user.user.username job=user.user.job_details.designation location=user.user_location.address_details.city status=user.user.is_online gender=user.gender age=user.age %}
+        {% else %}
+        <p>{{ user.user.username }} has no job details available.</p>
+        {% endif %}
+        {% empty %}
+        <p>No users found.</p>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
 
 <!-- Modal for notifiaction -->
-<div
-  style="backdrop-filter: blur(10px)"
-  class="modal fade"
-  id="staticBackdrop"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticBackdropLabel"
-  aria-hidden="true"
->
+<div style="backdrop-filter: blur(10px)" class="modal fade" id="staticBackdrop" data-bs-backdrop="static"
+  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable text-end">
-    <div
-      class="modal-content text-start"
-      style="background-color: transparent; border: none"
-    >
-      <button
-        type="button"
-        style="filter: invert(100%)"
-        class="btn-close text-end p-2 text-light"
-        data-bs-dismiss="modal"
-        aria-label="Close"
-      ></button>
+    <div class="modal-content text-start" style="background-color: transparent; border: none">
+      <button type="button" style="filter: invert(100%)" class="btn-close text-end p-2 text-light"
+        data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-body">
-{% include "widget/notifications/news_notifaction.html" with news_title='News Title' news_subtitle='Lorem ipsum dolor sit, amet consectetur adipisicing elit., amet consectetur adipisicing elit, amet consectetur adipisicing elit' time="Today 12:20PM" %}
-            {% include "widget/notifications/error_notifcation.html" with message='Error Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/success_notifaction.html" with message='Succuss Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/warning_notifaction.html" with message='Warning Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/news_notifaction.html" with news_title='News Title' news_subtitle='Lorem ipsum dolor sit, amet consectetur adipisicing elit., amet consectetur adipisicing elit, amet consectetur adipisicing elit' time="Today 12:20PM" %}
-            {% include "widget/notifications/error_notifcation.html" with message='Error Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/success_notifaction.html" with message='Succuss Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/warning_notifaction.html" with message='Warning Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/news_notifaction.html" with news_title='News Title' news_subtitle='Lorem ipsum dolor sit, amet consectetur adipisicing elit., amet consectetur adipisicing elit, amet consectetur adipisicing elit' time="Today 12:20PM" %}
-            {% include "widget/notifications/error_notifcation.html" with message='Error Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/success_notifaction.html" with message='Succuss Message' time="Today 12:20PM" %}
-            {% include "widget/notifications/warning_notifaction.html" with message='Warning Message' time="Today 12:20PM" %}
+        {% include "widget/notifications/news_notifaction.html" with news_title='News Title' news_subtitle='Lorem ipsu dolor sit, amet consectetur adipisicing elit., amet consectetur adipisicing elit, amet consectetur adipisicing elit' time="Today 12:20PM" %}
+        {% include "widget/notifications/error_notifcation.html" with message='Error Message' time="Today 12:20PM" %}
+        {% include "widget/notifications/success_notifaction.html" with message='Success Message' time="Today 12:20PM" %}
+        {% include "widget/notifications/warning_notifaction.html" with message='Warning Message' time="Today 12:20PM" %}
       </div>
     </div>
   </div>

@@ -134,7 +134,8 @@
         <input type="text" id="location_lng" readonly>
         </div>
         <input type="hidden" id="locationInput" name="location">
-        <textarea id="location_address" name="address_details" cols="50"></textarea>
+        <textarea id="location_address" cols="50"></textarea>
+        <input type="hidden" name="address_details" id="adressInput">
     {% else %}
     <input type="{{ type }}" name="{{name}}" class="form-control" id="{{ label|slugify }}" placeholder="{{ label }}" />
     {% endif %}
