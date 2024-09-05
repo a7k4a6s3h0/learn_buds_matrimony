@@ -82,13 +82,13 @@ def user_viewed_pg(request):
     return render(request, 'pr_viewed.html')
 
 
-class SendRequestView(LoginRequiredMixin):
+class SendRequestView(LoginRequiredMixin,View):
     def post(self, request, *args, **kwargs) :
         sender = request.user
         receiver = get_object_or_404(costume_user, id=self.kwargs['pk'])
 
         InterestRequest.objects.create(sender=sender, receiver=receiver)
-        return redirect(reverse_lazy('send.html'))
+        return redirect(reverse_lazy('sented_request'))
 
 class SentedRequestView(LoginRequiredMixin,ListView):
     model = InterestRequest
