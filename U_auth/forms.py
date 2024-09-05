@@ -521,4 +521,9 @@ class AdditionalDetailsForm(forms.ModelForm):
 
 
 
+class UserPartnerPreferenceForm(forms.ModelForm):
 
+
+    class Meta:
+        model = PartnerPreference
+        fields = ()
