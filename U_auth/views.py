@@ -712,7 +712,7 @@ class AdditionalDetailsView(FormView):
         return reverse_lazy('auth_page')
     
 
-class UserPartnerPreferenceView_2(FormView):
+class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
     template_name = 'User_profile_templates/privacy_setting_2.html'
     form_class = UserPartnerPreferenceForm
 
@@ -748,12 +748,15 @@ class UserPartnerPreferenceView_2(FormView):
 
     def get_form_kwargs(self) -> dict[str, Any]:
         kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
         print(kwargs,"datas............!!!!!!!!!!!!!!11")
         return kwargs
     
     def form_invalid(self, form: Any) -> HttpResponse:
+        details = form.save()
+        print(details)
         return super().form_invalid(form)
     
 
     def get_success_url(self) -> str:
-        return super().get_success_url()
+        return redirect('privacy_setting_sec')
