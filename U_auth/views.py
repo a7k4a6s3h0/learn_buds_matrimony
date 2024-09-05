@@ -59,8 +59,8 @@ def user_details_4(request):
 def user_details_5(request):
     return render(request, 'User_profile_templates/user_pr_5.html')
 
-def user_details_6(request):
-    return render(request, 'User_profile_templates/user_pr_6.html')
+# def user_details_6(request):
+#     return render(request, 'User_profile_templates/user_pr_6.html')
 
 
 def AuthPage(request):
@@ -710,3 +710,50 @@ class AdditionalDetailsView(FormView):
     
     def get_success_url(self) -> str:
         return reverse_lazy('auth_page')
+    
+
+class UserPartnerPreferenceView_2(FormView):
+    template_name = 'User_profile_templates/privacy_setting_2.html'
+    form_class = UserPartnerPreferenceForm
+
+    def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
+        context =  super().get_context_data(**kwargs)
+        interst_hobbies_list = []
+        qualification_list = []
+        locations_list = []
+        LifestyleChoice_list = []
+        interst_obj = Interests.objects.all()
+        hobbies_obj = Hobbies.objects.all()
+        qualification_obj = Qualifications.objects.all()
+        locations_obj = Location.objects.all()
+        LifestyleChoice_obj =  LifestyleChoice.objects.all()
+        for Lifestyle in LifestyleChoice_obj:
+            LifestyleChoice_list.append(Lifestyle.name)
+        for interst in interst_obj:
+            interst_hobbies_list.append(interst.interest)
+        for hobbie in hobbies_obj:
+            interst_hobbies_list.append(hobbie.hobby)
+        for qualifiction in qualification_obj:
+            qualification_list.append(qualifiction.qualification)
+        for location in locations_obj:
+            if location.address_details['state_district'] not in locations_list :
+                locations_list.append(location.address_details['state_district'])
+        print(interst_hobbies_list, qualification_list, locations_list)
+        context['interest_hobbies_list'] = interst_hobbies_list
+        context['qualifications_list'] = qualification_list
+        context['location_list'] = locations_list
+        context['LifestyleChoice_list'] = LifestyleChoice_list
+        context['occupation'] = [occupation.job_title for occupation in Job_Details.objects.all()]
+        return context
+
+    def get_form_kwargs(self) -> dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        print(kwargs,"datas............!!!!!!!!!!!!!!11")
+        return kwargs
+    
+    def form_invalid(self, form: Any) -> HttpResponse:
+        return super().form_invalid(form)
+    
+
+    def get_success_url(self) -> str:
+        return super().get_success_url()

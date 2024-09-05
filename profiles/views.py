@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 #profile display imports :
 from django.shortcuts import render, get_object_or_404
-from U_auth.models import costume_user, UserPersonalDetails, Job_Details, AdditionalDetails, Pictures, Hobbies, Interests, Relationship_Goals
+from U_auth.models import *
 
 # Create your views here.
 def demo_pr(request, user_id):
