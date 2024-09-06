@@ -327,24 +327,27 @@
                     <i class='fas fa-angle-left' style='font-size:24px'></i>
                 </div>
                 <div class="nav-right">
-                    <div class="distance"><i class="fas fa-edit" style="font-size: 18px;"></i>Edit
-                    </div>
+                    <a href="{% url 'profile_edit' %}">
+                        <div class="distance"><i class="fas fa-edit" style="font-size: 18px;"></i>Edit
+                        </div>
+                    </a>
                 </div>
             </nav>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="https://img.freepik.com/premium-vector/anonymous-man-black-silhouette-with-question-mark-incognito-male-person-vector-illustration_261737-806.jpg"
+                        <img src="{{user_details.profile_pic.url}}"
                             class="d-block img-fluid" alt="...">
                     </div>
+                    {% if extra_photos %}
+                    {% for pic in extra_photos %}
                     <div class="carousel-item">
-                        <img src="https://img.freepik.com/premium-vector/anonymous-man-black-silhouette-with-question-mark-incognito-male-person-vector-illustration_261737-806.jpg"
+                        <img src="{{pic.photos.url}}"
                             class="d-block img-fluid" alt="...">
                     </div>
-                    <div class="carousel-item">
-                        <img src="https://img.freepik.com/premium-vector/anonymous-man-black-silhouette-with-question-mark-incognito-male-person-vector-illustration_261737-806.jpg"
-                            class="d-block img-fluid" alt="...">
-                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
                     data-bs-slide="prev">
@@ -361,10 +364,10 @@
 
             <div class="profile-name">
                 <label>
-                    <h2>User Name</h2>
+                    <h2>{{user_details.user.username}}</h2>
                 </label>
                 <label>
-                    <h4>User Name</h4>
+                    <h4>{{user_details.user_location.address_details.town}}</h4>
                 </label>
                 <button type="button" class="profile-button" data-mdb-ripple-init>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
@@ -391,29 +394,39 @@
 
             <div class="about_user mt-3 ps-2" id="show_details">
                 <label for="titile" style="font-size:15px; font-weight: bold;">About : </label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-                    obcaecati tenetur iure eius earum
+                <p>{{user_details.bio}}
                 </p>
             </div>
 
             <div class="about_user mt-3 ps-2" id="address" style="display: none;">
                 <label for="titile" style="font-size:15px; font-weight: bold;">Address: </label>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-                    molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-                    numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-                    optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-                    obcaecati tenetur iure eius earum
-                </p>
+                <p>Email: {{ user_details.user.email }}</p>
+                <p>Phone number: {{ user_details.user.country_details.country_code }} {{ user_details.user.phone }}</p>
+                <p>County: {{ user_details.user_location.address_details.county }}</p>
+                <p>State: {{ user_details.user_location.address_details.state }}</p>
+                <p>Road: {{ user_details.user_location.address_details.road }}</p>
+                <p>Postcode: {{ user_details.user_location.address_details.postcode }}</p>
+                <p>Country: {{ user_details.user_location.address_details.country }}</p>
+                <p>Is Verified: {% if user_details.user.is_verified %} &#x2705; <!-- Tick mark if verified --> {% else %} &#x274C; <!-- Cross mark if not verified --> {% endif %}</p>
             </div>
 
             <div class="interest ps-2" id="interest_section">
                 <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
                 <div class="interest_flex">
-                    {% for i in 100|number_rangeobj %}
-                    <span>Interests</span>
+                    {% for interest in user_details.interests.all %}
+                        <span>{{ interest.interest}}</span>
+                    {% empty %}
+                        <li>No interests available</li>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="interest ps-2 pt-2" id="hobbie_section">
+                <label for="title" style="font-size:15px; font-weight: bold;">Hobbies : </label>
+                <div class="interest_flex">
+                    {% for hobbie in user_details.hobbies.all %}
+                        <span>{{ hobbie.hobby}}</span>
+                    {% empty %}
+                        <li>No hobbies available</li>
                     {% endfor %}
                 </div>
             </div>
@@ -436,26 +449,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // Define the show_popup function
     var x = document.getElementById("show_details");
     var z = document.getElementById("interest_section");
+    var h = document.getElementById("hobbie_section");
     var y = document.getElementById("address");
     but_on_2 = document.getElementById('button_2');
     but_on_1 = document.getElementById('button_1');
     function show_address() {
         
-        but_on_1.style.backgroundColor = 'white';
-        but_on_2.style.backgroundColor = 'pink';
+        but_on_1.style.backgroundColor = 'pink';
+        but_on_2.style.backgroundColor = 'white';
 
         x.style.display = "none";
         z.style.display = "none";
+        h.style.display = "none";
         y.style.display = "block";
         
     }
     
     function show_about(){
-        but_on_1.style.backgroundColor = 'pink';
-        but_on_2.style.backgroundColor = 'white';
+        but_on_1.style.backgroundColor = 'white';
+        but_on_2.style.backgroundColor = 'pink';
 
         x.style.display = "block";
         z.style.display = "block";
+        h.style.display = "block";
         y.style.display = "none";
     }
 
