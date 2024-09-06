@@ -224,11 +224,23 @@
                                 <br>
                                 <span style="text-transform: capitalize;">hello how are you</span>
                             </div>
-                            <div class="cross_icon">
-                                <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
-                            </div>
-                            <div class="heart_icon">
-                                <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                            <div class="text-end">
+                                <form method="post" action="{% url 'handle_request' request.pk 'reject' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background:none;border:none;padding:0;">
+                                        <div class="cross_icon">
+                                            <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                        </div>
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'handle_request' request.pk 'accept' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background:none;border:none;padding:0;">
+                                        <div class="heart_icon">
+                                            <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                                        </div>
+                                    </button>
+                                </form>
                             </div>
                             <!-- </a> -->
                         </div>
