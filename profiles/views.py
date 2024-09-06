@@ -5,13 +5,13 @@ from django.shortcuts import redirect, render
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from U_auth.models import costume_user, UserPersonalDetails, Job_Details, AdditionalDetails, Pictures, Hobbies, Interests, Relationship_Goals
-
-from U_auth.models import costume_user
+#for  interest-request
 from .models import InterestRequest
 from django.views.generic import ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q  # Import Q for complex queries
 from django.contrib import messages
+from U_auth.permissions import RedirectNotAuthenticatedUserMixin
 # Create your views here.
 def demo_pr(request, user_id):
     # Fetch the user and related data
@@ -51,22 +51,6 @@ def demo_pr(request, user_id):
 def messages_pg(request):
     return render(request, 'messages.html')
 
-
-# def user_send_pg(request):
-#     return render(request, 'send.html')
-
-
-# def user_accept_pg(request):
-#     return render(request, 'accept.html')
-
-
-# def user_reject_pg(request):
-#     return render(request, 'reject.html')
-
-
-# def user_recieved_pg(request):
-#     return render(request, 'recieved.html')
-
 def user_chat_pg(request):
     return render(request, 'col_chat.html')
 
@@ -84,7 +68,7 @@ def user_viewed_pg(request):
     return render(request, 'pr_viewed.html')
 
 
-class SendRequestView(LoginRequiredMixin, View):
+class SendRequestView(RedirectNotAuthenticatedUserMixin, View):
     def post(self, request, *args, **kwargs):
         sender = request.user
         receiver = get_object_or_404(costume_user, id=self.kwargs['pk'])
@@ -103,7 +87,7 @@ class SendRequestView(LoginRequiredMixin, View):
             
         return redirect(reverse_lazy('sented_request'))
 
-class SentedRequestView(LoginRequiredMixin,ListView):
+class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'send.html'
     context_object_name = 'sent_requests'
@@ -111,46 +95,46 @@ class SentedRequestView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         return InterestRequest.objects.filter(sender=self.request.user)
     
-class ReceivedRequestView(LoginRequiredMixin,ListView):
+class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'received.html'
     context_object_name = 'received_requests'
     
     def get_queryset(self):
-        return InterestRequest.objects.filter(receiver=self.request.user)
+        return InterestRequest.objects.filter(receiver=self.request.user, status="pending")
 
-class RequestHandleView(LoginRequiredMixin, View):
+class HandleRequestView(RedirectNotAuthenticatedUserMixin, View):
     def post(self, request, *args, **kwargs):
         interest_request = get_object_or_404(InterestRequest, id=self.kwargs['pk'], receiver=request.user)
         action = self.kwargs.get('action')  # This fetches the value of 'action' from the URL ('accept' or 'reject').
-
+        
         if action == 'accept':  # If 'action' is 'accept'
             interest_request.status = 'accepted'  # Set the request's status to 'accepted'
         elif action == 'reject':  # Otherwise, if 'action' is 'reject'
             interest_request.status = 'rejected'  # Set the request's status to 'rejected'
 
         interest_request.save()
-        return redirect(reverse_lazy('received_requests'))
+        return redirect(reverse_lazy('received_request'))
 
-class AcceptedRequestView(LoginRequiredMixin, ListView):
+class AcceptedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
     model = InterestRequest
     template_name = 'accept.html'
     context_object_name = 'accepted_requests'
 
     def get_queryset(self):
         return InterestRequest.objects.filter(
-            Q(sender=self.request.uesr, status='accepted')|
+            Q(sender=self.request.user, status='accepted')|
             Q(receiver=self.request.user, status='accepted')
         )
 
-class RejectedRequestView(LoginRequiredMixin, ListView):
+class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
     model = InterestRequest
     template_name = 'reject.html'
     context_object_name = 'rejected_requests'
 
     def get_queryset(self):
         return InterestRequest.objects.filter(
-            Q(sender=self.request.uesr, status='rejected')|
+            Q(sender=self.request.user, status='rejected')|
             Q(receiver=self.request.user, status='rejected')
         )
 
