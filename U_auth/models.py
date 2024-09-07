@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+import django.db.models
 from . manager import UserManager
 
 
@@ -69,8 +70,8 @@ class Location(models.Model):
     latitude = models.FloatField()
     address_details = models.JSONField(null=True, blank=True)
 
-    def _str_(self):
-        return self.longitude
+    def __str__(self):
+        return f"{self.id}Longitude: {self.longitude}, Latitude: {self.latitude}"
 
 class UserPersonalDetails(models.Model):
 
@@ -90,11 +91,13 @@ class UserPersonalDetails(models.Model):
     interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
-    profile_pic = models.ImageField(upload_to='images/', default='img/default_pic.png', blank=True)
+    profile_pic = models.ImageField(upload_to='images/', default='default/default_pic.png', blank=True)
     short_video = models.FileField(upload_to='videos/', null=True, blank=True)
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
     is_jobseeker = models.BooleanField(default=False)
+    bio = models.CharField(max_length=100, blank=True, default='This user hasn’t added a bio yet. Stay tuned for more!')
+
 
     def __str__(self):
         return f"{self.user.username}_details"
@@ -103,11 +106,11 @@ class UserPersonalDetails(models.Model):
         verbose_name = "User Personal Detail"
         verbose_name_plural = "User Personal Details"
 
-    @property
-    def profile_pic_url(self):
-        if self.profile_pic:
-            return f"{settings.MEDIA_URL}{self.profile_pic}"
-        return ""
+    # @property
+    # def profile_pic_url(self):
+    #     if self.profile_pic:
+    #         return f"{settings.MEDIA_URL}{self.profile_pic}"
+    #     return ""
 
     @property
     def short_video_url(self):
@@ -203,7 +206,7 @@ class AdditionalDetails(models.Model):
     blood_group = models.CharField(max_length=50, blank=False)
     religion = models.CharField(choices=RELIGION_CHOICES, max_length=50, blank=False)
     caste_or_community = models.CharField(max_length=50, blank=False)
-    user_disabilities = models.ManyToManyField(Disabilities, verbose_name='disabilities')  # Corrected typo from 'user_disabilitys'
+    user_disabilities = models.ManyToManyField(Disabilities, verbose_name='disabilities') 
     complexion = models.CharField(null=True, max_length=50, blank=False)
 
     class Meta:
@@ -217,13 +220,13 @@ class AdditionalDetails(models.Model):
 class Interest_and_Hobbie(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class LifestyleChoice(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class PartnerPreference(models.Model):
@@ -242,12 +245,7 @@ class PartnerPreference(models.Model):
         ('SI', 'Sikhism'),
         ('OT', 'Other'),
     ]
-    EDUCATION_LEVEL_CHOICES = [
-        ('High School', 'High School'),
-        ('Bachelors', 'Bachelors'),
-        ('Masters', 'Masters'),
-        ('Doctorate', 'Doctorate'),
-    ]
+
 
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE, related_name="partner_preference")
 
@@ -257,7 +255,7 @@ class PartnerPreference(models.Model):
     preferred_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
     preferred_location = models.ManyToManyField(Location)  # ForeignKey for locations
     interests_hobbies = models.ManyToManyField(Interest_and_Hobbie)
-    education_level = models.CharField(max_length=50, choices=EDUCATION_LEVEL_CHOICES)
+    education_level = models.ManyToManyField(Qualifications)
    
     height_min = models.IntegerField(default=100)  # in cm
     height_max = models.IntegerField(default=220)
@@ -271,8 +269,7 @@ class PartnerPreference(models.Model):
     religion = models.CharField(max_length=2, choices=RELIGION_CHOICES, blank=False)
     occupation = models.CharField(max_length=255, blank=False)
 
-
-    def _str_(self):
+    def __str__(self):
         return f"{self.user.username}"
 
 class OTP(models.Model):

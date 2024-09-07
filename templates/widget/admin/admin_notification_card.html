@@ -1,0 +1,29 @@
+<div class="container-fluid notification-card">
+    <div class="row pt-3">
+        <div class="col">
+            <p class="notification-card-title">Notification</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/8Xqgtvq/profile.jpg' title='example title' user='anfique' cmp='BadiesPair' date='feb 2' %}
+            {% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/8Xqgtvq/profile.jpg' title='New User Registration' user='John Doe' cmp='TechCorp' date='Sep 4' %}
+
+{% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/7yFbVQ9/profile1.jpg' title='Server Maintenance Completed' user='Jane Smith' cmp='Data Solutions' date='Sep 3' %}
+
+{% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/GF5yY5N/profile3.jpg' title='New Comment on Blog Post' user='Alex Brown' cmp='BlogMaster' date='Sep 2' %}
+            {% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/8Xqgtvq/profile.jpg' title='example title' user='anfique' cmp='BadiesPair' date='feb 2' %}
+            {% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/8Xqgtvq/profile.jpg' title='New User Registration' user='John Doe' cmp='TechCorp' date='Sep 4' %}
+
+{% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/qj5HpTv/profile4.jpg' title='New Order Received' user='Samantha Lee' cmp='ShopEase' date='Sep 1' %}
+
+{% include "widget/admin/admin_notification_items.html" with image='https://i.ibb.co/r6LjbzK/profile5.jpg' title='Password Reset Request' user='Michael Johnson' cmp='SecureLogin' date='Aug 31' %}
+
+        </div>
+    </div>
+    <div class="row bg-light border-top p-1" style="border-radius:0 0 0.5rem 0.5rem;">
+        <div class="col d-flex align-items-center justify-content-start">
+            <p class="mb-0">Previous Notification</p>
+        </div>
+    </div>
+</div>
