@@ -216,8 +216,10 @@
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
                                 <img class="img-fluid"
-                                     src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
-                                     alt="">
+                                src="{{ request.get_sender_profile_pic.url }}"
+                                alt=""
+                                width="50"
+                                height="50">
                             </div>
                             <div class="msg">
                                 <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
