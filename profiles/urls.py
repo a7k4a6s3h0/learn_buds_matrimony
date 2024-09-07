@@ -12,10 +12,7 @@ urlpatterns = [
     path('reject/',views.RejectedRequestView.as_view(), name="rejected_request"),
     path('received/',views.ReceivedRequestView.as_view(), name="received_request"),
     path('request-hanlde/<int:pk>/<str:action>/', views.HandleRequestView.as_view(), name='handle_request'),
-    # path('send',views.user_send_pg, name="send"),
-    # path('accept',views.user_accept_pg, name="accept"),
-    # path('reject',views.user_reject_pg, name="reject"),
-    # path('recieved',views.user_recieved_pg, name="recieved"),
+    path("request/delete/<int:pk>", views.DeleteRequestView.as_view(), name="delete_request"),
     path('chat',views.user_chat_pg, name="chat"),
 
     path('contacted',views.user_contacted_pg, name="contacted"),

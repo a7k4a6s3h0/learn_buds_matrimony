@@ -479,14 +479,17 @@
     
         // Show the About section by default on page load
         showAbout();
-        
-        {% if messages %}    
-            {% for message in messages %}
-            swal("Alert..!", "{{ message}}", "{{message.tags}}");
-            {% endfor %}
-        {% endif %}
     });
     
     </script>
+    {% if messages %}    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
 
 {% endblock scripts %}

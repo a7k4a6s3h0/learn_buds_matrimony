@@ -140,3 +140,13 @@ class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
             Q(receiver=self.request.user, status='rejected')
         )
 
+class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
+    def post (self, request, *args, **kwargs):
+        interest_request = get_object_or_404(InterestRequest, sender= request.user, id=self.kwargs['pk'])
+
+        try:
+            interest_request.delete()
+            messages.success(request,"Interest request deleted successfully!")
+        except Exception as e:
+            messages.error(request, f"Failed to delete interest request: {str(e)}")
+        return redirect(reverse('sented_request'))
