@@ -73,6 +73,7 @@
     /* Ensure the view_user div elements do not overflow */
     .view_user {
         display: flex;
+        flex-wrap: nowrap;
         flex-direction: column;
         padding: 10px 0;
         /* height: 118px; */
@@ -83,6 +84,7 @@
     .view_user_img{
         display: flex;
         gap: 8px;
+        position: relative;
     }
 
     /* Ensure the image in view_user scales properly */
@@ -99,6 +101,7 @@
 
     /* Position show_pic_in_lap at the bottom of view_user */
     .show_pic_in_lap {
+        position: relative;
         padding-top: 5px;
         
     }
@@ -129,6 +132,14 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+    }
+
+    .edit_icon{
+        position: absolute;
+    }
+
+    .cross_icon{
+        position: absolute;
     }
 
 
@@ -169,6 +180,7 @@
         .view_user {
             display: flex;
             padding: 10px 0;
+            flex-wrap: wrap;
             /* align-items: center; */
         }
 
@@ -201,7 +213,9 @@
         <div class="col-md-12">
             <nav class="navbar-custom">
                 <div class="nav-left">
-                    <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    <a href="{%url 'profile'%}">
+                        <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    </a>
                 </div>
                 <div class="nav-right">
                     <div class="distance">Edit My Profile</div>
@@ -221,20 +235,25 @@
             <div class="menu-icon">
 
                 <div class="view_user" style="border-top: inset; border-color:darkgray ;" id="user_imgs">
-                    <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                    
                     <div class="view_user_img">
+                        <div class="edit_icon">
+                            <a href="">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
                         <div class="img_div">
                         <img class="img-fluid"
-                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
-                            alt="">
+                            src="{{user_details.profile_pic.url}}"
+                            alt="img..">
                         </div>    
                         <div class="msg">
-                            <span style="text-transform: capitalize;">Username</span><br>
-                            <span style="text-transform: capitalize;">hello how are you</span>
+                            <span style="text-transform: capitalize;">{{user_details.user.username}}</span><br>
+                            <span style="text-transform: capitalize;">{{user_details.bio}}</span>
                         </div>
                     </div>
                     <div class="show_page_function_details pt-2 text-white">
-                        <p>cfsdscsjcoccaydddddsdcksclccioscjscjsdcy</p>
+                        <p>{{user_details.bio}}</p> 
                     </div>
 
 
@@ -242,85 +261,129 @@
                     <!-- </a> -->
                     <label for="images" id="img_label">Images</label>
                     <div class="show_pic_in_lap" id="add_pic" >
-                        {% for i in 5|number_rangeobj %}
-                        <img class="img-fluid"
-                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                        {% if extra_photos %}
+                        {% for img in extra_photos %}
+                        <div class="cross_icon">
+                            <a href="">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </div>
+                        <img class="img-fluid" 
+                            src="{{img.photos.url}}"
                             alt="img">
                         {% endfor %}
+                        {% else %}
+                        <p>No images uploaded</p>
+                        {% endif %}
                     </div>
 
             
                        <label for="reels" id="reel_label">Reels</label>
                        <div class="show_pic_in_lap" id="add_reel" >
-                           {% for i in 5|number_rangeobj %}
+                        
+                           {% if user_details.short_video %}
+                           <div class="cross_icon">
+                            <a href="">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
                            <img class="img-fluid"
                                src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
                                alt="img">
-                           {% endfor %}
+                           {% else %}
+                           <p>No reels uploaded</p>
+                           {% endif %}
                        </div>
 
                 </div>
 
 
-
                 <div class="user_form text-white">
-
-
-                    <form>
-                        <!-- 2 column grid layout with text inputs for the first and last names -->
-                        <div class="row mb-4 ">
-                          <div class="col">
-                            <div data-mdb-input-init class="form-outline">
-                              <input type="text" id="form3Example1" class="form-control" />
-                              <label class="form-label" for="form3Example1">First name</label>
-                            </div>
-                          </div>
-                          <div class="col">
-                            <div data-mdb-input-init class="form-outline">
-                              <input type="text" id="form3Example2" class="form-control" />
-                              <label class="form-label" for="form3Example2">Last name</label>
-                            </div>
-                          </div>
+                    <form action="{% url 'profile_edit' %}" method="post">
+                        {% csrf_token %}
+                        <!-- username -->
+                          
+                        <div data-mdb-input-init class="form-outline">
+                            <input name='username' readonly type="text" id="form3Example1" class="form-control" placeholder="{{user_details.user.username}}" />
+                            <label  class="form-label" for="form3Example1">username</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a target="_blank" onclick="add_or_remove_attr(this)">Update Username</a>
                         </div>
                       
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
-                          <input type="email" id="form3Example3" class="form-control" />
-                          <label class="form-label" for="form3Example3">Email address</label>
+                          <input type="email" readonly name='email' id="form3Example3" class="form-control" placeholder="{{user_details.user.email}}" />
+                          <label class="form-label" for="form3Example3">Email address</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <a target="_blank" onclick="add_or_remove_attr(this)">Update Email</a>
+                        </div>
+
+                        <!-- phonenumber input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <input type="password" name='phone' readonly id="form3Example4" class="form-control" placeholder="{{user_details.user.phone}}" />
+                            <label class="form-label" for="form3Example4">phone number</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a target="_blank" onclick="add_or_remove_attr(this)">Update phonenumber</a>
+                        </div>
+
+                        <!-- bio input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <textarea class="form-control" name="bio" id="bio" cols="30" rows="5" oninput="checkCharacterLimit(this, 100)"></textarea>
+                            <label class="form-label" for="bio">Update Bio</label>
+                            <span id="charCountMessage" class="form-text text-muted"></span>
                         </div>
                       
-                        <!-- Password input -->
-                        <div data-mdb-input-init class="form-outline mb-4">
-                          <input type="password" id="form3Example4" class="form-control" />
-                          <label class="form-label" for="form3Example4">Password</label>
-                        </div>
 
                         <!-- show user photo in mobile size -->
                         
                         <label for="images" id="img_label_ph">Images</label>
-                    <div class="show_pic_in_lap" id="add_pic_ph" >
-                        {% for i in 5|number_rangeobj %}
-                        <img class="img-fluid"
-                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
-                            alt="img">
-                        {% endfor %}
-                    </div>
+                        <div class="show_pic_in_lap" id="add_pic_ph" >
+                            {% if extra_photos %}
+                            {% for img in extra_photos %}
+                                <div class="cross_icon">
+                                    <a href="">
+                                        <i class="fas fa-times-circle"></i>
+                                    </a>
+                                </div>
+                                <img class="img-fluid" 
+                                    src="{{img.photos.url}}"
+                                    alt="img">
+                            {% endfor %}
+                            {% else %}
+                                <p>No images uploaded</p>
+                            {% endif %}
+                        </div>
 
             
                        <label for="reels" id="reel_label_ph">Reels</label>
                        <div class="show_pic_in_lap" id="add_reel_ph" >
-                           {% for i in 5|number_rangeobj %}
-                           <img class="img-fluid"
-                               src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
-                               alt="img">
-                           {% endfor %}
+                        {% if user_details.short_video %}
+                        <div class="cross_icon">
+                            <a href="">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                            </div>
+                            <img class="img-fluid"
+                                src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                                alt="img">
+                        {% else %}
+                            <p>No reels uploaded</p>
+                        {% endif %}
                        </div>
 
                         <!-- add user pictures -->
                  
                         <div class="form-outline mb-4">
-                            <label for="formFileSm" class="form-label">Small file input example</label>
-                            <input class="form-control form-control-sm" id="formFileSm" type="file" />
+                            <label for="formFileSm" class="form-label">Add Profile Photo</label>
+                            <input name='Photos' class="form-control form-control-sm" id="formFileSm" type="file" />
+                        </div>
+
+                        <!-- add more user pictures -->
+                        <div class="form-outline mb-4">
+                            <label for="formFileSm" class="form-label">Add more Profile Photo</label>
+                            <input name='extra_Photos' class="form-control form-control-sm" id="formFileSm" multiple type="file" />
+                        </div>
+
+                        <!-- add user reel pictures -->
+                        <div class="form-outline mb-4">
+                            <label for="formFileSm" class="form-label">Add reel videos</label>
+                            <input name='reel' class="form-control form-control-sm" id="formFileSm" type="file" />
                         </div>
                       
                         <!-- Submit button -->
@@ -430,7 +493,33 @@ function checkBrowserSize() {
 // Optional: Add an event listener to detect changes in screen size
 window.addEventListener('resize', checkBrowserSize);
 
+function checkCharacterLimit(textarea, limit) {
+    const charCount = textarea.value.length;
+    const message = document.getElementById('charCountMessage');
 
+    if (charCount > limit) {
+        message.innerHTML = `Character limit exceeded! Only ${limit} characters allowed.`;
+        message.style.color = 'red';
+
+        // Trim the text to the allowed character limit
+        textarea.value = textarea.value.substring(0, limit);
+    } else {
+        message.innerHTML = `Characters: ${charCount}/${limit}`;
+        message.style.color = 'white';
+    }
+}
+
+function add_or_remove_attr(Inputid){
+    console.log(Inputid)
+    const element = document.getElementById(Inputid.id);
+    if (element.hasAttribute('readonly')) {
+        element.removeAttribute('readonly');
+        } 
+        // else {
+        //     element.setAttribute('data-attr', 'value');
+        //     }
+
+}
 
 </script>
 
