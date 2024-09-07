@@ -1,5 +1,5 @@
 from django.db import models
-from U_auth.models import costume_user
+from U_auth.models import UserPersonalDetails, costume_user
 # Create your models here.
 
 
@@ -17,5 +17,16 @@ class InterestRequest(models.Model):
 
     def __str__(self):
         return f"From {self.sender} to {self.receiver}: {self.status}"
+    
+    def get_sender_profile_pic(self):
+        try:
+            return self.sender.user_details.profile_pic
+        except UserPersonalDetails.DoesNotExist:
+            return None
 
+    def get_receiver_profile_pic(self):
+        try:
+            return self.receiver.user_details.profile_pic
+        except UserPersonalDetails.DoesNotExist:
+            return None
 

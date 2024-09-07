@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render
 
 #profile display imports :
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from U_auth.models import costume_user, UserPersonalDetails, Job_Details, AdditionalDetails, Pictures, Hobbies, Interests, Relationship_Goals
 #for  interest-request
 from .models import InterestRequest
@@ -78,22 +78,24 @@ class SendRequestView(RedirectNotAuthenticatedUserMixin, View):
         
         if existing_request:
             messages.warning(request, "You have already sent a request to this user.")
+            return redirect(reverse('profile', kwargs={'user_id': receiver.id}))
         else:
             try:
                 InterestRequest.objects.create(sender=sender, receiver=receiver)
                 messages.success(request, "Interest request sent successfully!")
+                return redirect(reverse_lazy('sented_request'))
             except Exception as e:
                 messages.error(request, f"Failed to send interest request: {str(e)}")
+                return redirect(reverse('profile', kwargs={'user_id': receiver.id}))
             
-        return redirect(reverse_lazy('sented_request'))
-
+        
 class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'send.html'
     context_object_name = 'sent_requests'
 
     def get_queryset(self):
-        return InterestRequest.objects.filter(sender=self.request.user)
+        return InterestRequest.objects.filter(sender=self.request.user).select_related("receiver__user_details")
     
 class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
@@ -101,7 +103,7 @@ class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     context_object_name = 'received_requests'
     
     def get_queryset(self):
-        return InterestRequest.objects.filter(receiver=self.request.user, status="pending")
+        return InterestRequest.objects.filter(receiver=self.request.user, status="pending").select_related("sender__user_details")
 
 class HandleRequestView(RedirectNotAuthenticatedUserMixin, View):
     def post(self, request, *args, **kwargs):
