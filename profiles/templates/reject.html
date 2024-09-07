@@ -185,6 +185,11 @@
                 </div>
                 {% if rejected_requests %}
                     {% for request in rejected_requests %}
+                    {% if request.sender == user %}
+                    <div class="text-white">Sent</div>
+                    {% else %}
+                    <div class="text-white">Received</div>
+                    {% endif %}
                         <div class="view_user" >
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">

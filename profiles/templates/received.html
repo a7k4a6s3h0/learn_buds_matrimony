@@ -216,28 +216,26 @@
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
                                 <img class="img-fluid"
-                                src="{{ request.get_sender_profile_pic.url }}"
-                                alt=""
-                                width="50"
-                                height="50">
+                                     src="{{ request.get_sender_profile_pic.url }}"
+                                     alt=""
+                                     width="50"
+                                     height="50">
                             </div>
                             <div class="msg">
                                 <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
                                 <br>
                                 <span style="text-transform: capitalize;">hello how are you</span>
                             </div>
-                            <div class="text-end">
+                            <div class="cross_icon">
                                 <form method="post" action="{% url 'handle_request' request.pk 'reject' %}">
                                     {% csrf_token %}
-                                    <button type="submit" style="background:none;border:none;padding:0;">
-                                        <div class="cross_icon">
-                                            <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
-                                        </div>
+                                    <button type="submit" class="btn">
+                                        <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
                                     </button>
                                 </form>
                                 <form method="post" action="{% url 'handle_request' request.pk 'accept' %}">
                                     {% csrf_token %}
-                                    <button type="submit" style="background:none;border:none;padding:0;">
+                                    <button type="submit" class="btn">
                                         <div class="heart_icon">
                                             <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
                                         </div>

@@ -237,13 +237,26 @@
                                 <span style="text-transform: capitalize;">hello how are you</span>
                             </div>
                             <div class="cross_icon">
-                                <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                <form method="post"
+                                      action="{% url 'delete_request' pk=request.id %}"
+                                      style="display: inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn" >
+                                        <span style="font-size: 25px;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </form>
                             </div>
                             <!-- </a> -->
                         </div>
                     {% endfor %}
                 {% else %}
                     <div class="text-white">currently no requests sended</div>
+                {% endif %}
+                {% if messages %}
+                    {% for message in messages %}{% endfor %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
