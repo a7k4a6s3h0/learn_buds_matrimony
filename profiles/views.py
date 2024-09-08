@@ -73,7 +73,6 @@ class SendRequestView(RedirectNotAuthenticatedUserMixin, View):
         sender = request.user
         receiver = get_object_or_404(costume_user, id=self.kwargs['pk'])
         
-        # Check if a request already exists
         existing_request = InterestRequest.objects.filter(sender=sender, receiver=receiver).exists()
         
         if existing_request:
@@ -112,8 +111,10 @@ class HandleRequestView(RedirectNotAuthenticatedUserMixin, View):
         
         if action == 'accept':  # If 'action' is 'accept'
             interest_request.status = 'accepted'  # Set the request's status to 'accepted'
+            messages.success(request, "Interest request has accepted successfully!")
         elif action == 'reject':  # Otherwise, if 'action' is 'reject'
             interest_request.status = 'rejected'  # Set the request's status to 'rejected'
+            messages.success(request, "Interest request has rejected successfully!")
 
         interest_request.save()
         return redirect(reverse_lazy('received_request'))

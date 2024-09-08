@@ -256,4 +256,13 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+    {% if messages %}    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for message in messages %}
+                    swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
 {% endblock scripts %}
