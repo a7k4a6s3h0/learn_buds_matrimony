@@ -95,7 +95,7 @@ class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     context_object_name = 'sent_requests'
 
     def get_queryset(self):
-        return InterestRequest.objects.filter(sender=self.request.user).select_related("receiver__user_details")
+        return InterestRequest.objects.filter(sender=self.request.user, status="pending").select_related("receiver__user_details")
     
 class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest

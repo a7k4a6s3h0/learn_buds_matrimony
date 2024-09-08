@@ -186,36 +186,39 @@
                 {% if rejected_requests %}
                     {% for request in rejected_requests %}
                     {% if request.sender == user %}
-                    <div class="text-white">Sent</div>
-                    {% else %}
-                    <div class="text-white">Received</div>
-                    {% endif %}
-                        <div class="view_user" >
-                            <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                            <div class="view_user_img">
-                                {% if request.get_receiver_profile_pic %}
+                            <div class="text-white">Sent</div>
+                            <div class="view_user">
+                                <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                                <div class="view_user_img">
                                     <img src="{{ request.get_receiver_profile_pic.url }}"
                                          alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
-                                {% else %}
-                                    <img src="{% static 'img/auth1.png' %}"
-                                         alt="Default Profile Picture"
+                                </div>
+                                <div class="msg">
+                                    <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
+                                    <br>
+                                    <span style="text-transform: capitalize;">hello how are you</span>
+                                </div>
+                                <!-- </a> -->
+                            </div>
+                        {% else %}
+                            <div class="text-white">Received</div>
+                            <div class="view_user">
+                                <div class="view_user_img">
+                                    <img src="{{ request.get_sender_profile_pic.url }}"
+                                         alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
-                                {% endif %}
+                                </div>
+                                <div class="msg">
+                                    <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
+                                    <br>
+                                    <span style="text-transform: capitalize;">hello how are you</span>
+                                </div>
+                                <!-- </a> -->
                             </div>
-                            <div class="msg">
-                                {% if request.sender == user %}
-                                <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
-                                {% else %}
-                                <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
-                                {% endif %}
-                                <br>
-                                <span style="text-transform: capitalize;">hello how are you</span>
-                            </div>
-                            <!-- </a> -->
-                        </div>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
                     <div class="text-white">currently no requests rejected</div>

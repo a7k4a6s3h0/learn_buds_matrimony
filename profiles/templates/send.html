@@ -1,5 +1,4 @@
 {% extends "base_files/base.html" %}
-{% load static %}
 {% load custom_tags %}
 {% block meta %}
 {% endblock meta %}
@@ -219,17 +218,10 @@
                         <div class="view_user" style="border-top: inset; border-color:darkgray ;">
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
-                                {% if request.get_receiver_profile_pic %}
                                     <img src="{{ request.get_receiver_profile_pic.url }}"
                                          alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
-                                {% else %}
-                                    <img src="{% static 'img/auth1.png' %}"
-                                         alt="Default Profile Picture"
-                                         width="50"
-                                         height="50">
-                                {% endif %}
                             </div>
                             <div class="msg">
                                 <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
