@@ -155,7 +155,9 @@
         <div class="col-md-12">
             <nav class="navbar-custom">
                 <div class="nav-left">
+                    <a href="{%url 'home'%}" class="nav-link">
                     <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    </a>
                 </div>
                 <div class="nav-right">
                     <div class="distance">Privacy & Setting</div>
@@ -203,7 +205,7 @@
                 <div class="second_row">
                     <label for="">{% if user.is_verified %} &#x2705; <!-- Tick mark if verified --> {% else %} &#x274C; <!-- Cross mark if not verified --> {% endif %}</label><br>
                     <label for="">{{ user.country_details.country_code }} {{ user.phone }}</label><br>
-                    <label for=""></label>
+                    <a href="{% url 'privacy_setting_sec' %}">Set Partner Preference</a>
 
                 </div>
 
