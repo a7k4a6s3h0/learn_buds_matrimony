@@ -28,6 +28,7 @@ urlpatterns = [
     path('check_type', views.UserType, name='check_type'),
     path('profile/', views.UserProfile.as_view(), name="profile"),
     path('profile_edit/', views.ProfileEdit.as_view(), name="profile_edit"),
+    path('remove_files/<str:type>/<int:id>/', views.RemoveFiles.as_view(), name='remove_files'),
     path('change_pass/',views.ForgotPassword.as_view(),name="change_pass"),
     path('settings/', views.UserSetting.as_view(), name="settings"),
     path('privacy_setting_sec/', views.UserPartnerPreferenceView_2.as_view(), name="privacy_setting_sec"),
