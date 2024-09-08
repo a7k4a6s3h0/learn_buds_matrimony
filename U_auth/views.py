@@ -664,7 +664,7 @@ class ProfileEdit(RedirectNotAuthenticatedUserMixin, TemplateView):
         # Fetch user details and extra photos
         user_details = UserPersonalDetails.objects.get(user=request.user)
         extra_photos = Pictures.objects.filter(user=user_details) 
-        
+        print(extra_photos)
         # Add the details to context
         context = self.get_context_data(user_details=user_details, extra_photos=extra_photos)
         
@@ -674,31 +674,94 @@ class ProfileEdit(RedirectNotAuthenticatedUserMixin, TemplateView):
     
     def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
         # Handle POST data (like form submission)
-        user_details = UserPersonalDetails.objects.get(user=request.user)
+        field_dict = [(costume_user, 'username', 'email', 'phone'), 
+                    (UserPersonalDetails, 'profile_pic', 'bio', 'short_video'), 
+                    (Pictures, 'photos')]
         
-        # Get the data from the POST request
-        bio = request.POST.get('bio')
-        profile_pic = request.FILES.get('profile_pic')  # For file uploads
-        
-        # Update the user details if necessary
-        if bio:
-            user_details.bio = bio
-        if profile_pic:
-            user_details.profile_pic = profile_pic
-        
-        # Save the updated user details
-        # user_details.save()
+        # Loop through request.POST items
+        for key, value in request.POST.items():
+            if value:  # If the POST value is not empty
+                # print(f"{key}: {value}")  # Debugging
 
-        # redirect to the same page or another page after processing
-        messages.success(request, "Your Details Updated Sucessfully")
+                # Loop through field_dict and check only the fields 'username', 'email', 'phone'
+                for fields in field_dict:
+                    if key in fields[1:]:  # fields[1:] to skip the model name and only check field names
+                        print(f"{fields[0]}: Matched field '{key}' in the model...")  # Output the matched model
+
+                        # Handle user_data based on the model
+                        if fields[0] == costume_user:
+                            user_data = fields[0].objects.get(id=request.user.id)
+                        else:
+                            user_data = fields[0].objects.get(user=request.user)
+
+                        recieved_value = request.POST.get(key)    
+                        # Use setattr to dynamically update the model's field
+                        setattr(user_data, key, value)  # Dynamically set the field value
+                        user_data.save()  # Save the changes
+                        
+                        print(f"Updated {user_data, key} with {recieved_value}")  # Output the          
+        
+        # Print all uploaded files  
+        print("Files:")
+        # print(request.FILES.getlist('photos'))
+
+        for key, value in request.FILES.items():
+            print(f"{key}: {value}")
+            if value:  # If the POST value is not empty
+                for fields in field_dict:
+                    if key in fields[1:]:  # fields[1:] to skip the model name and only check field names
+                        print(f"{fields[0]}: Matched field '{key}' in the model...")
+
+                        if fields[0] == Pictures:
+                            user_details = UserPersonalDetails.objects.get(user=request.user)
+                            
+                            # Handle file uploads
+                            photo_list = request.FILES.getlist(key)  # Retrieve list of files for the key
+                            if photo_list:
+                                for photo in photo_list:
+                                    # Create a new record for each uploaded photo
+                                    fields[0].objects.create(user=user_details, photos=photo)
+                                messages.success(request, "Photos updated successfully")
+                                return redirect('profile_edit')
+                        else:
+                            # Handle other models (e.g., costume_user, UserPersonalDetails)
+                            user_data = fields[0].objects.get(user=request.user)
+
+                            recieved_value = request.FILES.getlist(key)  # Retrieve list of files for the key
+                            if recieved_value:
+                                for val in recieved_value:
+                                    # Use setattr to dynamically update the model's field
+                                    setattr(user_data, key, val)  # Dynamically set the field value
+                                    user_data.save()  # Save the changes
+
+                            print(f"Updated {user_data} with {recieved_value}")          
+
+        messages.success(request, "Data Updated Sucessfully")
         return redirect('profile_edit')
 
 class RemoveFiles(RedirectNotAuthenticatedUserMixin, View):
     
     def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
         # Handle POST data (like form submission)
+        id = kwargs.get('id')
+        print(f"ID: {id}")
+        which_one = kwargs.get('type')
+        print(f"Which one: {which_one}")
         user_details = UserPersonalDetails.objects.get(user=request.user)
-        extra_photos = Pictures.objects.filter(user=user_details)
+        if which_one == 'photos':
+            # Get the user's profile picture
+            extra_photos = Pictures.objects.filter(user=user_details)
+            for photo in extra_photos:
+                if photo.id == int(id):
+                    photo.delete()
+                    print(f"Deleted photo with id: {id}")
+                    messages.success(request, "Photo deleted successfully")
+
+        if which_one == 'reel':
+            # Get the user's reel
+            user_details.short_video = None
+            user_details.save()
+            messages.success(request, "reel deleted successfully")
 
         return redirect('profile_edit')
 

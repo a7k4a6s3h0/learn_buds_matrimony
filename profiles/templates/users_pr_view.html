@@ -336,11 +336,11 @@
 
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    {% for picture in pictures %}
+                    
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img src="{{ picture.photos.url|default_if_none:'default_image_url_here' }}" class="d-block img-fluid" alt="Profile Picture">
+                        <img src="{{user_details.profile_pic.url}}" class="d-block img-fluid" alt="Profile Picture">
                     </div>
-                    {% endfor %}
+                    
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
                     data-bs-slide="prev">
