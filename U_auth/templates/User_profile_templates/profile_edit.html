@@ -72,6 +72,7 @@
 
     /* Ensure the view_user div elements do not overflow */
     .view_user {
+        width: 35%;
         display: flex;
         flex-wrap: nowrap;
         flex-direction: column;
@@ -178,6 +179,7 @@
 
         /* Ensure the view_user div elements do not overflow */
         .view_user {
+            width: auto;
             display: flex;
             padding: 10px 0;
             flex-wrap: wrap;
@@ -237,11 +239,11 @@
                 <div class="view_user" style="border-top: inset; border-color:darkgray ;" id="user_imgs">
                     
                     <div class="view_user_img">
-                        <div class="edit_icon">
+                        <!-- <div class="edit_icon">
                             <a href="">
                                 <i class="fas fa-edit"></i>
                             </a>
-                        </div>
+                        </div> -->
                         <div class="img_div">
                         <img class="img-fluid"
                             src="{{user_details.profile_pic.url}}"
@@ -256,7 +258,6 @@
                         <p>{{user_details.bio}}</p> 
                     </div>
 
-
                    
                     <!-- </a> -->
                     <label for="images" id="img_label">Images</label>
@@ -264,7 +265,8 @@
                         {% if extra_photos %}
                         {% for img in extra_photos %}
                         <div class="cross_icon">
-                            <a href="">
+                            <a href="#" class="delete-icon" data-url="{% url 'remove_files' 'photos' img.id %}">
+                                {% csrf_token %}
                                 <i class="fas fa-times-circle"></i>
                             </a>
                         </div>
@@ -280,14 +282,16 @@
             
                        <label for="reels" id="reel_label">Reels</label>
                        <div class="show_pic_in_lap" id="add_reel" >
-                        
+                            
                            {% if user_details.short_video %}
                            <div class="cross_icon">
-                            <a href="">
+                            <a  href="#" class="delete-icon" data-url="{% url 'remove_files' 'reel' user_details.id %}" method='post'>
+                                {% csrf_token %}
                                 <i class="fas fa-times-circle"></i>
                             </a>
+                            </div>
                            <img class="img-fluid"
-                               src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                               src="{{user_details.short_video.url}}"
                                alt="img">
                            {% else %}
                            <p>No reels uploaded</p>
@@ -296,35 +300,34 @@
 
                 </div>
 
-
                 <div class="user_form text-white">
-                    <form action="{% url 'profile_edit' %}" method="post">
+                    <form action="{% url 'profile_edit' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <!-- username -->
                           
                         <div data-mdb-input-init class="form-outline">
-                            <input name='username' readonly type="text" id="form3Example1" class="form-control" placeholder="{{user_details.user.username}}" />
-                            <label  class="form-label" for="form3Example1">username</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a target="_blank" onclick="add_or_remove_attr(this)">Update Username</a>
+                            <input name='username' readonly type="text" id="form3Example1" class="form-control"  placeholder={{user_details.user.username}} />
+                            <label  class="form-label" for="form3Example1">username</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a target="_blank" onclick="toggleReadOnly(this)">Update Username</a>
                         </div>
                       
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                           <input type="email" readonly name='email' id="form3Example3" class="form-control" placeholder="{{user_details.user.email}}" />
                           <label class="form-label" for="form3Example3">Email address</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <a target="_blank" onclick="add_or_remove_attr(this)">Update Email</a>
+                          <a target="_blank" onclick="toggleReadOnly(this)">Update Email</a>
                         </div>
 
                         <!-- phonenumber input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                             <input type="password" name='phone' readonly id="form3Example4" class="form-control" placeholder="{{user_details.user.phone}}" />
                             <label class="form-label" for="form3Example4">phone number</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a target="_blank" onclick="add_or_remove_attr(this)">Update phonenumber</a>
+                            <a target="_blank" onclick="toggleReadOnly(this)">Update phonenumber</a>
                         </div>
 
                         <!-- bio input -->
                         <div data-mdb-input-init class="form-outline mb-4">
-                            <textarea class="form-control" name="bio" id="bio" cols="30" rows="5" oninput="checkCharacterLimit(this, 100)"></textarea>
+                            <textarea class="form-control" name="bio" id="bio" cols="30" rows="5" placeholder="{{user_details.bio}}" oninput="checkCharacterLimit(this, 100)"></textarea>
                             <label class="form-label" for="bio">Update Bio</label>
                             <span id="charCountMessage" class="form-text text-muted"></span>
                         </div>
@@ -337,7 +340,7 @@
                             {% if extra_photos %}
                             {% for img in extra_photos %}
                                 <div class="cross_icon">
-                                    <a href="">
+                                    <a href="#" class="delete-icon" data-url="{% url 'remove_files' 'photos' img.id %}">
                                         <i class="fas fa-times-circle"></i>
                                     </a>
                                 </div>
@@ -355,12 +358,12 @@
                        <div class="show_pic_in_lap" id="add_reel_ph" >
                         {% if user_details.short_video %}
                         <div class="cross_icon">
-                            <a href="">
+                            <a href="#" class="delete-icon" data-url = "{% url 'remove_files' 'reel' user_details.id %}">
                                 <i class="fas fa-times-circle"></i>
                             </a>
                             </div>
                             <img class="img-fluid"
-                                src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                                src="{{user_details.short_video.url}}"
                                 alt="img">
                         {% else %}
                             <p>No reels uploaded</p>
@@ -369,23 +372,26 @@
 
                         <!-- add user pictures -->
                  
-                        <div class="form-outline mb-4">
-                            <label for="formFileSm" class="form-label">Add Profile Photo</label>
-                            <input name='Photos' class="form-control form-control-sm" id="formFileSm" type="file" />
+                        <div class="form-outline mb-4"> 
+                            <label for="formFileSm" class="form-label">Change or Add Profile Photo</label>
+                            <input name='profile_pic' class="form-control form-control-sm" id="formFileSm" type="file" />
                         </div>
 
                         <!-- add more user pictures -->
                         <div class="form-outline mb-4">
                             <label for="formFileSm" class="form-label">Add more Profile Photo</label>
-                            <input name='extra_Photos' class="form-control form-control-sm" id="formFileSm" multiple type="file" />
+                            <input name='photos' class="form-control form-control-sm" id="formFileSm" multiple type="file" />
                         </div>
 
                         <!-- add user reel pictures -->
                         <div class="form-outline mb-4">
                             <label for="formFileSm" class="form-label">Add reel videos</label>
-                            <input name='reel' class="form-control form-control-sm" id="formFileSm" type="file" />
+                            <input name='short_video' class="form-control form-control-sm" id="formFileSm" type="file" />
                         </div>
-                      
+                        
+                        <div class="form-outline mb-4">
+                            <a href="{%url 'change_pass'%}">change password</a>
+                        </div>
                         <!-- Submit button -->
                          <div class="row">
                         <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Submit</button>
@@ -411,6 +417,9 @@
 
 {% block scripts %}
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
     var images_ph = document.getElementById('add_pic_ph');
@@ -509,17 +518,77 @@ function checkCharacterLimit(textarea, limit) {
     }
 }
 
-function add_or_remove_attr(Inputid){
-    console.log(Inputid)
-    const element = document.getElementById(Inputid.id);
-    if (element.hasAttribute('readonly')) {
-        element.removeAttribute('readonly');
-        } 
-        // else {
-        //     element.setAttribute('data-attr', 'value');
-        //     }
+function toggleReadOnly(anchor) {
+        // Find the input element just before the label (or adjust according to DOM structure)
+        const inputField = anchor.previousElementSibling.previousElementSibling;
 
-}
+        if (inputField.hasAttribute('readonly')) {
+            inputField.removeAttribute('readonly');
+            anchor.innerText = "Save"; // Change the link text
+        } else {
+            inputField.setAttribute('readonly', 'readonly');
+            anchor.innerText = "Update"; // Change it back to Update
+        }
+    }
+
+{% if messages %}    
+    {% for message in messages %}
+        swal("Alert..!", "{{ message}}", "{{message.tags}}");
+    {% endfor %}
+{% endif %}
+
+
+$(document).ready(function() {
+    $('.delete-icon').on('click', function(event) {
+        event.preventDefault();  // Prevent the default link behavior
+
+        var url = $(this).data('url');  // Get the URL from the data-url attribute
+
+        swal.fire({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this file!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            dangerMode: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked "Yes, delete it!"
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token
+                    },
+                    success: function(response) {
+                        swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        ).then(() => {
+                            location.reload();  // Optionally reload the page or update the DOM
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        swal.fire(
+                            'Error!',
+                            'There was an error deleting the file.',
+                            'error'
+                        );
+                    }
+                });
+            } else {
+                // User clicked "No, cancel!"
+                swal.fire(
+                    'Cancelled',
+                    'Your file is safe :)',
+                    'error'
+                );
+            }
+        });
+    });
+});
 
 </script>
 
