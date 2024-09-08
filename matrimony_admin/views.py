@@ -9,3 +9,9 @@ def usr_mng(request):
 
 class NotifcationManagement(TemplateView):
     template_name = "notification_management.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['select_options'] = ['User 1', 'User 2', 'User 3']
+        # Add other context variables if needed
+        return context

@@ -3,7 +3,7 @@
 {% block meta %}
 {% endblock meta %}
 {% block title %}
-    reject
+    recieved
 {% endblock title %}
 {% block link %}
 {% endblock link %}
@@ -104,6 +104,18 @@
         justify-content: center;
     }
 
+
+    .cross_icon{
+        margin-left: auto;
+        color: white;
+    }
+
+
+    .heart_icon{
+        padding-left: 25px;
+        color: white;
+    }
+
     .footer_nav{
         height: 70px;
     }
@@ -131,16 +143,32 @@
             height: calc(100vh - 80px); /* Adjust based on the height of the .menu-icon and any other fixed elements */
             overflow-y: auto; /* Enable vertical scrolling */
             background-color: black;
-            padding: 30px;
+            padding: 18px;
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
         }
 
+
+        .msg {
+            margin-left: 10px;
+            color: white;
+        }
+
+        .cross_icon{
+            margin: auto;
+            color: white;
+        }
+
+        .heart_icon{
+           padding-left: 0;
+            color: white;
+            font-size: 15px;
+        }
+
         .footer_nav{
             height: 95px;
         }
-
     }
     </style>
 {% endblock style %}
@@ -153,7 +181,7 @@
                         <i class='fas fa-angle-left' style='font-size:24px'></i>
                     </div>
                     <div class="nav-right">
-                        <div class="distance">Reject</div>
+                        <div class="distance">Recieved</div>
                     </div>
                 </nav>
             </div>
@@ -182,45 +210,43 @@
                         </form>
                     </nav>
                 </div>
-                {% if rejected_requests %}
-                    {% for request in rejected_requests %}
-                    {% if request.sender == user %}
-                            <div class="text-white">Sent</div>
-                            <div class="view_user">
-                                <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                                <div class="view_user_img">
-                                    <img src="{{ request.get_receiver_details.profile_pic.url }}"
-                                         alt="Receiver Profile Picture"
-                                         width="50"
-                                         height="50">
-                                </div>
-                                <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.get_receiver_details.bio }}</span>
-                                </div>
-                                <!-- </a> -->
+                {% if received_requests %}
+                    {% for request in received_requests %}
+                        <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+                            <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                            <div class="view_user_img">
+                                <img class="img-fluid"
+                                     src="{{ request.get_sender_details.profile_pic.url }}"
+                                     alt=""
+                                     width="50"
+                                     height="50">
                             </div>
-                        {% else %}
-                            <div class="text-white">Received</div>
-                            <div class="view_user">
-                                <div class="view_user_img">
-                                    <img src="{{ request.get_sender_details.profile_pic.url }}"
-                                         alt="Receiver Profile Picture"
-                                         width="50"
-                                         height="50">
-                                </div>
-                                <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.get_sender_details.bio }}</span>
-                                </div>
-                                <!-- </a> -->
+                            <div class="msg">
+                                <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
+                                <br>
+                                <span style="text-transform: capitalize;">{{ request.get_sender_details.bio }}</span>
                             </div>
-                        {% endif %}
+                            <div class="cross_icon">
+                                <form method="post" action="{% url 'handle_request' request.pk 'reject' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn">
+                                        <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'handle_request' request.pk 'accept' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn">
+                                        <div class="heart_icon">
+                                            <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                                        </div>
+                                    </button>
+                                </form>
+                            </div>
+                            <!-- </a> -->
+                        </div>
                     {% endfor %}
                 {% else %}
-                    <div class="text-white">currently no requests rejected</div>
+                    <div class="text-white">currently no requests recieved</div>
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
@@ -230,4 +256,13 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+    {% if messages %}    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for message in messages %}
+                    swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
 {% endblock scripts %}
