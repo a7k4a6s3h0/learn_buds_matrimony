@@ -96,6 +96,8 @@ class UserPersonalDetails(models.Model):
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
     is_jobseeker = models.BooleanField(default=False)
+    bio = models.CharField(max_length=100, blank=True, default='This user hasn’t added a bio yet. Stay tuned for more!')
+
 
     def __str__(self):
         return f"{self.user.username}_details"

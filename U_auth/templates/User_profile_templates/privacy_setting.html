@@ -184,7 +184,7 @@
                     </div>
 
                     <div class="second_row">
-                        <label for="">johnsmith@gmail.com</label><br>
+                        <label for="">{{user.email}}</label><br>
                         <label for=""><a style="color: blue;" href="#">password</a></label>
 
                     </div>
@@ -201,8 +201,8 @@
                 </div>
 
                 <div class="second_row">
-                    <label for="">johnsmith@gmail.com</label><br>
-                    <label for="">+50 90876543</label><br>
+                    <label for="">{% if user.is_verified %} &#x2705; <!-- Tick mark if verified --> {% else %} &#x274C; <!-- Cross mark if not verified --> {% endif %}</label><br>
+                    <label for="">{{ user.country_details.country_code }} {{ user.phone }}</label><br>
                     <label for=""></label>
 
                 </div>
@@ -213,27 +213,21 @@
 
                 <div class="first_row">
                     <label for="">Last Sign in</label><br>
-                    <label for="">today at 18:34, safary 198.872.333.12</label><br><br><br>
-                    <label for="">Total active sessions (5)</label><br>
-                    <label for="">DESKTOP-6TIG6EC + kyiv, Ukriane</label><br>
-                    <span>Chrome Used Right now</span>
+                    <label for="">{{user.last_login}}</label><br><br><br>
+                    <label for="">Total active sessions {{active_sessions_count}}</label><br>
+                    <label for="">{{device_name}} + {{location_details.user_location.address_details.state }} + {{location_details.user_location.address_details.county}}</label><br>
+                    <span>{{device_name}} Used Right now</span>
 
                 </div>
 
             </div>
 
-            <div class="inner_flex">
-
-                <div class="first_row">
-                    <label for="">Iphone 11 Kyive, Ukraine</label><br>
-                    <span>Chrome Used Right now</span>
+            <form action="{% url 'privacy_setting' %}" method="post">
+                {% csrf_token %}
+                <div class="button_reset">
+                    <button type="submit" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> &nbsp;&nbsp;&nbsp; reset all active sessions</button>
                 </div>
-
-            </div>
-               
-            <div class="button_reset">
-                <button type="button" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> &nbsp;&nbsp;&nbsp; reset all active sessions</button>
-            </div>
+            </form>
         </div>
 
         </div>
