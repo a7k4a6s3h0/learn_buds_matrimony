@@ -18,15 +18,29 @@ class InterestRequest(models.Model):
     def __str__(self):
         return f"From {self.sender} to {self.receiver}: {self.status}"
     
-    def get_sender_profile_pic(self):
+    def get_sender_details(self):
         try:
-            return self.sender.user_details.profile_pic
+            details = self.sender.user_details
+            return {
+                'profile_pic': details.profile_pic,
+                'bio': details.bio
+            }
         except UserPersonalDetails.DoesNotExist:
-            return None
+            return {
+                'profile_pic': None,
+                'bio': None
+            }
 
-    def get_receiver_profile_pic(self):
+    def get_receiver_details(self):
         try:
-            return self.receiver.user_details.profile_pic
+            details = self.receiver.user_details
+            return {
+                'profile_pic': details.profile_pic,
+                'bio': details.bio
+            }
         except UserPersonalDetails.DoesNotExist:
-            return None
+            return {
+                'profile_pic': None,
+                'bio': None
+            }
 
