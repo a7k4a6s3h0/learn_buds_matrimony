@@ -1,13 +1,14 @@
 {% extends "base_files/base.html" %}
 {% load custom_tags %}
-{% block meta %}{% endblock meta %}
-
-{% block title %}Send{% endblock title %}
-
-{% block link %}{% endblock link %}
-
+{% block meta %}
+{% endblock meta %}
+{% block title %}
+    Send
+{% endblock title %}
+{% block link %}
+{% endblock link %}
 {% block style %}
-<style>
+    <style>
     /* Custom styles for the messaging interface */
     .navbar-custom {
         position: absolute;
@@ -172,74 +173,95 @@
             height: 95px;
         }
     }
-</style>
+    </style>
 {% endblock style %}
-
 {% block header %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar-custom">
-                <div class="nav-left">
-                    <i class='fas fa-angle-left' style='font-size:24px'></i>
-                </div>
-                <div class="nav-right">
-                    <div class="distance">Send</div>
-                </div>
-            </nav>
-        </div>
-    </div>
-</div>
-{% endblock header %}
-
-{% block content %}
-<div class="container-fluid">
-    
-    <div class="row chat-section" style="padding-top: 80px;">
-        <!-- Chat User View -->
-        <div class="col-md-6 chat_userview">
-            <div class="menu-icon">
-                <h3 class="match-message">Peoples</h3>
-                <nav class="navbar navbar-light">
-                    <form class="form-inline">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">@</span>
-                            </div>
-                            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
-                        </div>
-                    </form>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar-custom">
+                    <div class="nav-left">
+                        <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    </div>
+                    <div class="nav-right">
+                        <div class="distance">Send</div>
+                    </div>
                 </nav>
             </div>
-
-            {% for k in ""|random_range%}
-            <div class="view_user" style="border-top: inset; border-color:darkgray ;">
-                <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                <div class="view_user_img">
-                    <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
-                </div>
-                <div class="msg">
-                    <span style="text-transform: capitalize;">Username</span><br>
-                    <span style="text-transform: capitalize;">hello how are you</span>
-                </div>
-                <div class="cross_icon">
-                    <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
-                </div>
-                <!-- </a> -->
-            </div>
-            {% endfor %}
-
-            <div class="footer_nav">
-
-            {% include "widget/menu.html" %}
-        </div>
         </div>
     </div>
-</div>
+{% endblock header %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row chat-section" style="padding-top: 80px;">
+            <!-- Chat User View -->
+            <div class="col-md-6 chat_userview">
+                <div class="menu-icon">
+                    <h3 class="match-message">Peoples</h3>
+                    <nav class="navbar navbar-light">
+                        <form class="form-inline">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">@</span>
+                                </div>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Search"
+                                       aria-label="Search"
+                                       aria-describedby="basic-addon1">
+                            </div>
+                        </form>
+                    </nav>
+                </div>
+                {% if sent_requests %}
+                    {% for request in sent_requests %}
+                        <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+                            <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                            <div class="view_user_img">
+                                    <img src="{{ request.get_receiver_details.profile_pic.url }}"
+                                         alt="Receiver Profile Picture"
+                                         width="50"
+                                         height="50">
+                            </div>
+                            <div class="msg">
+                                <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
+                                <br>
+                                <span style="text-transform: capitalize;">{{ request.get_receiver_details.bio }}</span>
+                            </div>
+                            <div class="cross_icon">
+                                <form method="post"
+                                      action="{% url 'delete_request' pk=request.id %}"
+                                      style="display: inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn" >
+                                        <span style="font-size: 25px;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                            <!-- </a> -->
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-white">currently no requests sended</div>
+                {% endif %}
+                <div class="footer_nav">{% include "widget/menu.html" %}</div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
-
-{% block footer %}{% endblock footer %}
-
+{% block footer %}
+{% endblock footer %}
 {% block scripts %}
-
+    {% if messages %}    
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for message in messages %}
+                    swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
 {% endblock scripts %}
