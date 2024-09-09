@@ -47,7 +47,7 @@
 
         {% for user in users %}
         {% if user.user.job_details %}
-        {% include "widget/home-profle-card.html" with image=user.profile_pic_url name=user.user.username job=user.user.job_details.designation location=user.user_location.address_details.city status=user.user.is_online gender=user.gender age=user.age %}
+        {% include "widget/home-profle-card.html" with image=user.profile_pic.url name=user.user.username job=user.user.job_details.designation location=user.user_location.address_details.town status=user.user.is_online gender=user.gender age=user.age %}
         {% else %}
         <p>{{ user.user.username }} has no job details available.</p>
         {% endif %}

@@ -194,7 +194,7 @@ class Matches(LoginRequiredMixin, TemplateView):
 
             # Location Preference
             preferred_locations = [location for location in user_preference.preferred_location.all()]
-            if str(other_user.country_details) in preferred_locations:
+            if str(other_user_personal.user_location.address_details['town']) in preferred_locations:
                 score += 9.09
 
             # Education Level
