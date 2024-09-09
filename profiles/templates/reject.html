@@ -189,7 +189,7 @@
                             <div class="view_user">
                                 <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                                 <div class="view_user_img">
-                                    <img src="{{ request.get_receiver_details.profile_pic.url }}"
+                                    <img src="{{ request.receiver.user_details.profile_pic.url }}"
                                          alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
@@ -197,7 +197,7 @@
                                 <div class="msg">
                                     <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
                                     <br>
-                                    <span style="text-transform: capitalize;">{{ request.get_receiver_details.bio }}</span>
+                                    <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
                                 </div>
                                 <!-- </a> -->
                             </div>
@@ -205,7 +205,7 @@
                             <div class="text-white">Received</div>
                             <div class="view_user">
                                 <div class="view_user_img">
-                                    <img src="{{ request.get_sender_details.profile_pic.url }}"
+                                    <img src="{{ request.sender.user_details.profile_pic.url }}"
                                          alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
@@ -213,7 +213,7 @@
                                 <div class="msg">
                                     <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
                                     <br>
-                                    <span style="text-transform: capitalize;">{{ request.get_sender_details.bio }}</span>
+                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
                                 </div>
                                 <!-- </a> -->
                             </div>

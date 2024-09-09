@@ -216,7 +216,7 @@
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
                                 <img class="img-fluid"
-                                     src="{{ request.get_sender_details.profile_pic.url }}"
+                                     src="{{ request.sender.user_details.profile_pic.url }}"
                                      alt=""
                                      width="50"
                                      height="50">
@@ -224,7 +224,7 @@
                             <div class="msg">
                                 <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
                                 <br>
-                                <span style="text-transform: capitalize;">{{ request.get_sender_details.bio }}</span>
+                                <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
                             </div>
                             <div class="cross_icon">
                                 <form method="post" action="{% url 'handle_request' request.pk 'reject' %}">
