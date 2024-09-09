@@ -60,17 +60,18 @@ class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'send.html'
     context_object_name = 'sent_requests'
+    ordering = ["-created_at"]
 
     def get_queryset(self):
-        return InterestRequest.objects.filter(sender=self.request.user, status="pending").select_related("receiver__user_details")
-    
+        return InterestRequest.objects.filter(sender=self.request.user, status="pending")
+
 class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'received.html'
     context_object_name = 'received_requests'
     
     def get_queryset(self):
-        return InterestRequest.objects.filter(receiver=self.request.user, status="pending").select_related("sender__user_details")
+        return InterestRequest.objects.filter(receiver=self.request.user, status="pending").order_by("-created_at")
 
 class HandleRequestView(RedirectNotAuthenticatedUserMixin, View):
     def post(self, request, *args, **kwargs):
@@ -118,4 +119,4 @@ class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
             messages.success(request,"Interest request deleted successfully!")
         except Exception as e:
             messages.error(request, f"Failed to delete interest request: {str(e)}")
-        return redirect(reverse('sented_request')
+        return redirect(reverse('sented_request'))
