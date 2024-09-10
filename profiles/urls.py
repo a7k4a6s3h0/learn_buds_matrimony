@@ -13,6 +13,7 @@ urlpatterns = [
     path('received/',views.ReceivedRequestView.as_view(), name="received_request"),
     path('request-hanlde/<int:pk>/<str:action>/', views.HandleRequestView.as_view(), name='handle_request'),
     path("request/delete/<int:pk>", views.DeleteRequestView.as_view(), name="delete_request"),
+    
 #     path('chat',views.user_chat_pg, name="chat"),
 
 #     path('contacted',views.user_contacted_pg, name="contacted"),

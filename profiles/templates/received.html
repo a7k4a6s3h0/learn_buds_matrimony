@@ -106,7 +106,7 @@
 
 
     .cross_icon{
-        margin-left: auto;
+        margin-left: 25px;
         color: white;
     }
 
@@ -196,19 +196,21 @@
                 <div class="menu-icon">
                     <h3 class="match-message">Peoples</h3>
                     <nav class="navbar navbar-light">
-                        <form class="form-inline">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">@</span>
-                                </div>
-                                <input type="text"
-                                       class="form-control"
-                                       placeholder="Search"
-                                       aria-label="Search"
-                                       aria-describedby="basic-addon1">
+                        <form class="form-inline" onsubmit="return false;">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">@</span>
                             </div>
+                            <input type="text"
+                                   id="search-input"
+                                   class="form-control"
+                                   placeholder="Search"
+                                   aria-label="Search"
+                                   aria-describedby="basic-addon1">
+                          </div>
                         </form>
-                    </nav>
+                      </nav>
+                      <div id="search-results" class="mt-2 list-group"></div>
                 </div>
                 {% if received_requests %}
                     {% for request in received_requests %}
@@ -222,29 +224,33 @@
                                      height="50">
                             </div>
                             <div class="msg">
-                                <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
+                                <a href="{% url 'profile' request.sender.id %}">
+                                    <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
+                                </a>
                                 <br>
                                 <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
                             </div>
-                            <div class="cross_icon">
+                            <div>
                                 <form method="post" action="{% url 'handle_request' request.pk 'reject' %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn">
-                                        <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                    <button class="btn">
+                                        <div class="cross_icon">
+                                            <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                        </div>
                                     </button>
                                 </form>
                                 <form method="post" action="{% url 'handle_request' request.pk 'accept' %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn">
+                                    <button class="btn">
                                         <div class="heart_icon">
                                             <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
                                         </div>
                                     </button>
                                 </form>
-                                {{ request.created_at|time:"g:i a" }}
                             </div>
-                            <!-- </a> -->
+                            {{ request.created_at|time:"g:i a" }}
                         </div>
+                        <!-- </a> -->
                     {% endfor %}
                 {% else %}
                     <div class="text-white">currently no requests recieved</div>
@@ -257,6 +263,92 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('search-results');
+    
+        if (!searchInput || !resultsContainer) {
+            console.error('Search input or results container not found');
+            return;
+        }
+    
+        searchInput.addEventListener('input', function() {
+            const searchQuery = this.value;
+    
+            if (searchQuery.length > 0) {
+                fetch(`?search=${encodeURIComponent(searchQuery)}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resultsContainer.innerHTML = '';
+                    data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'view_user';
+                        div.style = 'border-top: inset; border-color: darkgray;';
+    
+                        // Profile image section
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'view_user_img';
+                        const img = document.createElement('img');
+                        img.className = 'img-fluid';
+                        img.src = item.sender__user_details__profile_pic;  // update the key if needed
+                        img.width = 50;
+                        img.height = 50;
+                        imgDiv.appendChild(img);
+    
+                        // Message and user details section
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = 'msg';
+                        const link = document.createElement('a');
+                        link.href = `/profile/${item.sender__id}/`;
+                        link.innerHTML = `<span style="text-transform: capitalize; color: white;">${item.sender__username}</span>`;
+                        msgDiv.appendChild(link);
+                        msgDiv.innerHTML += `<br><span style="text-transform: capitalize;">${item.sender__user_details__bio}</span>`;
+    
+                        // Action buttons
+                        const actionsDiv = document.createElement('div');
+                        const rejectForm = document.createElement('form');
+                        rejectForm.method = 'post';
+                        rejectForm.action = `/handle_request/${item.pk}/reject/`;  // Update as needed
+                        rejectForm.innerHTML = `{% csrf_token %}<button class="btn"><div class="cross_icon"><span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span></div></button>`;
+                        actionsDiv.appendChild(rejectForm);
+    
+                        const acceptForm = document.createElement('form');
+                        acceptForm.method = 'post';
+                        acceptForm.action = `/handle_request/${item.pk}/accept/`;  // Update as needed
+                        acceptForm.innerHTML = `{% csrf_token %}<button class="btn"><div class="heart_icon"><span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span></div></button>`;
+                        actionsDiv.appendChild(acceptForm);
+    
+                        // Time section
+                        const timeSpan = document.createElement('span');
+                        timeSpan.textContent = new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                        timeSpan.style.color = 'white';
+    
+                        // Append elements to result container
+                        div.appendChild(imgDiv);
+                        div.appendChild(msgDiv);
+                        div.appendChild(actionsDiv);
+                        div.appendChild(timeSpan);
+    
+                        resultsContainer.appendChild(div);
+                    });
+                    resultsContainer.style.display = data.length > 0 ? 'block' : 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                resultsContainer.innerHTML = '';
+                resultsContainer.style.display = 'none';
+            }
+        });
+    });
+    
+</script>
     {% if messages %}
         <script>
             document.addEventListener('DOMContentLoaded', function() {

@@ -199,26 +199,28 @@
                 <div class="menu-icon">
                     <h3 class="match-message">Peoples</h3>
                     <nav class="navbar navbar-light">
-                        <form class="form-inline">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">@</span>
-                                </div>
-                                <input type="text"
-                                       class="form-control"
-                                       placeholder="Search"
-                                       aria-label="Search"
-                                       aria-describedby="basic-addon1">
+                        <form class="form-inline" onsubmit="return false;">
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">@</span>
                             </div>
+                            <input type="text"
+                                   id="search-input"
+                                   class="form-control"
+                                   placeholder="Search"
+                                   aria-label="Search"
+                                   aria-describedby="basic-addon1">
+                          </div>
                         </form>
-                    </nav>
+                      </nav>
+                      <div id="search-results" class="mt-2 list-group"></div>
                 </div>
                 {% if sent_requests %}
                     {% for request in sent_requests %}
                         <div class="view_user" style="border-top: inset; border-color:darkgray ;">
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
-                                    <img src="{{ request.get_receiver_details.profile_pic.url }}"
+                                    <img src="{{ request.receiver.user_details.profile_pic.url }}"
                                          alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
@@ -226,7 +228,7 @@
                             <div class="msg">
                                 <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
                                 <br>
-                                <span style="text-transform: capitalize;">{{ request.get_receiver_details.bio }}</span>
+                                <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
                             </div>
                             <div class="cross_icon">
                                 <form method="post"
@@ -255,6 +257,7 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+
     {% if messages %}    
         <script>
             document.addEventListener('DOMContentLoaded', function() {

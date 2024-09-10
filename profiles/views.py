@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 #profile display imports :
@@ -13,6 +15,7 @@ from U_auth.permissions import RedirectNotAuthenticatedUserMixin
 from typing import Any
 from django.views.generic import TemplateView
 from django.contrib import messages
+from django.contrib.postgres.search import SearchVector
 #profile display imports :
 from django.shortcuts import render, get_object_or_404
 from U_auth.models import *
@@ -63,8 +66,16 @@ class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     ordering = ["-created_at"]
 
     def get_queryset(self):
-        return InterestRequest.objects.filter(sender=self.request.user, status="pending")
-
+        queryset = InterestRequest.objects.filter(sender=self.request.user, status="pending")
+        search_query = self.request.GET.get('search', '')
+        if search_query:
+            queryset = queryset.filter(
+                Q(receiver__username__icontains=search_query) |
+                Q(receiver__first_name__icontains=search_query) |
+                Q(receiver__last_name__icontains=search_query)
+            )
+        return queryset
+        
 class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'received.html'

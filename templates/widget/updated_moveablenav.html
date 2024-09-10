@@ -4,7 +4,7 @@
     <div class="menu-item">
         <form method="post" action="{% url 'send_request' user.pk %}">
             {% csrf_token %}
-            <button type="submit">
+            <button class="btn" >
                 <i class="fas fa-home"></i>
             </button>
         </form>
