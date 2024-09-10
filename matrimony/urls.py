@@ -23,11 +23,13 @@ from django.conf.urls import handler404, handler500
 urlpatterns = [
     path('main_admin', admin.site.urls),
     path('auth/', include("U_auth.urls")),
+    # path(' ', include("U_auth.urls")),
     path('home/', include("Home.urls")),
     path('profiles/', include("profiles.urls")),
     path('subscription/', include("subscription.urls")),
     path('U_messages/', include("U_messages.urls")),
     path('admin/', include("matrimony_admin.urls")),
+    path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
