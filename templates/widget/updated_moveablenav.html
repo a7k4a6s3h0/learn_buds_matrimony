@@ -2,12 +2,12 @@
 <!-- Desktop Navbar -->
 <div class="menu-bar-desktop">
     <div class="menu-item">
-        <form method="post" action="{% url 'send_request' user.pk %}">
+        {% comment %} <form method="post" action="{% url 'send_request' user.pk %}">
             {% csrf_token %}
-            <button class="btn" >
+            <button class="btn" > {% endcomment %}
                 <i class="fas fa-home"></i>
-            </button>
-        </form>
+            {% comment %} </button>
+        </form> {% endcomment %}
     </div>
     <div class="menu-item"> 
         <i class="fas fa-envelope"></i>

@@ -66,13 +66,13 @@ class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     ordering = ["-created_at"]
 
     def get_queryset(self):
-        queryset = InterestRequest.objects.filter(sender=self.request.user, status="pending")
-        search_query = self.request.GET.get('search', '')
+        queryset = InterestRequest.objects.filter(sender=self.request.user, status="pending").order_by("-created_at")
+        search_query = self.request.GET.get('search')
         if search_query:
             queryset = queryset.filter(
                 Q(receiver__username__icontains=search_query) |
                 Q(receiver__first_name__icontains=search_query) |
-                Q(receiver__last_name__icontains=search_query)
+                Q(receiver__user_details__bio__icontains=search_query)
             )
         return queryset
         
@@ -82,8 +82,16 @@ class ReceivedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     context_object_name = 'received_requests'
     
     def get_queryset(self):
-        return InterestRequest.objects.filter(receiver=self.request.user, status="pending").order_by("-created_at")
-
+        queryset = InterestRequest.objects.filter(receiver=self.request.user, status="pending").order_by("-created_at")
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                Q(sender__username__icontains=search_query) |
+                Q(sender__first_name__icontains=search_query) |
+                Q(sender__user_details__bio__icontains=search_query)
+            )
+        return queryset
+    
 class HandleRequestView(RedirectNotAuthenticatedUserMixin, View):
     def post(self, request, *args, **kwargs):
         interest_request = get_object_or_404(InterestRequest, id=self.kwargs['pk'], receiver=request.user)
@@ -103,23 +111,25 @@ class AcceptedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
     model = InterestRequest
     template_name = 'accept.html'
     context_object_name = 'accepted_requests'
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         return InterestRequest.objects.filter(
             Q(sender=self.request.user, status='accepted')|
             Q(receiver=self.request.user, status='accepted')
-        )
+        ).order_by("-created_at")
 
 class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
     model = InterestRequest
     template_name = 'reject.html'
     context_object_name = 'rejected_requests'
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         return InterestRequest.objects.filter(
             Q(sender=self.request.user, status='rejected')|
             Q(receiver=self.request.user, status='rejected')
-        )
+        ).order_by("-created_at")
 
 class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
     def post (self, request, *args, **kwargs):
