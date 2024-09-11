@@ -195,7 +195,9 @@
         <div class="col-md-12">
             <nav class="navbar-custom">
                 <div class="nav-left">
+                    <a href="{%url 'home'%}" >
                     <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    </a>
                 </div>
                 <div class="nav-right">
                     <div class="distance">Setting</div>
@@ -218,12 +220,12 @@
                     <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                     <div class="view_user_img">
                         <img class="img-fluid"
-                            src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                            src="{{user.profile_pic.url}}"
                             alt="">
                     </div>
                     <div class="msg">
-                        <span style="text-transform: capitalize;">Username</span><br>
-                        <span style="text-transform: capitalize;">hello how are you</span>
+                        <span style="text-transform: capitalize;">{{user.username}}</span><br>
+                        <span style="text-transform: capitalize;">{{user.user_details.bio}}</span>
                     </div>
 
                    
@@ -232,19 +234,20 @@
 
                 <div class="user_setting text-white" >
                     {% for i in 6|number_rangeobj  %}
-                    <div class="inner_setting">
-                    
-                        <div class="logo">
-                            <div class="icon_circle">
-                                <i class="fa-solid fa-key"></i>
+                    <a href="{% url 'privacy_setting' %}">
+                        <div class="inner_setting">
+                            <div class="logo">
+                                <div class="icon_circle">
+                                    <i class="fa-solid fa-key"></i>
+                                </div>
                             </div>
+                            <div class="logo_paragraph">
+                                <label for="title">Account</label><br>
+                                <span>privacy, security, number</span>
+                            </div>
+                            
                         </div>
-                        <div class="logo_paragraph">
-                            <label for="title">Account</label><br>
-                            <span>privacy, security, number</span>
-                        </div>
-                        
-                    </div>
+                    </a>
                     <!-- <hr style="background-color: white;"> -->
                     {% endfor %}
                 </div>

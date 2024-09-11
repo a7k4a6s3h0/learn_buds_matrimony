@@ -7,7 +7,8 @@ urlpatterns = [
 
     path('error_404/', views.error_404,name="error_404"),
     path('error_403/', views.error_403,name="error_403"),
-
+    path('error_500/', views.error_500,name="error_500"),
+    path('trigger-500/', views.trigger_500_error, name='trigger-500'), 
 
 
     path('', views.SignupView.as_view(), name='auth_page'),

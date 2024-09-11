@@ -25,13 +25,19 @@ from django.views.generic import TemplateView
 # Create your views here.
 
 
-def error_404(request):
-    return render(request, 'Errors/404.html')
-
+def error_404(request, exception):
+    return render(request, 'Errors/404.html', status=404)
 
 def error_403(request):
     return render(request, 'Errors/403.html')
 
+def error_500(request):
+    return render(request, 'Errors/500.html', status=500)
+
+
+def trigger_500_error(request):
+    # Deliberately raise an exception to simulate a server error
+    raise ValueError("This is a manually triggered 500 error for testing purposes!")
 
 # ................................backend code starting..............................................
 
@@ -795,8 +801,10 @@ class ForgotPassword(RedirectNotAuthenticatedUserMixin, FormView):
 class UserSetting(RedirectNotAuthenticatedUserMixin, TemplateView):
     template_name = 'User_profile_templates/user_setting.html'
 
-    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
-        return super().get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
+        context =  super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
 
 class UserPrivacySetting(RedirectNotAuthenticatedUserMixin, TemplateView):
