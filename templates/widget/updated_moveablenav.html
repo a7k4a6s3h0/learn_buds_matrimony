@@ -9,6 +9,13 @@
             </button>
         </form>
     </div>
+    <div class="menu-item">
+        <form method="post" class="add-to-shortlist" action="{% url 'add_to_shortlist' user.pk %}">
+        {% csrf_token %}
+        <button class="btn">
+        <i class="fa-solid fa-star"></i>
+        </button>
+    </div>
     <div class="menu-item"> 
         <i class="fas fa-envelope"></i>
     </div>

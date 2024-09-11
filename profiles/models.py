@@ -43,4 +43,10 @@ class InterestRequest(models.Model):
                 'profile_pic': None,
                 'bio': None
             }
+class Shortlist(models.Model):
+    user = models.ForeignKey(costume_user, related_name='shortlists', on_delete=models.CASCADE)  # The user who shortlists
+    shortlisted_user = models.ForeignKey(costume_user, related_name='shortlisted_by', on_delete=models.CASCADE)  # The shortlisted user
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.user.username} shortlisted {self.shortlisted_user.username}"
