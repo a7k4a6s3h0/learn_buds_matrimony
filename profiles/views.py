@@ -27,9 +27,9 @@ class UserProfileView(TemplateView):
         if user_id:
             user = costume_user.objects.get(id=user_id)
             user_details = UserPersonalDetails.objects.get(user=user) 
-            print(user_details.profile_pic.url)
             additional_details = AdditionalDetails.objects.get(user=user)
             pictures = Pictures.objects.filter(user=user_details)
+            context['user'] = user
             context['user_details'] = user_details
             context['additional_details'] = additional_details
             context['pictures'] = pictures
