@@ -443,7 +443,7 @@
             // Update button background colors
             document.getElementById('button_1').style.backgroundColor = 'pink';
             document.getElementById('button_2').style.backgroundColor = 'white';
-        }
+        } 
     
         // Function to show the Contact section and hide About
         function showContact() {
@@ -486,16 +486,51 @@
         // Show the About section by default on page load
         showAbout();
     });
-    
-    </script>
-    {% if messages %}    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            {% for message in messages %}
-                swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
-            {% endfor %}
-        });
-    </script>
-    {% endif %}
+</script>
+     <!-- Include SweetAlert2 -->
+{% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {% endcomment %}
+<script>
+    $(document).ready(function() {
+        // SweetAlert2 for add to shortlist confirmation
+        $('form.add-to-shortlist').on('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting immediately
 
+            var form = $(this);  // Get the form element
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to add this user to your shortlist?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, add!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.off('submit').submit();  // Re-enable form submission and submit it
+                } else {
+                    Swal.fire(
+                        'Cancelled',
+                        'The user was not added to your shortlist.',
+                        'info'
+                    );
+                }
+            });
+        });
+    });
+
+    // SweetAlert2 for Django messages
+    {% if messages %}
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for message in messages %}
+            Swal.fire({
+                title: "{{ message.tags|title }}",
+                text: "{{ message|escapejs }}",
+                icon: "{{ message.tags }}",
+                confirmButtonText: "OK"
+            });
+        {% endfor %}
+    });
+    {% endif %}
+</script>
 {% endblock scripts %}
