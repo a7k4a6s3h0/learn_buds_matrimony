@@ -36,6 +36,7 @@ class UserProfileView(TemplateView):
             context['user_details'] = user_details
             context['additional_details'] = additional_details
             context['pictures'] = pictures
+            context['user'] = user
             return context
 
 
