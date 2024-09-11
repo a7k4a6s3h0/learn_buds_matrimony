@@ -57,11 +57,11 @@ class Hobbies(models.Model):
     def __str__(self):
         return f"Hobby: {self.hobby}"
 
-class Interests(models.Model):
-    interest = models.CharField(max_length=100)
+# class Interests(models.Model):
+#     interest = models.CharField(max_length=100)
 
-    def __str__(self):
-        return f"Interest: {self.interest}"
+#     def __str__(self):
+#         return f"Interest: {self.interest}"
 
 
 
@@ -88,7 +88,7 @@ class UserPersonalDetails(models.Model):
     user_location = models.ForeignKey(Location, on_delete=models.CASCADE)
     smoking_habits = models.BooleanField(default=False, verbose_name="Smoking Habits")
     drinking_habits = models.BooleanField(default=False, verbose_name="Drinking Habits")
-    interests = models.ManyToManyField(Interests)
+    # interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
     profile_pic = models.ImageField(upload_to='images/', default='default/default_pic.png', blank=True)

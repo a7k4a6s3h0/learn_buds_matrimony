@@ -118,4 +118,4 @@ class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
             messages.success(request,"Interest request deleted successfully!")
         except Exception as e:
             messages.error(request, f"Failed to delete interest request: {str(e)}")
-        return redirect(reverse('sented_request')
+        return redirect(reverse('sented_request'))
