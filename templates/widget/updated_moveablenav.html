@@ -11,7 +11,7 @@
     </div>
     <div class="menu-item">
         <form method="post" class="add-to-shortlist" action="{% url 'add_to_shortlist' user.pk %}">
-        {% csrf_token %}
+        {% csrf_token %} 
         <button class="btn">
         <i class="fa-solid fa-star"></i>
         </button>

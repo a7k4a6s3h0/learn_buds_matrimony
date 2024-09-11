@@ -340,7 +340,13 @@
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img src="{{user_details.profile_pic.url}}" class="d-block img-fluid" alt="Profile Picture">
                     </div>
-                    
+                    {% if pictures %}
+                        {% for photo in pictures %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{photo.photos.url}}" class="d-block img-fluid" alt="extra Picture">
+                        </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
                     data-bs-slide="prev">
@@ -384,12 +390,12 @@
             <!-- About Section (default visible) -->
             <div class="about_user mt-3 ps-2" id="about_section">
                 <label for="title" style="font-size:15px; font-weight: bold;">About : </label>
-                <p>{{ personal_details.about_me|default:"No details provided." }}</p>
+                <p>{{ user_details.bio|default:"No details provided." }}</p>
 
                 <div class="interest ps-2">
                     <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
                     <div class="interest_flex">
-                        {% for interest in interests %}
+                        {% for interest in user_details.interests.all %}
                         <span>{{ interest.interest }}</span>
                         {% endfor %}
                     </div>
@@ -398,7 +404,7 @@
                 <div class="hobbies ps-2">
                     <label for="title" style="font-size:15px; font-weight: bold;">Hobbies : </label>
                     <div class="hobby_flex">
-                        {% for hobby in hobbies %}
+                        {% for hobby in user_details.hobbies.all %}
                         <span>{{ hobby.hobby }}</span>
                         {% endfor %}
                     </div>
@@ -408,7 +414,7 @@
             <!-- Contact Section (initially hidden) -->
             <div class="about_user mt-3 ps-2" id="contact_section" style="display: none;">
                 <label for="title" style="font-size:15px; font-weight: bold;">Contact Info : </label>
-                <p>Address: {{ personal_details.user_location.address_details|default:"No address provided." }}</p>
+                <p>Address: {{ user_details.user_location.address_details.town}} ,{{ user_details.user_location.address_details.state}}</p>
                 <p>Phone: {{ user.phone }}</p>
                 <p>Email: {{ user.email }}</p>
                 <p>Marital Status: {{ additional_details.married_status|yesno:"Married,Not Married" }}</p>
