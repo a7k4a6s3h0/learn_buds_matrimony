@@ -487,8 +487,7 @@
         showAbout();
     });
 </script>
-     <!-- Include SweetAlert2 -->
-{% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {% endcomment %}
+
 <script>
     $(document).ready(function() {
         // SweetAlert2 for add to shortlist confirmation
@@ -517,7 +516,34 @@
                 }
             });
         });
+
+        // SweetAlert2 for send request confirmation
+        $('form.send-request').on('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting immediately
+            var form = $(this); // Get the form element
+            Swal.fire({
+                title: "Send Interest Request",
+                text: "Are you sure you want to send an interest request to this user?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, send request!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form
+                    form.off('submit').submit();
+                } else {
+                    Swal.fire(
+                        'Cancelled',
+                        'The interest request was not sent.',
+                        'info'
+                    );
+                }
+            });
+        });
     });
+    
 
     // SweetAlert2 for Django messages
     {% if messages %}
