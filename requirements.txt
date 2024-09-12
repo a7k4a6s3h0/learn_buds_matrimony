@@ -9,10 +9,13 @@ django-allauth==64.2.1
 httpagentparser==1.9.5
 idna==3.8
 ipapi==1.0.4
+phonenumbers==8.13.45
 pillow==10.4.0
+pycountry==24.6.1
 pycparser==2.22
 PyJWT==2.9.0
 pytz==2024.1
+razorpay==1.4.2
 requests==2.32.3
 six==1.16.0
 sqlparse==0.5.1

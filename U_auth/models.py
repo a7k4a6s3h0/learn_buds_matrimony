@@ -60,11 +60,11 @@ class Hobbies(models.Model):
     def __str__(self):
         return f"Hobby: {self.hobby}"
 
-# class Interests(models.Model):
-#     interest = models.CharField(max_length=100)
+class Interests(models.Model):
+    interest = models.CharField(max_length=100)
 
-#     def __str__(self):
-#         return f"Interest: {self.interest}"
+    def __str__(self):
+        return f"Interest: {self.interest}"
 
 
 
