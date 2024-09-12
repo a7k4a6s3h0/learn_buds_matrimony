@@ -280,11 +280,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    {% if request.GET.search %}
-                        <div class="text-white">No matching requests found.</div>
-                    {% else %}
                         <div class="text-white">Currently no requests accepted.</div>
-                    {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
@@ -319,12 +315,22 @@
     
         function filterResults(query) {
             const requestItems = document.querySelectorAll('.request-item');
+            let hasVisibleItems = false;  // Track if any item is visible
+    
             requestItems.forEach(item => {
                 const textContent = item.textContent.toLowerCase();
-                item.style.display = textContent.includes(query) ? '' : 'none';
+                if (textContent.includes(query)) {
+                    item.style.display = '';  // Show the item
+                    hasVisibleItems = true;   // At least one item is visible
+                } else {
+                    item.style.display = 'none';  // Hide the item
+                }
             });
     
-            if (query === '') {
+            // Check if no items are visible and show a "no results" message
+            if (!hasVisibleItems && query !== '') {
+                searchResults.innerHTML = '<div class="text-white">No matching requests found.</div>';
+            } else if (query === '') {
                 searchResults.innerHTML = originalHTML;  // Reset if query is empty
             }
         }
