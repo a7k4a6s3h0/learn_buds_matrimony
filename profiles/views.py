@@ -141,7 +141,6 @@ class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
             Q(receiver=self.request.user, status='accepted')
         )
         search_query = self.request.GET.get('search')
-        print(search_query)
         if search_query:
             queryset = queryset.filter(
                 Q(sender__username__icontains=search_query) |

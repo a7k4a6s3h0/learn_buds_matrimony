@@ -298,19 +298,36 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-input');
-        const searchForm = document.getElementById('searchForm');
+        const searchResults = document.getElementById('search-results');
+        const originalHTML = searchResults.innerHTML;
     
-        searchForm.addEventListener('submit', function (event) {
-            event.preventDefault();  // Prevent the default form submission
-            window.location.href = `${window.location.pathname}?search=${searchInput.value}`;
+        // Clear search input on page load
+        searchInput.value = '';
+    
+        // Event listener to prevent form submission
+        searchInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // Prevent the form from submitting
+                filterResults(searchInput.value.toLowerCase());
+            }
         });
     
-        // Clear search query from URL on page load
-        if (window.location.search) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
+        // Listener for input changes
+        searchInput.addEventListener('input', function () {
+            filterResults(searchInput.value.toLowerCase());
+        });
     
-        searchInput.value = '';  // Ensure search input is cleared on refresh
+        function filterResults(query) {
+            const requestItems = document.querySelectorAll('.request-item');
+            requestItems.forEach(item => {
+                const textContent = item.textContent.toLowerCase();
+                item.style.display = textContent.includes(query) ? '' : 'none';
+            });
+    
+            if (query === '') {
+                searchResults.innerHTML = originalHTML;  // Reset if query is empty
+            }
+        }
     });
     
     </script>
