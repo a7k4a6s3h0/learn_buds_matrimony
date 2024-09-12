@@ -1,0 +1,595 @@
+{% extends "base_files/base.html" %}
+{% load custom_tags %}
+{% block meta %}{% endblock meta %}
+
+{% block title %}Send{% endblock title %}
+
+{% block link %}{% endblock link %}
+
+{% block style %}
+<style>
+    /* Custom styles for the messaging interface */
+    .navbar-custom {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        z-index: 10;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-left {
+        flex-shrink: 0;
+    }
+
+    .nav-right {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar-custom i {
+        color: white;
+        padding-right: 8px;
+    }
+
+    .navbar-custom .distance {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+
+    /* .menu-icon {
+        top: 0;
+        background-color: #343a40;
+        padding: 10px 0;
+        display: flex;
+        gap: 20px;
+
+    } */
+
+    .menu-icon h3 {
+        margin: 0;
+        color: white;
+    }
+
+    /* Container for chat users */
+    .chat_userview {
+        /* height: calc(100vh - 80px); */
+        /* Adjust based on the height of the .menu-icon and any other fixed elements */
+        /* overflow-y: auto; */
+        /* Enable vertical scrolling */
+        background-color: #343a40;
+        padding: 10px;
+    }
+
+    /* Ensure the view_user div elements do not overflow */
+    .view_user {
+        width: 35%;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        padding: 10px 0;
+        /* height: 118px; */
+        /* align-items: center; */
+        position: relative;
+    }
+
+    .view_user_img{
+        display: flex;
+        gap: 8px;
+        position: relative;
+    }
+
+    /* Ensure the image in view_user scales properly */
+    .img_div img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+
+    .msg {
+        padding-top: 10px;
+        color: white;
+    }
+
+    /* Position show_pic_in_lap at the bottom of view_user */
+    .show_pic_in_lap {
+        position: relative;
+        padding-top: 5px;
+        
+    }
+
+    .show_pic_in_lap img{
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+
+    .menu-icon {
+        top: 0;
+        background-color: #343a40;
+        padding: 10px 0;
+        display: flex;
+        gap: 20px;
+    }
+
+
+    .col-10.col-md-11 {
+        padding-right: 0;
+    }
+
+    .chat-section {
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .edit_icon{
+        position: absolute;
+    }
+
+    .cross_icon{
+        position: absolute;
+    }
+
+
+    @media (max-width: 576px) {
+
+        .menu-icon {
+            background-color: black;
+            flex-direction: column;
+            gap: 0;
+            /* align-items: baseline; */
+        }
+
+        .chat-section {
+            /* background-color: #343a40; */
+            background-color: rgb(80, 1, 80);
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* Container for chat users */
+        .chat_userview {
+            /* height: auto; */
+            background-color: black;
+            padding: 20px;
+            border-top-right-radius: 45px;
+            border-top-left-radius: 45px;
+            margin-top: 30px;
+        }
+
+        .img_div img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            align-items: center;
+        }
+
+        /* Ensure the view_user div elements do not overflow */
+        .view_user {
+            width: auto;
+            display: flex;
+            padding: 10px 0;
+            flex-wrap: wrap;
+            /* align-items: center; */
+        }
+
+
+        .msg {
+            padding-top: 10px;
+            color: white;
+            font-size: 12px;
+            /* text-align: center; */
+        }
+
+        
+        .show_pic_in_lap {
+            padding-top: 5px;
+            
+        }
+
+        .show_pic_in_lap img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+    }
+</style>
+{% endblock style %}
+
+{% block header %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar-custom">
+                <div class="nav-left">
+                    <a href="{%url 'profile'%}">
+                        <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    </a>
+                </div>
+                <div class="nav-right">
+                    <div class="distance">Edit My Profile</div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock header %}
+
+{% block content %}
+<div class="container-fluid bg-dark">
+
+    <div class="row chat-section" style="padding-top: 80px;">
+        <!-- Chat User View -->
+        <div class="col-md-6 chat_userview">
+            <div class="menu-icon">
+
+                <div class="view_user" style="border-top: inset; border-color:darkgray ;" id="user_imgs">
+                    
+                    <div class="view_user_img">
+                        <!-- <div class="edit_icon">
+                            <a href="">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </div> -->
+                        <div class="img_div">
+                        <img class="img-fluid"
+                            src="{{user_details.profile_pic.url}}"
+                            alt="img..">
+                        </div>    
+                        <div class="msg">
+                            <span style="text-transform: capitalize;">{{user_details.user.username}}</span><br>
+                            <span style="text-transform: capitalize;">{{user_details.bio}}</span>
+                        </div>
+                    </div>
+                    <div class="show_page_function_details pt-2 text-white">
+                        <p>{{user_details.bio}}</p> 
+                    </div>
+
+                   
+                    <!-- </a> -->
+                    <label for="images" id="img_label">Images</label>
+                    <div class="show_pic_in_lap" id="add_pic" >
+                        {% if extra_photos %}
+                        {% for img in extra_photos %}
+                        <div class="cross_icon">
+                            <a href="#" class="delete-icon" data-url="{% url 'remove_files' 'photos' img.id %}">
+                                {% csrf_token %}
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </div>
+                        <img class="img-fluid" 
+                            src="{{img.photos.url}}"
+                            alt="img">
+                        {% endfor %}
+                        {% else %}
+                        <p>No images uploaded</p>
+                        {% endif %}
+                    </div>
+
+            
+                       <label for="reels" id="reel_label">Reels</label>
+                       <div class="show_pic_in_lap" id="add_reel" >
+                            
+                           {% if user_details.short_video %}
+                           <div class="cross_icon">
+                            <a  href="#" class="delete-icon" data-url="{% url 'remove_files' 'reel' user_details.id %}" method='post'>
+                                {% csrf_token %}
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                            </div>
+                           <img class="img-fluid"
+                               src="{{user_details.short_video.url}}"
+                               alt="img">
+                           {% else %}
+                           <p>No reels uploaded</p>
+                           {% endif %}
+                       </div>
+
+                </div>
+
+                <div class="user_form text-white">
+                    <form action="{% url 'profile_edit' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <!-- username -->
+                          
+                        <div data-mdb-input-init class="form-outline">
+                            <input name='username' readonly type="text" id="form3Example1" class="form-control"  placeholder={{user_details.user.username}} />
+                            <label  class="form-label" for="form3Example1">username</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a target="_blank" onclick="toggleReadOnly(this)">Update Username</a>
+                        </div>
+                      
+                        <!-- Email input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                          <input type="email" readonly name='email' id="form3Example3" class="form-control" placeholder="{{user_details.user.email}}" />
+                          <label class="form-label" for="form3Example3">Email address</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <a target="_blank" onclick="toggleReadOnly(this)">Update Email</a>
+                        </div>
+
+                        <!-- phonenumber input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <input type="password" name='phone' readonly id="form3Example4" class="form-control" placeholder="{{user_details.user.phone}}" />
+                            <label class="form-label" for="form3Example4">phone number</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a target="_blank" onclick="toggleReadOnly(this)">Update phonenumber</a>
+                        </div>
+
+                        <!-- bio input -->
+                        <div data-mdb-input-init class="form-outline mb-4">
+                            <textarea class="form-control" name="bio" id="bio" cols="30" rows="5" placeholder="{{user_details.bio}}" oninput="checkCharacterLimit(this, 100)"></textarea>
+                            <label class="form-label" for="bio">Update Bio</label>
+                            <span id="charCountMessage" class="form-text text-muted"></span>
+                        </div>
+                      
+
+                        <!-- show user photo in mobile size -->
+                        
+                        <label for="images" id="img_label_ph">Images</label>
+                        <div class="show_pic_in_lap" id="add_pic_ph" >
+                            {% if extra_photos %}
+                            {% for img in extra_photos %}
+                                <div class="cross_icon">
+                                    <a href="#" class="delete-icon" data-url="{% url 'remove_files' 'photos' img.id %}">
+                                        <i class="fas fa-times-circle"></i>
+                                    </a>
+                                </div>
+                                <img class="img-fluid" 
+                                    src="{{img.photos.url}}"
+                                    alt="img">
+                            {% endfor %}
+                            {% else %}
+                                <p>No images uploaded</p>
+                            {% endif %}
+                        </div>
+
+            
+                       <label for="reels" id="reel_label_ph">Reels</label>
+                       <div class="show_pic_in_lap" id="add_reel_ph" >
+                        {% if user_details.short_video %}
+                        <div class="cross_icon">
+                            <a href="#" class="delete-icon" data-url = "{% url 'remove_files' 'reel' user_details.id %}">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                            </div>
+                            <img class="img-fluid"
+                                src="{{user_details.short_video.url}}"
+                                alt="img">
+                        {% else %}
+                            <p>No reels uploaded</p>
+                        {% endif %}
+                       </div>
+
+                        <!-- add user pictures -->
+                 
+                        <div class="form-outline mb-4"> 
+                            <label for="formFileSm" class="form-label">Change or Add Profile Photo</label>
+                            <input name='profile_pic' class="form-control form-control-sm" id="formFileSm" type="file" />
+                        </div>
+
+                        <!-- add more user pictures -->
+                        <div class="form-outline mb-4">
+                            <label for="formFileSm" class="form-label">Add more Profile Photo</label>
+                            <input name='photos' class="form-control form-control-sm" id="formFileSm" multiple type="file" />
+                        </div>
+
+                        <!-- add user reel pictures -->
+                        <div class="form-outline mb-4">
+                            <label for="formFileSm" class="form-label">Add reel videos</label>
+                            <input name='short_video' class="form-control form-control-sm" id="formFileSm" type="file" />
+                        </div>
+                        
+                        <div class="form-outline mb-4">
+                            <a href="{%url 'change_pass'%}">change password</a>
+                        </div>
+                        <!-- Submit button -->
+                         <div class="row">
+                        <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Submit</button>
+                         </div>
+                        <!-- Register buttons -->
+                      </form>
+    
+    
+                </div>
+
+
+            </div>
+
+            
+        </div>
+
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}{% endblock footer %}
+
+{% block scripts %}
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+    var images_ph = document.getElementById('add_pic_ph');
+    var reels_ph = document.getElementById('add_reel_ph');
+    var images_label_ph = document.getElementById('img_label_ph');
+    var reels_label_ph = document.getElementById('reel_label_ph');
+
+
+    images_ph.style.display = 'None'
+    reels_ph.style.display = 'None'
+
+    // To remove lables
+
+    images_label_ph.style.display = 'None'
+    reels_label_ph.style.display = 'None'
+
+function checkBrowserSize() {
+
+    var images = document.getElementById('add_pic');
+    var reels = document.getElementById('add_reel');
+    var images_label = document.getElementById('img_label');
+    var reels_label = document.getElementById('reel_label');
+ 
+
+    if (window.matchMedia("(max-width: 767px)").matches) {
+        // If the screen width is less than or equal to 767px, it is considered phone size
+        // To remove displayed images
+        console.log("Phone size");
+        images.style.display = 'None'
+        reels.style.display = 'None'
+
+        // To remove lables
+
+        images_label.style.display = 'None'
+        reels_label.style.display = 'None' 
+
+
+
+        images_ph.style.display = 'block'
+        reels_ph.style.display = 'block'
+
+
+        images_label_ph.style.display = 'block'
+        reels_label_ph.style.display = 'block' 
+
+
+    } else {
+       
+        console.log("Tablet/Desktop size");
+
+        // this will back all 
+
+        images.style.display = 'block'
+        reels.style.display = 'block'
+
+
+        images_label.style.display = 'block'
+        reels_label.style.display = 'block' 
+
+
+        images_ph.style.display = 'None'
+        reels_ph.style.display = 'None'
+
+        // To remove lables
+
+        images_label_ph.style.display = 'None'
+        reels_label_ph.style.display = 'None'
+        
+    }
+}
+
+// Call the function initially
+// checkBrowserSize();
+
+
+// window.onload = function() {
+//     checkBrowserSize();
+// };
+
+// Optional: Add an event listener to detect changes in screen size
+window.addEventListener('resize', checkBrowserSize);
+
+function checkCharacterLimit(textarea, limit) {
+    const charCount = textarea.value.length;
+    const message = document.getElementById('charCountMessage');
+
+    if (charCount > limit) {
+        message.innerHTML = `Character limit exceeded! Only ${limit} characters allowed.`;
+        message.style.color = 'red';
+
+        // Trim the text to the allowed character limit
+        textarea.value = textarea.value.substring(0, limit);
+    } else {
+        message.innerHTML = `Characters: ${charCount}/${limit}`;
+        message.style.color = 'white';
+    }
+}
+
+function toggleReadOnly(anchor) {
+        // Find the input element just before the label (or adjust according to DOM structure)
+        const inputField = anchor.previousElementSibling.previousElementSibling;
+
+        if (inputField.hasAttribute('readonly')) {
+            inputField.removeAttribute('readonly');
+            anchor.innerText = "Save"; // Change the link text
+        } else {
+            inputField.setAttribute('readonly', 'readonly');
+            anchor.innerText = "Update"; // Change it back to Update
+        }
+    }
+
+{% if messages %}    
+    {% for message in messages %}
+        swal("Alert..!", "{{ message}}", "{{message.tags}}");
+    {% endfor %}
+{% endif %}
+
+
+$(document).ready(function() {
+    $('.delete-icon').on('click', function(event) {
+        event.preventDefault();  // Prevent the default link behavior
+
+        var url = $(this).data('url');  // Get the URL from the data-url attribute
+
+        swal.fire({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this file!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            dangerMode: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User clicked "Yes, delete it!"
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token
+                    },
+                    success: function(response) {
+                        swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        ).then(() => {
+                            location.reload();  // Optionally reload the page or update the DOM
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        swal.fire(
+                            'Error!',
+                            'There was an error deleting the file.',
+                            'error'
+                        );
+                    }
+                });
+            } else {
+                // User clicked "No, cancel!"
+                swal.fire(
+                    'Cancelled',
+                    'Your file is safe :)',
+                    'error'
+                );
+            }
+        });
+    });
+});
+
+</script>
+
+{% endblock scripts %}

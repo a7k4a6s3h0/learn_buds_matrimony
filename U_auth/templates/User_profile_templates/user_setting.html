@@ -2,7 +2,7 @@
 {% load custom_tags %}
 {% block meta %}{% endblock meta %}
 
-{% block title %}Send{% endblock title %}
+{% block title %}setting{% endblock title %}
 
 {% block link %}{% endblock link %}
 
@@ -52,15 +52,6 @@
         color: white;
     }
 
-    /* Container for chat users */
-    .chat_userview {
-        /* height: calc(100vh - 80px); */
-        background-color: #343a40;
-        padding: 10px;
-        /* position: relative; */
-        
-    }
-
     .chat-section {
         height: 100vh;
         background-color: #343a40;
@@ -69,19 +60,32 @@
         justify-content: center;
     }
 
+    /* Container for chat users */
+    .chat_userview {
+        background-color: #343a40;
+    }
 
-    /* Ensure the view_user div elements do not overflow */
+/* Ensure the view_user div elements do not overflow */
     .view_user {
         display: flex;
         flex-direction: column;
         padding: 10px 0;
+        /* height: 118px; */
+        align-items: center;
         position: relative;
+    }
+
+    /* Ensure the image in view_user scales properly */
+    .view_user_img img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
     }
 
     .msg {
         margin-left: 10px;
         color: white;
-        border-bottom: inset;
+        text-align: center;
     }
 
 
@@ -100,6 +104,37 @@
     }
 
 
+    .user_setting {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Vertically center align the flex items */
+        gap: 20px; /* Gap between inner_setting divs */
+        }
+
+    .inner_setting {
+        display: flex;
+        gap: 20px; /* Adjust the gap between the icon and the text */
+        width: 100%;
+        padding-bottom: 9px; /* Add some padding at the bottom */
+        border-bottom-style: inset;
+        border-bottom-color: white;
+    }
+
+    .logo .icon_circle {
+        background-color: rgb(80, 76, 76);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center; /* Horizontally center the icon */
+        align-items: center; /* Vertically center the icon */
+    }
+
+    .icon_circle i {
+        font-size: 25px;
+        color: white; /* Add this to make the icon visible if needed */
+    }
+
 
 
     @media (max-width: 576px) {
@@ -112,7 +147,6 @@
 
         .chat-section {
             height: 100vh;
-            position: relative;
             background-color: rgb(80, 1, 80);
             display: flex;
             flex-direction: row;
@@ -120,8 +154,6 @@
 
         /* Container for chat users */
         .chat_userview {
-            /* position: relative; */
-            padding-bottom: 50px; /* Add padding to account for the button height */
             /* height: calc(100vh - 80px); */
             background-color: black;
             padding: 20px;
@@ -130,12 +162,18 @@
             margin-top: 30px;
         }
 
+        .view_user_img img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            /* align-items: center; */
+        }
 
         .msg {
             margin-left: 5px;
             color: white;
-            font-size: 12px;
-            /* text-align: center; */
+            font-size: 15px;
+            text-align: center;
         }
 
             /* Ensure the view_user div elements do not overflow */
@@ -143,7 +181,10 @@
             display: flex;
             padding: 10px 0;
             align-items: center;
+            flex-direction: row;
+            gap: 10px;
         }
+
     }
 </style>
 {% endblock style %}
@@ -154,10 +195,12 @@
         <div class="col-md-12">
             <nav class="navbar-custom">
                 <div class="nav-left">
+                    <a href="{%url 'home'%}" >
                     <i class='fas fa-angle-left' style='font-size:24px'></i>
+                    </a>
                 </div>
                 <div class="nav-right">
-                    <div class="distance">change password</div>
+                    <div class="distance">Setting</div>
                 </div>
             </nav>
         </div>
@@ -175,58 +218,43 @@
 
                 <div class="view_user" id="user_imgs">
                     <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                    <div class="view_user_img">
+                        <img class="img-fluid"
+                            src="{{user.profile_pic.url}}"
+                            alt="">
+                    </div>
                     <div class="msg">
-                        <p> tenetur iure eius earum ut molestias architecto voluptate aliquam
-                            nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,
-                            tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,
-                         </p>
+                        <span style="text-transform: capitalize;">{{user.username}}</span><br>
+                        <span style="text-transform: capitalize;">{{user.user_details.bio}}</span>
                     </div>
 
                    
                     <!-- </a> -->
-
                 </div>
 
-                <div class="user_form text-white">
-
-
-                    <form>
-                        <!-- 2 column grid layout with text inputs for the first and last names -->
-                        <div class="row mb-4 ">
-                          <div class="col">
-                            <div data-mdb-input-init class="form-outline">
-                              <input type="text" id="form3Example1" class="form-control" />
-                              <label class="form-label" for="form3Example1">current password</label>
+                <div class="user_setting text-white" >
+                    {% for i in 6|number_rangeobj  %}
+                    <a href="{% url 'privacy_setting' %}">
+                        <div class="inner_setting">
+                            <div class="logo">
+                                <div class="icon_circle">
+                                    <i class="fa-solid fa-key"></i>
+                                </div>
                             </div>
-                          </div>
+                            <div class="logo_paragraph">
+                                <label for="title">Account</label><br>
+                                <span>privacy, security, number</span>
+                            </div>
+                            
                         </div>
-                      
-                        <!-- Email input -->
-                        <div data-mdb-input-init class="form-outline mb-4">
-                          <input type="email" id="form3Example3" class="form-control" />
-                          <label class="form-label" for="form3Example3">new password</label>
-                        </div>
-                      
-                        <!-- Password input -->
-                        <div data-mdb-input-init class="form-outline mb-4">
-                          <input type="password" id="form3Example4" class="form-control" />
-                          <label class="form-label" for="form3Example4">confirm password</label>
-                        </div>
-                      </form>
-    
-    
+                    </a>
+                    <!-- <hr style="background-color: white;"> -->
+                    {% endfor %}
                 </div>
 
 
             </div>
 
-            <!-- Submit button -->
-            <div class="row button-container">
-                <div class="col-12 d-flex justify-content-center align-items-end">
-                    <button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block">Change password</button>
-                </div>
-            </div>
-            
             
         </div>
 
@@ -238,5 +266,6 @@
 {% block footer %}{% endblock footer %}
 
 {% block scripts %}
+
 
 {% endblock scripts %}

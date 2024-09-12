@@ -3,7 +3,7 @@
 {% block meta %}
 {% endblock meta %}
 {% block title %}
-    reject
+    recieved
 {% endblock title %}
 {% block link %}
 {% endblock link %}
@@ -104,6 +104,18 @@
         justify-content: center;
     }
 
+
+    .cross_icon{
+        margin-left: auto;
+        color: white;
+    }
+
+
+    .heart_icon{
+        padding-left: 25px;
+        color: white;
+    }
+
     .footer_nav{
         height: 70px;
     }
@@ -131,16 +143,32 @@
             height: calc(100vh - 80px); /* Adjust based on the height of the .menu-icon and any other fixed elements */
             overflow-y: auto; /* Enable vertical scrolling */
             background-color: black;
-            padding: 30px;
+            padding: 18px;
             border-top-right-radius: 45px;
             border-top-left-radius: 45px;
             margin-top: 30px;
         }
 
+
+        .msg {
+            margin-left: 10px;
+            color: white;
+        }
+
+        .cross_icon{
+            margin: auto;
+            color: white;
+        }
+
+        .heart_icon{
+           padding-left: 0;
+            color: white;
+            font-size: 15px;
+        }
+
         .footer_nav{
             height: 95px;
         }
-
     }
     </style>
 {% endblock style %}
@@ -153,7 +181,7 @@
                         <i class='fas fa-angle-left' style='font-size:24px'></i>
                     </div>
                     <div class="nav-right">
-                        <div class="distance">Reject</div>
+                        <div class="distance">Recieved</div>
                     </div>
                 </nav>
             </div>
@@ -186,64 +214,56 @@
                     </nav>
                     <div id="search-results" class="mt-2 list-group"></div>
                 </div>
-                {% if rejected_requests %}
-                    {% for request in rejected_requests %}
-                        {% if request.sender == user %}
-                            <div class="text-white">
-                                Sent
-                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
-                            </div>
-                            <div class="view_user">
-                                <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                                <div class="view_user_img">
-                                    <a href="{% url 'profile' request.receiver.id %}">
-                                        <img src="{{ request.receiver.user_details.profile_pic.url }}"
-                                             alt="Receiver Profile Picture"
-                                             width="50"
-                                             height="50">
-                                    </a>
-                                </div>
-                                <div class="msg">
-                                    <a href="{% url 'profile' request.receiver.id %}">
-                                        <span style="text-transform: capitalize;  color: white; ">{{ request.receiver.username }}</span>
-                                    </a>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
-                                </div>
-                                <!-- </a> -->
-                            </div>
-                        {% else %}
-                            <div class="text-white">
-                                Received
-                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
-                            </div>
-                            <div class="view_user">
+                {% if received_requests %}
+                    {% for request in received_requests %}
+                        {% comment %} Shared HTML for both search and sent requests  {% endcomment %}
+                        <div class="view_user">
+                            <div class="view_user_img">
                                 <a href="{% url 'profile' request.sender.id %}">
-                                    <div class="view_user_img">
-                                        <img src="{{ request.sender.user_details.profile_pic.url }}"
-                                             alt="Receiver Profile Picture"
-                                             width="50"
-                                             height="50">
-                                    </a>
-                                </div>
-                                <div class="msg">
-                                    <a href="{% url 'profile' request.sender.id %}">
-                                        <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
-                                    </a>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
-                                </div>
-                                <!-- </a> -->
+                                    <img class="img-fluid"
+                                         src="{{ request.sender.user_details.profile_pic.url }}"
+                                         alt=""
+                                         width="50"
+                                         height="50">
+                                </a>
                             </div>
-                        {% endif %}
+                            <div class="msg">
+                                <a href="{% url 'profile' request.sender.id %}">
+                                    <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
+                                </a>
+                                <br>
+                                <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                            </div>
+                            <div>
+                                <form method="post"
+                                      action="{% url 'handle_request' request.pk 'reject' %}"
+                                      style="display: inline">
+                                    {% csrf_token %}
+                                    <button class="btn  cross_icon">
+                                        <span style="font-size: 25px;"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div>
+                                <form method="post"
+                                      action="{% url 'handle_request' request.pk 'accept' %}"
+                                      style="display: inline">
+                                    {% csrf_token %}
+                                    <button class="btn heart_icon">
+                                        <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
+                                    </button>
+                                </form>
+                            </div>
+                            <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
+                        </div>
                     {% endfor %}
                 {% else %}
                     {% if request.GET.search %}
                         {% comment %} Message when no search results are found  {% endcomment %}
                         <div class="text-white">No matching requests found.</div>
                     {% else %}
-                        {% comment %} Message when no rejected requests are available {% endcomment %}
-                        <div class="text-white">Currently no requests rejected.</div>
+                        {% comment %} Message when no received requests are available {% endcomment %}
+                        <div class="text-white">Currently no requests received.</div>
                     {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
@@ -254,4 +274,71 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+    <script>
+    $(document).ready(function() {
+        // Function to handle form submission with confirmation
+        function handleRequestForm(formElement, action) {
+            var confirmTitle, confirmText, successTitle, successText;
+            
+            if (action === 'accept') {
+                confirmTitle = "Accept Request";
+                confirmText = "Are you sure you want to accept this request?";
+                successTitle = "Request Accepted";
+                successText = "You have successfully accepted the request.";
+            } else if (action === 'reject') {
+                confirmTitle = "Reject Request";
+                confirmText = "Are you sure you want to reject this request?";
+                successTitle = "Request Rejected";
+                successText = "You have successfully rejected the request.";
+            }
+    
+            Swal.fire({
+                title: confirmTitle,
+                text: confirmText,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, " + action + "!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form
+                    formElement.off('submit').submit();
+                } else {
+                    Swal.fire(
+                        'Cancelled',
+                        'The request was not ' + action + 'ed.',
+                        'info'
+                    );
+                }
+            });
+        }
+    
+        // Handle accept request
+        $('.heart_icon form').on('submit', function(event) {
+            event.preventDefault();
+            handleRequestForm($(this), 'accept');
+        });
+    
+        // Handle reject request
+        $('.cross_icon form').on('submit', function(event) {
+            event.preventDefault();
+            handleRequestForm($(this), 'reject');
+        });
+    });
+    
+    // SweetAlert2 for Django messages
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    title: "{{ message.tags|title }}",
+                    text: "{{ message|escapejs }}",
+                    icon: "{{ message.tags }}",
+                    confirmButtonText: "OK"
+                });
+            {% endfor %}
+        {% endif %}
+    });
+    </script>
 {% endblock scripts %}
