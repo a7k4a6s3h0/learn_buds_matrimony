@@ -168,59 +168,83 @@
                 <div class="menu-icon">
                     <h3 class="match-message">Peoples</h3>
                     <nav class="navbar navbar-light">
-                        <form class="form-inline">
+                        <form class="form-inline" method="GET">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">@</span>
                                 </div>
                                 <input type="text"
+                                       id="search-input"
                                        class="form-control"
+                                       name="search"
                                        placeholder="Search"
                                        aria-label="Search"
-                                       aria-describedby="basic-addon1">
+                                       aria-describedby="basic-addon1"
+                                       value="{{ request.GET.search|default:'' }}">
                             </div>
                         </form>
                     </nav>
+                    <div id="search-results" class="mt-2 list-group"></div>
                 </div>
                 {% if rejected_requests %}
                     {% for request in rejected_requests %}
-                    {% if request.sender == user %}
-                            <div class="text-white">Sent</div>
+                        {% if request.sender == user %}
+                            <div class="text-white">
+                                Sent
+                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
+                            </div>
                             <div class="view_user">
                                 <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                                 <div class="view_user_img">
-                                    <img src="{{ request.get_receiver_details.profile_pic.url }}"
-                                         alt="Receiver Profile Picture"
-                                         width="50"
-                                         height="50">
+                                    <a href="{% url 'profile' request.receiver.id %}">
+                                        <img src="{{ request.receiver.user_details.profile_pic.url }}"
+                                             alt="Receiver Profile Picture"
+                                             width="50"
+                                             height="50">
+                                    </a>
                                 </div>
                                 <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
+                                    <a href="{% url 'profile' request.receiver.id %}">
+                                        <span style="text-transform: capitalize;  color: white; ">{{ request.receiver.username }}</span>
+                                    </a>
                                     <br>
-                                    <span style="text-transform: capitalize;">{{ request.get_receiver_details.bio }}</span>
+                                    <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
                                 </div>
                                 <!-- </a> -->
                             </div>
                         {% else %}
-                            <div class="text-white">Received</div>
+                            <div class="text-white">
+                                Received
+                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
+                            </div>
                             <div class="view_user">
-                                <div class="view_user_img">
-                                    <img src="{{ request.get_sender_details.profile_pic.url }}"
-                                         alt="Receiver Profile Picture"
-                                         width="50"
-                                         height="50">
+                                <a href="{% url 'profile' request.sender.id %}">
+                                    <div class="view_user_img">
+                                        <img src="{{ request.sender.user_details.profile_pic.url }}"
+                                             alt="Receiver Profile Picture"
+                                             width="50"
+                                             height="50">
+                                    </a>
                                 </div>
                                 <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
+                                    <a href="{% url 'profile' request.sender.id %}">
+                                        <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
+                                    </a>
                                     <br>
-                                    <span style="text-transform: capitalize;">{{ request.get_sender_details.bio }}</span>
+                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
                                 </div>
                                 <!-- </a> -->
                             </div>
                         {% endif %}
                     {% endfor %}
                 {% else %}
-                    <div class="text-white">currently no requests rejected</div>
+                    {% if request.GET.search %}
+                        {% comment %} Message when no search results are found  {% endcomment %}
+                        <div class="text-white">No matching requests found.</div>
+                    {% else %}
+                        {% comment %} Message when no rejected requests are available {% endcomment %}
+                        <div class="text-white">Currently no requests rejected.</div>
+                    {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>

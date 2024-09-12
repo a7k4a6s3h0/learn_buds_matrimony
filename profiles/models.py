@@ -18,31 +18,6 @@ class InterestRequest(models.Model):
     def __str__(self):
         return f"From {self.sender} to {self.receiver}: {self.status}"
     
-    def get_sender_details(self):
-        try:
-            details = self.sender.user_details
-            return {
-                'profile_pic': details.profile_pic,
-                'bio': details.bio
-            }
-        except UserPersonalDetails.DoesNotExist:
-            return {
-                'profile_pic': None,
-                'bio': None
-            }
-
-    def get_receiver_details(self):
-        try:
-            details = self.receiver.user_details
-            return {
-                'profile_pic': details.profile_pic,
-                'bio': details.bio
-            }
-        except UserPersonalDetails.DoesNotExist:
-            return {
-                'profile_pic': None,
-                'bio': None
-            }
 class Shortlist(models.Model):
     user = models.ForeignKey(costume_user, related_name='shortlists', on_delete=models.CASCADE)  # The user who shortlists
     shortlisted_user = models.ForeignKey(costume_user, related_name='shortlisted_by', on_delete=models.CASCADE)  # The shortlisted user
