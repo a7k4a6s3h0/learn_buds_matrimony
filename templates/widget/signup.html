@@ -1,0 +1,57 @@
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signupModalLabel">Sign up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Sign Up Form -->
+                <form>
+                  <div class="mb-3">
+                      <input type="text" class="form-control" placeholder="Name">
+                  </div>
+                  <div class="mb-3">
+                      <input type="email" class="form-control" placeholder="Email">
+                  </div>
+                  <div class="mb-3">
+                      <input type="text" class="form-control" placeholder="Mobile">
+                  </div>
+                  <div class="mb-3">
+                      <input type="password" class="form-control" placeholder="Password">
+                  </div>
+                  <div class="mb-3">
+                      <input type="password" class="form-control" placeholder="Conform Password">
+                  </div>
+                  <div class="mb-3 otp-section">
+                      <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title" id="otpModalLabel">Generate OTP</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <p>An OTP has been sent to your registered email and mobile number.</p>
+                                      <p>Please enter the OTP in the field provided.</p>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mb-3">
+                      <input type="text" class="form-control" placeholder="We sent a code to Email/Phone" readonly>
+                  </div>
+                  <button type="submit" class="btn btn-dark w-100">Register</button>
+                  <button type="button" class="btn btn-secondary w-100">Social media Login</button>
+                  <div class="login-link text-center mt-3">
+                      <p>Already have an account? <a href="#">Log In</a></p>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>

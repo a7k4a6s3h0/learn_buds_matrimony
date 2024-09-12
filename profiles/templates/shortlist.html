@@ -118,6 +118,12 @@
     .footer_nav{
         height: 70px;
     }
+    .time-display {
+        color: lightgray; /* Adjust to a lighter color for better visibility */
+        font-size: 12px;  /* You can adjust the size as per your design */
+        margin-left: auto; /* Aligns the time to the right */
+        padding-right: 10px; /* Add some padding for better spacing */
+    }
 
 
     @media (max-width: 576px) {
@@ -208,10 +214,10 @@
                 </nav>
             </div>
 
-            {% for k in ""|random_range%}
-            <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+            {% comment %} {% for k in ""|random_range%}
+            <div class="view_user" style="border-top: inset; border-color:darkgray ;"> {% endcomment %}
                 <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                <div class="view_user_img">
+                {% comment %} <div class="view_user_img">
                     <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
                 </div>
                 <div class="msg">
@@ -223,10 +229,46 @@
                 </div>
                 <div class="heart_icon">
                     <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                </div>
+                </div> {% endcomment %}
                 <!-- </a> -->
-            </div>
-            {% endfor %}
+            {% comment %} </div>
+            {% endfor %} {% endcomment %}
+            {% if shortlist %}
+                    {% for request in shortlist %}
+                        <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+                            <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                            <div class="view_user_img">
+                                    <img src="{{ request.shortlisted_user.user_details.profile_pic.url }}"
+                                         alt="Receiver Profile Picture"
+                                         width="50"
+                                         height="50">
+                            </div>
+                            <div class="msg">
+                                <span style="text-transform: capitalize;">{{ request.shortlisted_user.username }}</span>
+                                <br>
+                                <span style="text-transform: capitalize;">{{ request.shortlisted_user.user_details.bio }}</span>
+                            </div>
+                            <div class="cross_icon">
+                                <form method="post"
+                                      action="{% url 'remove_from_shortlist' user_id=request.shortlisted_user_id %}"
+                                      style="display: inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                    class="btn delete-icon"
+                                    data-url="{% url 'remove_from_shortlist' user_id=request.shortlisted_user_id %}">
+                                        <span style="font-size: 25px;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                            <span class="time-display">{{ request.created_at|time:"g:i a" }}</span>
+                            <!-- </a> -->
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-white">currently nobody shortlisted</div>
+                {% endif %}
             <div class="footer_nav">
                 {% include "widget/menu.html" %}
             </div>
@@ -239,5 +281,74 @@
 {% block footer %}{% endblock footer %}
 
 {% block scripts %}
+    <!-- Include SweetAlert2 -->
 
+<script>
+// SweetAlert2 for delete confirmation
+    $(document).ready(function() {
+        $('.delete-icon').on('click', function(event) {
+            event.preventDefault();  // Prevent the default link behavior
+
+            var url = $(this).data('url');  // Get the URL from the data-url attribute
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Once removed, you will not be able to see this in this page!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, remove it!",
+                cancelButtonText: "No, cancel!",
+                dangerMode: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User clicked "Yes, delete it!"
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'  // Include CSRF token
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Removed!',
+                                'Your file has been removed.',
+                                'success'
+                            ).then(() => {
+                                location.reload();  // Optionally reload the page or update the DOM
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'There was an error deleting the file.',
+                                'error'
+                            );
+                        }
+                    });
+                } else {
+                    // User clicked "No, cancel!"
+                    Swal.fire(
+                        'Cancelled',
+                        'Your file is safe :)',
+                        'error'
+                    );
+                }
+            });
+        });
+    });
+
+     // SweetAlert2 for Django messages
+     {% if messages %}
+     document.addEventListener('DOMContentLoaded', function() {
+         {% for message in messages %}
+             Swal.fire({
+                 title: "Alert!",
+                 text: "{{ message|escapejs }}",
+                 icon: "{{ message.tags }}",
+                 confirmButtonText: "OK"
+             });
+         {% endfor %}
+     });
+     {% endif %}
+ </script>
 {% endblock scripts %}
