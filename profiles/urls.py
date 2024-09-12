@@ -5,6 +5,7 @@ from . import views
 
 urlpatterns = [
     path('profile/<int:user_id>/',views.UserProfileView.as_view(), name="profile"),
+    # path('msg_pg',views.messages_pg, name="msg_pg"),
     path('send/<int:pk>/',views.SendRequestView.as_view(), name="send_request"),
     path('sent/',views.SentedRequestView.as_view(), name="sented_request"),
     path('accept/',views.AcceptedRequestView.as_view(), name="accepted_request"),
@@ -17,10 +18,10 @@ urlpatterns = [
     path('shortlist/remove/<int:user_id>/', views.RemoveFromShortlistView.as_view(), name='remove_from_shortlist'),
     path('shortlist_by/', views.ShortlistByView.as_view(), name='shortlist_by'),
     # path('chat',views.user_chat_pg, name="chat"),
-
     # path('contacted',views.user_contacted_pg, name="contacted"),
     # path('shortlisted',views.user_shortlisted_pg, name="shortlisted"),
     # path('shortlist',views.user_shortlist_pg, name="shortlist"),
     # path('pr_viewed',views.user_viewed_pg, name="pr_viewed"),
+
     
 ]
