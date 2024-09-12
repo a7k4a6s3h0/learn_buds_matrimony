@@ -199,42 +199,50 @@
                 <div class="menu-icon">
                     <h3 class="match-message">Peoples</h3>
                     <nav class="navbar navbar-light">
-                        <form class="form-inline">
+                        <form class="form-inline" method="GET">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">@</span>
                                 </div>
                                 <input type="text"
+                                       id="search-input"
                                        class="form-control"
+                                       name="search"
                                        placeholder="Search"
                                        aria-label="Search"
-                                       aria-describedby="basic-addon1">
+                                       aria-describedby="basic-addon1"
+                                       value="{{ request.GET.search|default:'' }}">
                             </div>
                         </form>
                     </nav>
+                    <div id="search-results" class="mt-2 list-group"></div>
                 </div>
                 {% if sent_requests %}
                     {% for request in sent_requests %}
-                        <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+                        <div class="view_user">
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
-                                    <img src="{{ request.get_receiver_details.profile_pic.url }}"
+                                <a href="{% url 'profile' request.receiver.id %}">
+                                    <img src="{{ request.receiver.user_details.profile_pic.url }}"
                                          alt="Receiver Profile Picture"
                                          width="50"
                                          height="50">
+                                </a>
                             </div>
                             <div class="msg">
-                                <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
+                                <a href="{% url 'profile' request.receiver.id %}">
+                                    <span style="text-transform: capitalize; color: white;">{{ request.receiver.username }}</span>
+                                </a>
                                 <br>
-                                <span style="text-transform: capitalize;">{{ request.get_receiver_details.bio }}</span>
+                                <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
                             </div>
                             <div class="cross_icon">
+                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 <form method="post"
                                       action="{% url 'delete_request' pk=request.id %}"
                                       style="display: inline">
                                     {% csrf_token %}
-                                    <button type="submit"
-                                            class="btn" >
+                                    <button class="btn cross_icon">
                                         <span style="font-size: 25px;">
                                             <i class="fa fa-times" aria-hidden="true"></i>
                                         </span>
@@ -245,7 +253,13 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <div class="text-white">currently no requests sended</div>
+                    {% if request.GET.search %}
+                        {% comment %} Message when no search results are found  {% endcomment %}
+                        <div class="text-white">No matching requests found.</div>
+                    {% else %}
+                        {% comment %} Message when no received requests are available {% endcomment %}
+                        <div class="text-white">Currently no requests received.</div>
+                    {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
@@ -255,12 +269,10 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
-    {% if messages %}    
+    {% if messages %}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                {% for message in messages %}
-                    swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
-                {% endfor %}
+                {% for message in messages %}swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");{% endfor %}
             });
         </script>
     {% endif %}
