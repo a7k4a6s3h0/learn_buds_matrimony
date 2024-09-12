@@ -1,18 +1,25 @@
 <!-- Desktop Navbar -->
 <div class="menu-bar-desktop">
-    <div class="menu-item">
-        <form method="post" action="{% url 'send_request' user.pk %}">
+    <div>
+        <form method="post"
+              class="add-to-shortlist"
+              action="{% url 'add_to_shortlist' user.pk %}">
             {% csrf_token %}
-            <button class="btn">
-                <i class="fas fa-home"></i>
-            </button>
+                <button class="btn menu-item">
+                    <i class="fa-solid fa-star"></i>
+                </button>
         </form>
     </div>
     <div class="menu-item">
         <i class="fas fa-envelope"></i>
     </div>
-    <div class="menu-item">
-        <i class="fa fa-heart"></i>
+    <div>
+        <form class="send-request" method="post" action="{% url 'send_request' user.pk %}">
+            {% csrf_token %}
+                <button class="btn menu-item">
+                    <i class="fa fa-heart"></i>
+                </button>
+        </form>
     </div>
     <div class="menu-item" id="closeBtn">
         <i class="fas fa-times"></i>

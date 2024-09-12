@@ -7,7 +7,7 @@
 {% block link %}{% endblock link %}
 
 {% block style %}
-<style>
+{% comment %} <style>
     /* Custom styles for the messaging interface */
     .navbar-custom {
         position: absolute;
@@ -169,6 +169,171 @@
             height: 95px;
         }
     }
+</style> {% endcomment %}
+<style>
+    /* Custom styles for the messaging interface */
+    .navbar-custom {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        z-index: 10;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-left {
+        flex-shrink: 0;
+    }
+
+    .nav-right {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .navbar-custom i {
+        color: white;
+        padding-right: 8px;
+    }
+
+    .navbar-custom .distance {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+
+    .menu-icon {
+        position: sticky; /* Keeps the menu-icon fixed within its container */
+        top: 0;
+        background-color: #343a40;
+        z-index: 10;
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .menu-icon h3 {
+        margin: 0;
+        color: white;
+    }
+
+    /* Container for chat users */
+    .chat_userview {
+        height: calc(100vh - 80px); /* Adjust based on the height of the .menu-icon and any other fixed elements */
+        overflow-y: auto; /* Enable vertical scrolling */
+        background-color: #343a40;
+        padding: 10px;
+    }
+
+    /* Ensure the view_user div elements do not overflow */
+    .view_user {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-top: inset;
+        border-color: darkgray;
+    }
+
+    /* Ensure the image in view_user scales properly */
+    .view_user_img img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+    }
+
+    .msg {
+        margin-left: 10px;
+        color: white;
+    }
+
+    .col-10.col-md-11 {
+        padding-right: 0;
+    }
+
+    .chat-section {
+        background-color: #343a40;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .cross_icon {
+        margin-left: auto;
+        color: white;
+    }
+
+    .heart_icon {
+        padding-left: 25px;
+        color: white;
+    }
+
+    .footer_nav {
+        height: 70px;
+    }
+
+    /* Styles for the time display */
+    .time-display {
+        color: lightgray; /* Adjust to a lighter color for better visibility */
+        font-size: 12px;  /* You can adjust the size as per your design */
+        margin-left: auto; /* Aligns the time to the right */
+        padding-right: 10px; /* Add some padding for better spacing */
+    }
+
+    @media (max-width: 576px) {
+        .profile-cards-container {
+            flex-direction: row;
+        }
+
+        .menu-icon {
+            flex-direction: row;
+            align-items: baseline;
+            background-color: black;
+        }
+        .chat-section {
+            background-color: rgb(80, 1, 80);
+            display: flex;
+            flex-direction: row;
+        }
+
+        /* Container for chat users */
+        .chat_userview {
+            height: calc(100vh - 80px); /* Adjust based on the height of the .menu-icon and any other fixed elements */
+            overflow-y: auto; /* Enable vertical scrolling */
+            background-color: black;
+            padding: 18px;
+            border-top-right-radius: 45px;
+            border-top-left-radius: 45px;
+            margin-top: 30px;
+        }
+
+        .msg {
+            margin-left: 10px;
+            color: white;
+        }
+
+        .cross_icon {
+            margin-left: auto;
+            color: white;
+        }
+
+        .heart_icon {
+            padding-left: 10px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .footer_nav {
+            height: 95px;
+        }
+    }
 </style>
 {% endblock style %}
 
@@ -209,10 +374,10 @@
                 </nav>
             </div>
 
-            {% for k in ""|random_range%}
+            {% comment %} {% for k in ""|random_range%}
             <div class="view_user" style="border-top: inset; border-color:darkgray ;">
                 <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                <div class="view_user_img">
+                {% comment %} <div class="view_user_img">
                     <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
                 </div>
                 <div class="msg">
@@ -224,10 +389,45 @@
                 </div>
                 <div class="heart_icon">
                     <span style="font-size: 25px;"><i class="fa fa-heart" aria-hidden="true"></i></span>
-                </div>
+                </div> {% endcomment %}
                 <!-- </a> -->
-            </div>
-            {% endfor %}
+            {% comment %} </div>
+            {% endfor %} {% endcomment %}
+            {% if shortlist_by %}
+                    {% for request in shortlist_by %}
+                        <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+                            <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
+                            <div class="view_user_img">
+                                    <img src="{{ request.user.user_details.profile_pic.url }}"
+                                         alt="Receiver Profile Picture"
+                                         width="50"
+                                         height="50">
+                            </div>
+                            <div class="msg">
+                                <span style="text-transform: capitalize;">{{ request.user.username }}</span>
+                                <br>
+                                <span style="text-transform: capitalize;">{{ request.user.user_details.bio }}</span>
+                            </div>
+                            {% comment %} <div class="cross_icon">
+                                <form method="post"
+                                      action="{% url 'remove_from_shortlist' user_id=request.shortlisted_user_id %}"
+                                      style="display: inline">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn" >
+                                        <span style="font-size: 25px;">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </span>
+                                    </button>
+                                </form>
+                            </div> {% endcomment %}
+                            <!-- </a> -->
+                            <span class="time-display">{{ request.created_at|time:"g:i a" }}</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-white">currently no requests sended</div>
+                {% endif %}
             <div class="footer_nav">
                 {% include "widget/menu.html" %}
             </div>
@@ -240,5 +440,14 @@
 {% block footer %}{% endblock footer %}
 
 {% block scripts %}
+{% if messages %}    
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% for message in messages %}
+            swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");
+        {% endfor %}
+    });
+</script>
+{% endif %}
 
 {% endblock scripts %}

@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block meta %}
-    <title>404 - Page Not Found</title>
+    <title>Server Error</title>
 {% endblock meta %}
 
 {% block link %}
@@ -74,8 +74,8 @@
 
 {% block content %}
     <div class="container">
-        <h1>404</h1>
-        <p>Oops! Page not found (404)</p>
+        <h1>Oops! Something went wrong (500)</h1>
+        <p>We're working to fix this issue. Please try again later.</p>
         <a href="{% url 'auth_page' %}" class="btn-custom">
             Let's try something different
             <i class="fas fa-chevron-right"></i>

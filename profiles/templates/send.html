@@ -220,26 +220,30 @@
                 
                 {% if sent_requests %}
                     {% for request in sent_requests %}
-                        <div class="view_user" style="border-top: inset; border-color:darkgray ;">
+                        <div class="view_user">
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
-                                <img src="{{ request.receiver.user_details.profile_pic.url }}"
-                                     alt="Receiver Profile Picture"
-                                     width="50"
-                                     height="50">
+                                <a href="{% url 'profile' request.receiver.id %}">
+                                    <img src="{{ request.receiver.user_details.profile_pic.url }}"
+                                         alt="Receiver Profile Picture"
+                                         width="50"
+                                         height="50">
+                                </a>
                             </div>
                             <div class="msg">
-                                <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
+                                <a href="{% url 'profile' request.receiver.id %}">
+                                    <span style="text-transform: capitalize; color: white;">{{ request.receiver.username }}</span>
+                                </a>
                                 <br>
                                 <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
                             </div>
                             <div class="cross_icon">
-                            {{ request.created_at|time:"g:i a" }}
+                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 <form method="post"
                                       action="{% url 'delete_request' pk=request.id %}"
                                       style="display: inline">
                                     {% csrf_token %}
-                                    <button class="btn">
+                                    <button class="btn cross_icon">
                                         <span style="font-size: 25px;">
                                             <i class="fa fa-times" aria-hidden="true"></i>
                                         </span>

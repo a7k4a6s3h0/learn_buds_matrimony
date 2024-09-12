@@ -205,73 +205,114 @@
     </div>
 {% endblock header %}
 {% block content %}
-    <div class="container-fluid bg-dark">
-        <div class="row chat-section" style="padding-top: 80px;">
-            <!-- Chat User View -->
-            <div class="col-md-6 chat_userview">
-                <div class="menu-icon">
-                    <h3 class="match-message">Peoples</h3>
-                    <nav class="navbar navbar-light">
-                        <form class="form-inline">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">@</span>
-                                </div>
-                                <input type="text"
-                                       class="form-control"
-                                       placeholder="Search"
-                                       aria-label="Search"
-                                       aria-describedby="basic-addon1">
+<div class="container-fluid bg-dark">
+    <div class="row chat-section" style="padding-top: 80px;">
+        <!-- Chat User View -->
+        <div class="col-md-6 chat_userview">
+            <div class="menu-icon">
+                <h3 class="match-message">Peoples</h3>
+                <nav class="navbar navbar-light">
+                    <form class="form-inline" method="GET" id="searchForm">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">@</span>
                             </div>
-                        </form>
-                    </nav>
-                </div>
+                            <input type="text"
+                                   id="search-input"
+                                   class="form-control"
+                                   name="search"
+                                   placeholder="Search"
+                                   aria-label="Search"
+                                   aria-describedby="basic-addon1">
+                        </div>
+                    </form>
+                </nav>
+            </div>
+            <div id="search-results">
                 {% if accepted_requests %}
                     {% for request in accepted_requests %}
-                        {% if request.sender == user %}
-                            <div class="text-white">Sent</div>
-                            <div class="view_user">
-                                <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                                <div class="view_user_img">
-                                    <img src="{{ request.sender.user_details.profile_pic.url }}"
-                                         alt="Receiver Profile Picture"
-                                         width="50"
-                                         height="50">
+                        <div class="request-item">
+                            {% if request.sender == user %}
+                                <div class="text-white">
+                                    Sent
+                                    <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 </div>
-                                <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ request.receiver.username }}</span>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request..sender.user_details.bio }}</span>
+                                <div class="view_user">
+                                    <div class="view_user_img">
+                                        <a href="{% url 'profile' request.receiver.id %}">
+                                            <img src="{{ request.receiver.user_details.profile_pic.url }}"
+                                                 alt="Receiver Profile Picture"
+                                                 width="50"
+                                                 height="50">
+                                        </a>
+                                    </div>
+                                    <div class="msg">
+                                        <a href="{% url 'profile' request.receiver.id %}">
+                                            <span style="text-transform: capitalize; color: white;">{{ request.receiver.username }}</span>
+                                        </a>
+                                        <br>
+                                        <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
+                                    </div>
                                 </div>
-                                <!-- </a> -->
-                            </div>
-                        {% else %}
-                            <div class="text-white">Received</div>
-                            <div class="view_user">
-                                <div class="view_user_img">
-                                    <img src="{{ request.sender.user_details.profile_pic.url }}"
-                                         alt="Sender Profile Picture"
-                                         width="50"
-                                         height="50">
+                            {% else %}
+                                <div class="text-white">
+                                    Received
+                                    <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 </div>
-                                <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ request.sender.username }}</span>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                                <div class="view_user">
+                                    <div class="view_user_img">
+                                        <a href="{% url 'profile' request.sender.id %}">
+                                            <img src="{{ request.sender.user_details.profile_pic.url }}"
+                                                 alt="Receiver Profile Picture"
+                                                 width="50"
+                                                 height="50">
+                                        </a>
+                                    </div>
+                                    <div class="msg">
+                                        <a href="{% url 'profile' request.sender.id %}">
+                                            <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
+                                        </a>
+                                        <br>
+                                        <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                                    </div>
                                 </div>
-                                <!-- </a> -->
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     {% endfor %}
                 {% else %}
-                    <div class="text-white">currently no requests accepted</div>
+                    {% if request.GET.search %}
+                        <div class="text-white">No matching requests found.</div>
+                    {% else %}
+                        <div class="text-white">Currently no requests accepted.</div>
+                    {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
         </div>
     </div>
+</div>
 {% endblock content %}
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const searchForm = document.getElementById('searchForm');
+    
+        searchForm.addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the default form submission
+            window.location.href = `${window.location.pathname}?search=${searchInput.value}`;
+        });
+    
+        // Clear search query from URL on page load
+        if (window.location.search) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    
+        searchInput.value = '';  // Ensure search input is cleared on refresh
+    });
+    
+    </script>
+    
 {% endblock scripts %}
