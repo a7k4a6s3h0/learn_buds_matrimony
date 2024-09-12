@@ -295,7 +295,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-input');
         const searchResults = document.getElementById('search-results');
-        const originalHTML = searchResults.innerHTML;
+        const requestItems = Array.from(document.querySelectorAll('.request-item'));  // Store as an array
     
         // Clear search input on page load
         searchInput.value = '';
@@ -314,11 +314,12 @@
         });
     
         function filterResults(query) {
-            const requestItems = document.querySelectorAll('.request-item');
             let hasVisibleItems = false;  // Track if any item is visible
     
+            // Loop through each request item and adjust visibility based on the search term
             requestItems.forEach(item => {
                 const textContent = item.textContent.toLowerCase();
+    
                 if (textContent.includes(query)) {
                     item.style.display = '';  // Show the item
                     hasVisibleItems = true;   // At least one item is visible
@@ -327,11 +328,9 @@
                 }
             });
     
-            // Check if no items are visible and show a "no results" message
+            // If no items match and the query is not empty, show the "no results" message
             if (!hasVisibleItems && query !== '') {
                 searchResults.innerHTML = '<div class="text-white">No matching requests found.</div>';
-            } else if (query === '') {
-                searchResults.innerHTML = originalHTML;  // Reset if query is empty
             }
         }
     });
