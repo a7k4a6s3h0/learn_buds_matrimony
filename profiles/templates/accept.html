@@ -280,11 +280,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    {% if request.GET.search %}
-                        <div class="text-white">No matching requests found.</div>
-                    {% else %}
                         <div class="text-white">Currently no requests accepted.</div>
-                    {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
@@ -298,19 +294,46 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-input');
-        const searchForm = document.getElementById('searchForm');
+        const searchResults = document.getElementById('search-results');
+        const originalHTML = searchResults.innerHTML;
     
-        searchForm.addEventListener('submit', function (event) {
-            event.preventDefault();  // Prevent the default form submission
-            window.location.href = `${window.location.pathname}?search=${searchInput.value}`;
+        // Clear search input on page load
+        searchInput.value = '';
+    
+        // Event listener to prevent form submission
+        searchInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // Prevent the form from submitting
+                filterResults(searchInput.value.toLowerCase());
+            }
         });
     
-        // Clear search query from URL on page load
-        if (window.location.search) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-        }
+        // Listener for input changes
+        searchInput.addEventListener('input', function () {
+            filterResults(searchInput.value.toLowerCase());
+        });
     
-        searchInput.value = '';  // Ensure search input is cleared on refresh
+        function filterResults(query) {
+            const requestItems = document.querySelectorAll('.request-item');
+            let hasVisibleItems = false;  // Track if any item is visible
+    
+            requestItems.forEach(item => {
+                const textContent = item.textContent.toLowerCase();
+                if (textContent.includes(query)) {
+                    item.style.display = '';  // Show the item
+                    hasVisibleItems = true;   // At least one item is visible
+                } else {
+                    item.style.display = 'none';  // Hide the item
+                }
+            });
+    
+            // Check if no items are visible and show a "no results" message
+            if (!hasVisibleItems && query !== '') {
+                searchResults.innerHTML = '<div class="text-white">No matching requests found.</div>';
+            } else if (query === '') {
+                searchResults.innerHTML = originalHTML;  // Reset if query is empty
+            }
+        }
     });
     
     </script>
