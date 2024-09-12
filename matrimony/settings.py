@@ -191,11 +191,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-<<<<<<< HEAD
 
 RAZORPAY_KEY_ID = 'rzp_test_cc7cPplZgxsSFN'
 RAZORPAY_KEY_SECRET = 'HRh6AjXf6R4tah0dGmt5Kole'
-=======
 # LOGIN_REDIRECT_URL = 'auth_page'
 # LOGOUT_REDIRECT_URL = 'auth_page'
->>>>>>> e0269c1eaab9e03fbc1eaa7220c809d6b18a72e3

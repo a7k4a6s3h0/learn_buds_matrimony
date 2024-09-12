@@ -66,7 +66,7 @@ class CreateUser(forms.ModelForm):
             username=self.cleaned_data['username'],
             phone=self.cleaned_data['phone'],
             password=self.cleaned_data['password'],
-            country_details =Country_codes.objects.get(country_code=self.cleaned_data['country_code']),
+            country_details =Country_codes.objects.get(calling_code=self.cleaned_data['country_code']),
 
         )
         if commit:

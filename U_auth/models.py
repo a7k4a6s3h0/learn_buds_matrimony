@@ -7,11 +7,14 @@ from . manager import UserManager
 
 
 class Country_codes(models.Model):
-    country_code = models.CharField(max_length=10, unique=True)
+    calling_code = models.CharField(max_length=10, unique=True)
     country_name = models.CharField(max_length=100, unique=True)
     
     def __str__(self):
-        return self.country_code
+        return self.calling_code
+    
+    class Meta:
+        ordering = ['calling_code']  # Order by calling_code
 
 class languages(models.Model):
     language_name = models.CharField(max_length=100, unique=True)
@@ -57,11 +60,11 @@ class Hobbies(models.Model):
     def __str__(self):
         return f"Hobby: {self.hobby}"
 
-# class Interests(models.Model):
-#     interest = models.CharField(max_length=100)
+class Interests(models.Model):
+    interest = models.CharField(max_length=100)
 
-#     def __str__(self):
-#         return f"Interest: {self.interest}"
+    def __str__(self):
+        return f"Interest: {self.interest}"
 
 
 
@@ -91,7 +94,7 @@ class UserPersonalDetails(models.Model):
     # interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
-    profile_pic = models.ImageField(upload_to='images/', default='default/default_pic.png', blank=True)
+    profile_pic = models.ImageField(upload_to='images/', default='default_pic.png')
     short_video = models.FileField(upload_to='videos/', null=True, blank=True)
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
