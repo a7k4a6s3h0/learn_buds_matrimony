@@ -18,10 +18,10 @@ urlpatterns = [
     path('shortlist/remove/<int:user_id>/', views.RemoveFromShortlistView.as_view(), name='remove_from_shortlist'),
     path('shortlist_by/', views.ShortlistByView.as_view(), name='shortlist_by'),
     # path('chat',views.user_chat_pg, name="chat"),
-
     # path('contacted',views.user_contacted_pg, name="contacted"),
     # path('shortlisted',views.user_shortlisted_pg, name="shortlisted"),
     # path('shortlist',views.user_shortlist_pg, name="shortlist"),
     # path('pr_viewed',views.user_viewed_pg, name="pr_viewed"),
+
     
 ]
