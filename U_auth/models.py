@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
-import django.db.models
 from . manager import UserManager
 
 
@@ -218,11 +217,7 @@ class AdditionalDetails(models.Model):
         return f"{self.user.username}_extra_details"
 
 
-class Interest_and_Hobbie(models.Model):
-    name = models.CharField(max_length=100, unique=True)
 
-    def __str__(self):
-        return self.name
 
 class LifestyleChoice(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -254,8 +249,8 @@ class PartnerPreference(models.Model):
     age_max = models.IntegerField(default=35)
 
     preferred_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
-    preferred_location = models.ManyToManyField(Location)  # ForeignKey for locations
-    interests_hobbies = models.ManyToManyField(Interest_and_Hobbie)
+    interests = models.ManyToManyField(Interests)
+    hobbies = models.ManyToManyField(Hobbies)
     education_level = models.ManyToManyField(Qualifications)
    
     height_min = models.IntegerField(default=100)  # in cm
@@ -272,6 +267,14 @@ class PartnerPreference(models.Model):
 
     def __str__(self):
         return f"{self.user.username}"
+
+
+class Preferred_location(models.Model):
+    user = models.ForeignKey(PartnerPreference, on_delete=models.CASCADE)
+    location_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.user.user.username
 
 class OTP(models.Model):
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE)

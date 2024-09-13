@@ -538,9 +538,9 @@ class UserPartnerPreferenceForm(forms.ModelForm):
        
     )
 
-    preferred_location  = forms.CharField(
-        required=True,
-        widget=forms.TextInput()
+    preferred_location  = MultipleValueField(
+        widget=forms.TextInput(),
+        required=True
     )
 
 
@@ -596,30 +596,38 @@ class UserPartnerPreferenceForm(forms.ModelForm):
             
         if commit:
             partner_obj.save()
-             # Save interests and hobbies
+
+            # Save interests and hobbies
             interests_hobbies  = self.cleaned_data.get('interests_hobbies', [])
             if interests_hobbies:
+                # Lists to store interests and hobbies objects
+                interest_objs = []
+                hobby_objs = []
 
-                int_hob_objs = Interest_and_Hobbie.objects.filter(name__in=interests_hobbies)
-                partner_obj.interests_hobbies.set(int_hob_objs)
+                for item in interests_hobbies:
+                    
+                    # Check if the item is an interest
+                    interest = Interests.objects.filter(interest=item).first()  # Using .first() to avoid multiple results
+                    if interest:
+                        interest_objs.append(interest)
+                    else:
+                        # Check if the item is a hobby
+                        hobby = Hobbies.objects.filter(hobby=item).first()
+                        if hobby:
+                            hobby_objs.append(hobby)
+
+                # Set interests and hobbies if any were found
+                if interest_objs:
+                    partner_obj.interests.set(interest_objs)
+
+                if hobby_objs:
+                    partner_obj.hobbies.set(hobby_objs)
 
             # Save preferred location
-            # location_list = location.objects.values_list('address_details', flat=True)
-            # final_result = [state for state in states if any(loc.get('state', '').lower() == state.lower() for loc in location_list)]
-
-
             preferred_location = self.cleaned_data.get('preferred_location', [])
             if preferred_location:
-                # Fetching the Location objects whose 'state_district' matches any in preferred_location
-                location_objs = Location.objects.filter(
-                    address_details__state_district__in=[state.lower() for state in preferred_location]
-                )
-                
-                print(location_objs, 'filtered locations')  # You can inspect the actual Location objects being matched
-                
-                # Setting the preferred_location with the actual Location instances
-                partner_obj.preferred_location.set(location_objs)
-
+                for location in preferred_location:
+                    Preferred_location.objects.create(user=partner_obj, location_name = location)
 
             # Save education level
             education_level = self.cleaned_data.get('education_level',[])
@@ -637,25 +645,3 @@ class UserPartnerPreferenceForm(forms.ModelForm):
         
         return partner_obj
     
-    
-
-    # def save(self, commit=True):
-    #     instance = super().save(commit=False)
-    #     instance.user = self.user
-        
-    #     if commit:
-    #         instance.save()
-    #         self.save_m2m()  # Save many-to-many relationships (like preferred_location, interests_hobbies, etc.)
-        
-    #     return instance
-        # Try saving and catch validation errors
-        # try:
-        #     if commit:
-        #         instance.save()
-        #         self.save_m2m()  # Save many-to-many relationships
-        # except ValueError as e:
-        #     print(f"Error during save: {e}")  # Log the error
-        #     raise
-
-        # return instance
-
