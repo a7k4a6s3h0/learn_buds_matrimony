@@ -66,8 +66,6 @@ class Interests(models.Model):
     def __str__(self):
         return f"Interest: {self.interest}"
 
-
-
 class Location(models.Model):
     longitude = models.FloatField()
     latitude = models.FloatField()
@@ -94,7 +92,7 @@ class UserPersonalDetails(models.Model):
     interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
-    profile_pic = models.ImageField(upload_to='images/', default='user-default-pic/default_pic.png')
+    profile_pic = models.ImageField(upload_to='images/', default='images/default_pic.png')
     short_video = models.FileField(upload_to='videos/', null=True, blank=True)
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
