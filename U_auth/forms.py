@@ -525,17 +525,137 @@ class AdditionalDetailsForm(forms.ModelForm):
     
 
 
-
 class UserPartnerPreferenceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        # Capture the user instance passed via kwargs
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
+
+    interests_hobbies  = MultipleValueField(
+        widget=forms.Textarea(),
+        required=True
+       
+    )
+
+    preferred_location  = forms.CharField(
+        required=True,
+        widget=forms.TextInput()
+    )
+
+
+    education_level = MultipleValueField(
+        widget=forms.TextInput(),
+        required=True
+    )
+
+
+    lifestyle_choices = MultipleValueField(
+        widget=forms.TextInput(),
+        required=True
+    )
+
+
     class Meta:
         model = PartnerPreference
-        fields = ('age_min', 'age_max', 'preferred_gender', 'preferred_location', 'interests_hobbies', 'education_level', 'height_min',
-                  'height_max', 'weight_min', 'weight_max', 'lifestyle_choices', 'religion', 'occupation' )
+        fields = ('age_min', 'age_max', 'preferred_gender',
+                  'height_min', 'height_max', 'weight_min', 'weight_max','religion', 'occupation')
+
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Validate age_min and age_max
+        age_min = cleaned_data.get('age_min')
+        age_max = cleaned_data.get('age_max')
+        if age_min is None or age_max is None:
+            raise forms.ValidationError("Age range is required.")
+        if age_min < 18:
+            raise forms.ValidationError("Minimum age must be at least 18 years old.")
+        if age_min > age_max:
+            raise forms.ValidationError("Minimum age cannot be greater than maximum age.")
+        
+        # Validate height and weight ranges
+        height_min = cleaned_data.get('height_min')
+        height_max = cleaned_data.get('height_max')
+        if height_min > height_max:
+            raise forms.ValidationError("Minimum height cannot be greater than maximum height.")
+
+        weight_min = cleaned_data.get('weight_min')
+        weight_max = cleaned_data.get('weight_max')
+        if weight_min > weight_max:
+            raise forms.ValidationError("Minimum weight cannot be greater than maximum weight.")
+        
+        return cleaned_data
+
+    def save(self, commit : bool) -> Any:
+        partner_obj =  super().save(commit=False)
+        # Assign the user if it's available
+        if self.user:
+            partner_obj.user = self.user
+            
+        if commit:
+            partner_obj.save()
+             # Save interests and hobbies
+            interests_hobbies  = self.cleaned_data.get('interests_hobbies', [])
+            if interests_hobbies:
+
+                int_hob_objs = Interest_and_Hobbie.objects.filter(name__in=interests_hobbies)
+                partner_obj.interests_hobbies.set(int_hob_objs)
+
+            # Save preferred location
+            # location_list = location.objects.values_list('address_details', flat=True)
+            # final_result = [state for state in states if any(loc.get('state', '').lower() == state.lower() for loc in location_list)]
+
+
+            preferred_location = self.cleaned_data.get('preferred_location', [])
+            if preferred_location:
+                # Fetching the Location objects whose 'state_district' matches any in preferred_location
+                location_objs = Location.objects.filter(
+                    address_details__state_district__in=[state.lower() for state in preferred_location]
+                )
+                
+                print(location_objs, 'filtered locations')  # You can inspect the actual Location objects being matched
+                
+                # Setting the preferred_location with the actual Location instances
+                partner_obj.preferred_location.set(location_objs)
+
+
+            # Save education level
+            education_level = self.cleaned_data.get('education_level',[])
+            if education_level:
+
+                education_objs = Qualifications.objects.filter(qualification__in=education_level)
+                partner_obj.education_level.set(education_objs)
+
+            # Save lifestyle choice
+            lifestyle_choices = self.cleaned_data.get('lifestyle_choices',[])
+            if lifestyle_choices:
+
+                lifestyle_objs = LifestyleChoice.objects.filter(name__in=lifestyle_choices)
+                partner_obj.lifestyle_choices.set(lifestyle_objs)
+        
+        return partner_obj
     
     
+
+    # def save(self, commit=True):
+    #     instance = super().save(commit=False)
+    #     instance.user = self.user
+        
+    #     if commit:
+    #         instance.save()
+    #         self.save_m2m()  # Save many-to-many relationships (like preferred_location, interests_hobbies, etc.)
+        
+    #     return instance
+        # Try saving and catch validation errors
+        # try:
+        #     if commit:
+        #         instance.save()
+        #         self.save_m2m()  # Save many-to-many relationships
+        # except ValueError as e:
+        #     print(f"Error during save: {e}")  # Log the error
+        #     raise
+
+        # return instance
+

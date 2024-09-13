@@ -900,10 +900,10 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         print(kwargs,"datas............!!!!!!!!!!!!!!11")
         return kwargs
     
-    def form_invalid(self, form: Any) -> HttpResponse:
-        details = form.save()
+    def form_valid(self, form: Any) -> HttpResponse:
+        details = form.save(commit = True)
         print(details)
-        return super().form_invalid(form)
+        return super().form_valid(form)
     
 
     def get_success_url(self) -> str:
