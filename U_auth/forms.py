@@ -337,6 +337,7 @@ class UserPersonalDetailsForm(forms.ModelForm):
         return cleaned_data
         
     def save(self, commit: bool = True) -> Any:
+        """Save the form data to the database."""
         try:
             # Access the user from the form instance
             user = self.user
@@ -349,12 +350,14 @@ class UserPersonalDetailsForm(forms.ModelForm):
                 dob=self.cleaned_data['dob'],
                 smoking_habits=self.cleaned_data['smoking_habits'],
                 drinking_habits=self.cleaned_data['drinking_habits'],
-                profile_pic=self.files.get('profile_pic'),
                 short_video=self.files.get('short_video'),
                 is_employer=self.cleaned_data['is_employer'],
                 is_employee=self.cleaned_data['is_employee'],
                 is_jobseeker=self.cleaned_data['is_jobseeker']
             )
+            pic = self.files.get('profile_pic')
+            if pic:
+                datas.profile_pic = pic
 
             # Parse location
             locations = self.cleaned_data['location'].split(',')  # Split the single string into a list of lat and lng
@@ -381,9 +384,11 @@ class UserPersonalDetailsForm(forms.ModelForm):
                 datas.save()
 
                 # Handle interests
-                interests = self.cleaned_data.get('interests', [])
+                interests = self.cleaned_data.get('intrestes', [])
+                print(interests,"datas")
                 if interests:
                     interests_objects = Interests.objects.filter(interest__in=interests)
+                    print(interests_objects,"datas obj")
                     datas.interests.set(interests_objects)  # Assign the interests to the UserPersonalDetails instance
 
                 # Handle hobbies
