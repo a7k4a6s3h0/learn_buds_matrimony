@@ -194,17 +194,21 @@
   <div class="row chat-section" style="padding-top:10px;border-radius:20px;">
     <!-- Chat User View -->
     <div class="col-md-6 chat_userview">
+        
       <div class="inner">
         <h1 style="font-weight: bold; color: rgb(248, 247, 247)">
-          Prime Member
+          Choose Your plan
         </h1>
-        <span style="color: rgb(248, 247, 247); font-size: xx-large"
-          ><b>$79</b>/-month</span
-        >
+        <!-- <span style="color: rgb(248, 247, 247); font-size: xx-large"
+        ><b>$79</b>/-month</span -->
+        <!-- > -->
+        {% for details in  subscription_details %}
         <div class="col-md-12" style="margin-top: 3%">
+          <input type="checkbox" name="checkboxGroup" id="">
+          <input type="hidden" name="plan_type" id="type" value="{{details.plan_type}}">
           <span style="color: white; font-size: smaller">
             <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Daily Limits
+            {{details.plan_type}}
           </span>
           <p
             style="
@@ -217,84 +221,48 @@
               padding-top: 2%;
             "
           >
-            View up to 15 Profiles per Day<br />Send up to 15 Requests per Day
+          {% for info in details.sub_info.all %}
+            {{info.info}}<br>
+            {% endfor %}
           </p>
           <hr style="color: aliceblue" />
         </div>
-        <div class="col-md-12">
-          <span style="color: white; font-size: smaller">
-            <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Weekly Limits
-          </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View up to 90 Profiles per Week<br />Send up to 90 Requests per Week
-          </p>
-          <hr style="color: aliceblue" />
-        </div>
-        <div class="col-md-12">
-          <span style="color: white; font-size: smaller">
-            <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Monthly Limits
-          </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View up to 300 Profiles per Month<br />Send up to 300 Requests per
-            Month
-          </p>
-          <hr style="color: aliceblue" />
-        </div>
-        <div class="col-md-12">
-          <span style="color: white; font-size: smaller">
-            <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Premium Limits
-          </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View Profiles Who Shortlisted You<br />Unlock Unlimited Messages<br />Unlock
-            Shortlisted Page<br />Short & filter Profiles
-          </p>
-          <hr style="color: aliceblue" />
+
+        {% endfor %}
+
           <div
             class="col-md-12"
             style="display: flex; justify-content: center; margin-top: 0%"
           >
-            <a href="{% url 'addpayment' %}" class="btn text-center" id="btn1"
+            <a href="{% url 'addpayment' %}?next={{ request.path }}" class="btn text-center" id="btn1"
               >Subscribe</a
             >
           </div>
-        </div>
+        </div> 
+
       </div>
+      
     </div>
   </div>
 </div>
 {% endblock content %} 
 {% block footer %}{% endblock footer %} 
-{% block scripts%} {% endblock scripts %}
+{% block scripts%}
+<script>
+  // Select all checkboxes with the name 'checkboxGroup'
+const checkboxes = document.querySelectorAll('input[name="checkboxGroup"]');
+
+// Add event listeners to all checkboxes
+checkboxes.forEach((checkbox) => {
+  checkbox.addEventListener('click', function () {
+    // Uncheck all checkboxes except the one that was clicked
+    checkboxes.forEach((cb) => {
+      if (cb !== this) {
+        cb.checked = false;
+      }
+    });
+  });
+});
+
+</script>
+{% endblock scripts %}

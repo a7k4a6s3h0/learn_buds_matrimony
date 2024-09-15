@@ -1,11 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>{{payment_details.user.username}}</p>
-</body>
-</html>
+{% extends "base_files/base.html" %}
+
+{% load static %}
+
+{% block meta %}{% endblock meta %}
+
+{% block title %}Addcard{% endblock title %}
+
+{% block style %}
+
+
+{% endblock style %}
+
+{% block content %} 
+
+
+<div class="container">
+    <div class="row">
+        {% for details in payment_details %}
+        <div class="col-md-12">
+            <div class="card text-center mt-5">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Your {{details.payment_type}} Payment Details</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <a href="#" class="btn btn-primary">see invoice</a>
+                  <a href="#" class="btn btn-primary"><i class="fa-solid fa-down-long"></i>&nbsp;Download invoice</a>
+                </div>
+                <div class="card-footer text-muted">
+                  {{details.created_at}}
+                </div>
+              </div>
+
+        </div>
+        {% endfor %}                                 
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+{% block scripts %}
+
+{% endblock scripts %}
