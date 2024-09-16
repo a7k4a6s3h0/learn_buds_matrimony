@@ -886,7 +886,6 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         for location in locations_obj:
             if location.address_details['state_district'] not in locations_list :
                 locations_list.append(location.address_details['state_district'])
-        print(interst_hobbies_list, qualification_list, locations_list)
         context['interest_hobbies_list'] = interst_hobbies_list
         context['qualifications_list'] = qualification_list
         context['location_list'] = locations_list
@@ -900,12 +899,12 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         print(kwargs,"datas............!!!!!!!!!!!!!!11")
         return kwargs
     
-    def form_invalid(self, form: Any) -> HttpResponse:
-        details = form.save()
-        print(details)
-        return super().form_invalid(form)
+    def form_valid(self, form: Any) -> HttpResponse:
+        details = form.save(commit = True)
+        print(details,"details............!!!!!!!!!!!!!!11")
+        messages.success(self.request, "Data sucessfully Updated..!!")
+        return super().form_valid(form)
     
 
     def get_success_url(self) -> str:
-        return redirect('privacy_setting_sec')
-
+        return reverse('privacy_setting_sec')  

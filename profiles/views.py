@@ -161,7 +161,6 @@ class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
 class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
     def post (self, request, *args, **kwargs):
         interest_request = get_object_or_404(InterestRequest, sender= request.user, id=self.kwargs['pk'])
-
         try:
             interest_request.delete()
             messages.success(request,"Interest request deleted successfully!")
@@ -169,8 +168,6 @@ class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
             messages.error(request, f"Failed to delete interest request: {str(e)}")
         return redirect(reverse('sented_request'))
 
-
-#shortlist view
 class ShortlistView(LoginRequiredMixin, ListView):
     model = Shortlist
     template_name = 'shortlist.html'
