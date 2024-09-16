@@ -30,11 +30,11 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="cardName" class="form-label">Plan</label>
-      <input type="text" class="form-control" id="cardName" />
+      <input type="text" class="form-control" id="cardName" readonly value='{{plan}}' />
     </div>
     <div class="mb-3">
       <label for="cardNumber" class="form-label">Amount</label>
-      <input type="number" name="amount" class="form-control" id="cardName" />
+      <input type="number" name="amount" class="form-control" id="cardName" readonly value='{{amount}}'/>
     </div>
     <div class="mb-3">
       <div class="scan-card" id="card">
@@ -64,14 +64,20 @@
         method: "POST",
         body: new FormData(this),
       })
-        .then((res) => res.json())
+      .then((res) => {
+        // Log the raw response object
+        console.log("Raw response:", res);
+        return res.json(); // Parse the response to JSON
+        })
         .then((data) => {
+          console.log(data,"data")
           var options = {
             key: data.razorpay_key_id,
             amount: data.amount,
             currency: "INR",
             order_id: data.razorpay_order_id,
             handler: function (response) {
+              console.log(response,"ooooooooo");
               fetch("{% url 'payment-callback' %}", {
                 method: "POST",
                 headers: {
@@ -84,7 +90,8 @@
                   razorpay_signature: response.razorpay_signature,
                 }),
               }).then((response) => {
-                window.location.href = "{% url 'payment-success' %}";
+                console.log(response,"last response")
+                // window.location.href = "{% url 'payment-success' %}";
               });
             },
             "theme": {

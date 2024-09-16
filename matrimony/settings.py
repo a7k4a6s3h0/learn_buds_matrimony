@@ -162,6 +162,10 @@ SOCIALACCOUNT_PROVIDERS = {
 # # settings.py
 # SOCIALACCOUNT_ADAPTER = 'U_auth.custom_adapter.CustomSocialAccountAdapter'
 
+# settings.py
+SESSION_COOKIE_AGE = 60  # Session will expire in 1 minute
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

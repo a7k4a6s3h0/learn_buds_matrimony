@@ -901,7 +901,8 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
     
     def form_valid(self, form: Any) -> HttpResponse:
         details = form.save(commit = True)
-        print(details)
+        print(details,"details............!!!!!!!!!!!!!!11")
+        messages.success(self.request, "Data sucessfully Updated..!!")
         return super().form_valid(form)
     
 
