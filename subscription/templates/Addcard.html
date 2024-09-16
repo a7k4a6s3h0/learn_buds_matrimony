@@ -30,7 +30,7 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="cardName" class="form-label">Plan</label>
-      <input type="text" class="form-control" id="cardName" readonly value='{{plan}}' />
+      <input type="text" class="form-control" id="cardName" name='plan_type' readonly value='{{plan}}' />
     </div>
     <div class="mb-3">
       <label for="cardNumber" class="form-label">Amount</label>
@@ -56,8 +56,42 @@
       Pay
     </button>
   </form>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" style="backdrop-filter: blur(10px);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        {% if exception %}
+        {{exception}}
+        {% else %}
+        {{status}}<br>
+        You can see Your payment DEtails by clicking "go to payment page" or go to where you come
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">go to Home</button>
+        <a href="{% url 'payment-details' %}" class="btn btn-primary">Go to payment Page</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
+
+    function show_popup(){
+      var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+      myModal.show();
+    }
+
     document.querySelector("#payment-form").onsubmit = function (e) {
       e.preventDefault();
       fetch("{% url 'payment' %}", {
@@ -91,7 +125,8 @@
                 }),
               }).then((response) => {
                 console.log(response,"last response")
-                // window.location.href = "{% url 'payment-success' %}";
+                // window.location.href = "";
+                show_popup()
               });
             },
             "theme": {
@@ -102,6 +137,10 @@
           rzp1.open();
         });
     };
+
+
+
+
   </script>
 
   {% endblock content %}

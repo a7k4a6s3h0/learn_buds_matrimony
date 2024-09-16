@@ -14,19 +14,21 @@
 {% block content %} 
 
 
-<div class="container">
+<div class="container-fluid h-100" style="background-color:rgb(80, 1, 80);">
     <div class="row">
         {% for details in payment_details %}
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="card text-center mt-5">
                 <div class="card-header">
-                  Featured
+                  {{details.subscription_plan.plan_type}} plan
                 </div>
                 <div class="card-body">
                   <h5 class="card-title">Your {{details.payment_type}} Payment Details</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <p class="card-text">Your Plan will expried in {{details.subscription_plan.end_date}}</p>
                   <a href="{% url 'invoice' %}" target="_blank" class="btn btn-primary">see invoice</a>
-                  <a href="#" class="btn btn-primary"><i class="fa-solid fa-down-long"></i>&nbsp;Download invoice</a>
+                  <a href="{% url 'payment-datas' details.id %}" class="btn btn-primary">
+                    <i class="fa-solid fa-down-long"></i>&nbsp;Download invoice
+                </a>
                 </div>
                 <div class="card-footer text-muted">
                   {{details.created_at}}
