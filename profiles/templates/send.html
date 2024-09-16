@@ -241,9 +241,10 @@
                                 <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 <form method="post"
                                       action="{% url 'delete_request' pk=request.id %}"
+                                      class="delete-request-form"
                                       style="display: inline">
                                     {% csrf_token %}
-                                    <button class="btn cross_icon">
+                                    <button class="btn ">
                                         <span style="font-size: 25px;">
                                             <i class="fa fa-times" aria-hidden="true"></i>
                                         </span>
@@ -320,12 +321,52 @@
         }
     });
     
-    </script>
-    {% if messages %}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                {% for message in messages %}swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");{% endfor %}
+    $(document).ready(function() {
+        // Function to handle form submission with confirmation
+        function handleDeleteForm(formElement) {
+            Swal.fire({
+                title: "Delete Request",
+                text: "Are you sure you want to delete this request?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form if confirmed
+                    formElement.off('submit').submit();
+                } else {
+                    Swal.fire(
+                        'Cancelled',
+                        'The request was not deleted.',
+                        'info'
+                    );
+                }
             });
-        </script>
-    {% endif %}
+        }
+    
+        // Handle delete request form submission
+        $('.delete-request-form').on('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting
+            handleDeleteForm($(this));  // Trigger the confirmation dialog
+        });
+    });
+    
+    // SweetAlert2 for Django messages
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    title: "{{ message.tags|title }}",
+                    text: "{{ message|escapejs }}",
+                    icon: "{{ message.tags }}",
+                    confirmButtonText: "OK"
+                });
+            {% endfor %}
+        {% endif %}
+    });
+    
+    </script>
+    
 {% endblock scripts %}
