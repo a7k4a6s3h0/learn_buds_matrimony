@@ -1,3 +1,5 @@
+import json
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
 #profile display imports :
@@ -64,6 +66,7 @@ class SentedRequestView(RedirectNotAuthenticatedUserMixin,ListView):
     model = InterestRequest
     template_name = 'send.html'
     context_object_name = 'sent_requests'
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         queryset = InterestRequest.objects.filter(sender=self.request.user, status="pending").order_by("-created_at")
@@ -111,6 +114,7 @@ class AcceptedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
     model = InterestRequest
     template_name = 'accept.html'
     context_object_name = 'accepted_requests'
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         queryset = InterestRequest.objects.filter(
@@ -118,7 +122,6 @@ class AcceptedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
             Q(receiver=self.request.user, status='accepted')
         )
         search_query = self.request.GET.get('search')
-        print(search_query)
         if search_query:
             queryset = queryset.filter(
                 Q(sender__username__icontains=search_query) |
@@ -128,17 +131,19 @@ class AcceptedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
                 Q(receiver__first_name__icontains=search_query) |
                 Q(receiver__user_details__bio__icontains=search_query)
             )
-        return queryset
+        return queryset.distinct()
+
 
 class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
     model = InterestRequest
     template_name = 'reject.html'
     context_object_name = 'rejected_requests'
+    ordering = ["-created_at"]
 
     def get_queryset(self):
         queryset = InterestRequest.objects.filter(
-            Q(sender=self.request.user, status='accepted')|
-            Q(receiver=self.request.user, status='accepted')
+            Q(sender=self.request.user, status='rejected')|
+            Q(receiver=self.request.user, status='rejected')
         )
         search_query = self.request.GET.get('search')
         print(search_query)
@@ -152,6 +157,7 @@ class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
                 Q(receiver__user_details__bio__icontains=search_query)
             )
         return queryset
+    
 class DeleteRequestView(RedirectNotAuthenticatedUserMixin,View):
     def post (self, request, *args, **kwargs):
         interest_request = get_object_or_404(InterestRequest, sender= request.user, id=self.kwargs['pk'])
