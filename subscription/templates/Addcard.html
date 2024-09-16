@@ -30,11 +30,11 @@
     {% csrf_token %}
     <div class="mb-3">
       <label for="cardName" class="form-label">Plan</label>
-      <input type="text" class="form-control" id="cardName" />
+      <input type="text" class="form-control" id="cardName" readonly value='{{plan}}' />
     </div>
     <div class="mb-3">
       <label for="cardNumber" class="form-label">Amount</label>
-      <input type="number" name="amount" class="form-control" id="cardName" />
+      <input type="number" name="amount" class="form-control" id="cardName" readonly value='{{amount}}'/>
     </div>
     <div class="mb-3">
       <div class="scan-card" id="card">

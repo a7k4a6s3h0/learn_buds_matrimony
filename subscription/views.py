@@ -1,14 +1,17 @@
 # views.py
+import django.contrib
 from typing import Any
 from urllib import request
 
 from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
+from django.shortcuts import redirect, render
 import razorpay
 from django.conf import settings
 from django.views.generic import FormView, TemplateView
 from django.urls import reverse_lazy
 from .forms import PaymentForm
+from django.contrib import messages
 from .models import Payment
 from django.urls import reverse
 
@@ -21,6 +24,41 @@ class PaymentView(RedirectNotAuthenticatedUserMixin,FormView):
     template_name = 'Addcard.html'
     form_class = PaymentForm
     success_url = reverse_lazy('payment-success')
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+ 
+        plan = request.GET.get('plan_type', None)
+        print(plan, "plan...............>>!!!!!!!!!!!!!!")
+        
+        # Store the selected plan in session
+        if not request.session.get('plan_type'):
+            request.session['plan_type'] = plan
+        
+        if plan:
+            context = {
+                'status': HTTPStatus.OK,
+                'redirect': True,
+                'redirect_url': 'pay'
+            }
+            return JsonResponse(context)
+        
+        try:
+            # Get the plan from session if it exists
+            session_plan = request.session.get('plan_type', None)
+            print(session_plan,"ooooooooooooooooooooooooo")
+            subscription = Subscription.objects.get(plan_type=session_plan)
+            
+            context = {
+                'plan': subscription.plan_type,
+                'amount': subscription.price
+            }
+            return self.render_to_response(context)
+        
+        except Subscription.DoesNotExist:
+            # If subscription does not exist, show an error and redirect
+            messages.error(request, "Choose a Plan...!!!")
+            return redirect(reverse('subscribe'))  # Redirects to the subscription page
+        
 
     def form_valid(self, form):
         # Get the amount entered by the user
@@ -42,7 +80,7 @@ class PaymentView(RedirectNotAuthenticatedUserMixin,FormView):
         payment = Payment.objects.create(
             user = self.request.user,
             payment_type = 'razorpay',
-            subscription_plan = Subscription.objects.get(id=1),
+            subscription_plan = Subscription.objects.get(plan_type=self.request.session.pop('plan_type')),
             razorpay_order_id=razorpay_order['id'],
             amount=form.cleaned_data['amount'],
             status='created'
@@ -117,8 +155,6 @@ class SubscriptionView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
         subscription_details = Subscription.objects.all()
-        for su in subscription_details:
-            print(su.sub_info.all())
         context['subscription_details'] = subscription_details
 
         return context
@@ -132,4 +168,7 @@ class SubscriptionView(TemplateView):
 class AddPaymentView(TemplateView):
     template_name='AddPayment.html'
 
+
+class Invoice(TemplateView):
+    template_name='sample-invoice-converted.html'
     
