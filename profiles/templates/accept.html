@@ -205,30 +205,30 @@
     </div>
 {% endblock header %}
 {% block content %}
-<div class="container-fluid bg-dark">
-    <div class="row chat-section" style="padding-top: 80px;">
-        <!-- Chat User View -->
-        <div class="col-md-6 chat_userview">
-            <div class="menu-icon">
-                <h3 class="match-message">Peoples</h3>
-                <nav class="navbar navbar-light">
-                    <form class="form-inline" method="GET" id="searchForm">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">@</span>
+    <div class="container-fluid bg-dark">
+        <div class="row chat-section" style="padding-top: 80px;">
+            <!-- Chat User View -->
+            <div class="col-md-6 chat_userview">
+                <div class="menu-icon">
+                    <h3 class="match-message">Peoples</h3>
+                    <nav class="navbar navbar-light">
+                        <form class="form-inline" method="GET" id="searchForm">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">@</span>
+                                </div>
+                                <input type="text"
+                                       id="search-input"
+                                       class="form-control"
+                                       name="search"
+                                       placeholder="Search"
+                                       aria-label="Search"
+                                       aria-describedby="basic-addon1">
                             </div>
-                            <input type="text"
-                                   id="search-input"
-                                   class="form-control"
-                                   name="search"
-                                   placeholder="Search"
-                                   aria-label="Search"
-                                   aria-describedby="basic-addon1">
-                        </div>
-                    </form>
-                </nav>
-            </div>
-            <div id="search-results">
+                        </form>
+                    </nav>
+                </div>
+                <div id="search-results"></div>
                 {% if accepted_requests %}
                     {% for request in accepted_requests %}
                         <div class="request-item">
@@ -280,18 +280,17 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                        <div class="text-white">Currently no requests accepted.</div>
+                    <div class="text-white">Currently no requests accepted.</div>
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
         </div>
     </div>
-</div>
 {% endblock content %}
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
-<script>
+    <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('search-input');
         const searchResults = document.getElementById('search-results');
@@ -328,13 +327,24 @@
                 }
             });
     
-            // If no items match and the query is not empty, show the "no results" message
+            // Handle "no results" message
             if (!hasVisibleItems && query !== '') {
-                searchResults.innerHTML = '<div class="text-white">No matching requests found.</div>';
+                // Show "no results" message if there are no visible items
+                if (!searchResults.querySelector('.no-results')) {
+                    const noResultsMessage = document.createElement('div');
+                    noResultsMessage.classList.add('no-results', 'text-white');
+                    noResultsMessage.textContent = 'No matching requests found.';
+                    searchResults.appendChild(noResultsMessage);
+                }
+            } else {
+                // Remove "no results" message if there are visible items
+                const noResultsMessage = searchResults.querySelector('.no-results');
+                if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
             }
         }
     });
     
     </script>
-    
 {% endblock scripts %}

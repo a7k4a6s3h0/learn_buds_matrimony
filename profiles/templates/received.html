@@ -212,11 +212,12 @@
                             </div>
                         </form>
                     </nav>
-                    <div id="search-results" class="mt-2 list-group"></div>
                 </div>
+                <div id="search-results"></div>
                 {% if received_requests %}
                     {% for request in received_requests %}
-                        {% comment %} Shared HTML for both search and sent requests  {% endcomment %}
+                    <div class="request-item">
+                        {% comment %} Shared HTML for both search and Received requests  {% endcomment %}
                         <div class="view_user">
                             <div class="view_user_img">
                                 <a href="{% url 'profile' request.sender.id %}">
@@ -256,16 +257,11 @@
                             </div>
                             <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                         </div>
+                    </div>
                     {% endfor %}
                 {% else %}
-                    {% if request.GET.search %}
-                        {% comment %} Message when no search results are found  {% endcomment %}
-                        <div class="text-white">No matching requests found.</div>
-                    {% else %}
-                        {% comment %} Message when no received requests are available {% endcomment %}
                         <div class="text-white">Currently no requests received.</div>
                     {% endif %}
-                {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
         </div>
@@ -275,6 +271,61 @@
 {% endblock footer %}
 {% block scripts %}
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            const requestItems = Array.from(document.querySelectorAll('.request-item'));  // Store as an array
+        
+            // Clear search input on page load
+            searchInput.value = '';
+        
+            // Event listener to prevent form submission
+            searchInput.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();  // Prevent the form from submitting
+                    filterResults(searchInput.value.toLowerCase());
+                }
+            });
+        
+            // Listener for input changes
+            searchInput.addEventListener('input', function () {
+                filterResults(searchInput.value.toLowerCase());
+            });
+        
+            function filterResults(query) {
+                let hasVisibleItems = false;  // Track if any item is visible
+        
+                // Loop through each request item and adjust visibility based on the search term
+                requestItems.forEach(item => {
+                    const textContent = item.textContent.toLowerCase();
+        
+                    if (textContent.includes(query)) {
+                        item.style.display = '';  // Show the item
+                        hasVisibleItems = true;   // At least one item is visible
+                    } else {
+                        item.style.display = 'none';  // Hide the item
+                    }
+                });
+        
+                // Handle "no results" message
+                if (!hasVisibleItems && query !== '') {
+                    // Show "no results" message if there are no visible items
+                    if (!searchResults.querySelector('.no-results')) {
+                        const noResultsMessage = document.createElement('div');
+                        noResultsMessage.classList.add('no-results', 'text-white');
+                        noResultsMessage.textContent = 'No matching requests found.';
+                        searchResults.appendChild(noResultsMessage);
+                    }
+                } else {
+                    // Remove "no results" message if there are visible items
+                    const noResultsMessage = searchResults.querySelector('.no-results');
+                    if (noResultsMessage) {
+                        noResultsMessage.remove();
+                    }
+                }
+            }
+        });
+
     $(document).ready(function() {
         // Function to handle form submission with confirmation
         function handleRequestForm(formElement, action) {
