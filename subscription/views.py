@@ -5,7 +5,7 @@ from urllib import request
 
 from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 import razorpay
 from django.conf import settings
 from django.views.generic import FormView, TemplateView
@@ -14,11 +14,19 @@ from .forms import PaymentForm
 from django.contrib import messages
 from .models import Payment
 from django.urls import reverse
+from django.template.loader import get_template, render_to_string
+from xhtml2pdf import pisa
+from weasyprint import HTML
+import tempfile
 
 from matrimony_admin.models import Subscription, SubscriptionINFO
 
 from U_auth.permissions import RedirectNotAuthenticatedUserMixin
 from http import HTTPStatus
+
+
+
+'''In paymentview have logical issue in plan_type '''
 
 class PaymentView(RedirectNotAuthenticatedUserMixin,FormView):
     template_name = 'Addcard.html'
@@ -125,36 +133,57 @@ class PaymentCallbackView(RedirectNotAuthenticatedUserMixin,TemplateView):
             payment.status = HTTPStatus.OK
             payment.save()
             context = {'status': 'Payment Successful'}
-        except:
+
+        except Exception as e:
             payment.status = HTTPStatus.BAD_REQUEST
             payment.save()
-            context = {'status': 'Payment Failed'}
+            context = {'status': 'Payment Failed', 'exception': str(e)}
 
         print(context,"in PaymentCallbackView post method")
-        return self.render_to_response(context)
+        return self.render_to_response(self.get_context_data(context))
         # return reverse('')
     
-class PaymentSuccess(RedirectNotAuthenticatedUserMixin,TemplateView):
-    template_name='payment_success.html'
+class PaymentDetails(RedirectNotAuthenticatedUserMixin, TemplateView):
+    template_name = 'payment_details.html'
 
-    def get_context_data(self, **kwargs) -> dict[str, Any]:
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs) 
-        print("in context")
-        context["payment_details"] = Payment.objects.filter(user=self.request.user)
-        print(Payment.objects.filter(user=self.request.user))
-        # print(context)
+        # Fetch payment details for the user
+        context["payment_details"] = Payment.objects.filter(user=self.request.user).order_by('-created_at')
         return context
-    
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    def get(self, request, *args, **kwargs):
+        # Check if 'pay_id' is in the URL for PDF download
+        pay_id = kwargs.get('pay_id', None)
+        
+        if pay_id:
+            # Fetch specific payment
+            payment_details = get_object_or_404(Payment, id=pay_id, user=request.user)
+
+            # Render the HTML template
+            html_string = render_to_string('invoice_template.html', {'payment_details': payment_details})
+
+            # Create a temporary file to store the PDF
+            with tempfile.NamedTemporaryFile(delete=True) as output_file:
+                # Generate the PDF using WeasyPrint
+                HTML(string=html_string).write_pdf(output_file.name)
+
+                # Return the PDF as a downloadable response
+                response = HttpResponse(output_file.read(), content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+                return response
+        
+        # Render the payment details template if no 'pay_id' is provided
         return super().get(request, *args, **kwargs)
+
     
 class SubscriptionView(TemplateView):
     template_name='Subscribe.html'
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
-        subscription_details = Subscription.objects.all()
+        # subscription_details = Subscription.objects.all().order_by('-created_at')
+        subscription_details = Subscription.objects.filter(status='active').order_by('-created_at')
         context['subscription_details'] = subscription_details
 
         return context
@@ -170,5 +199,13 @@ class AddPaymentView(TemplateView):
 
 
 class Invoice(TemplateView):
-    template_name='sample-invoice-converted.html'
+    template_name='invoice_template.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        # Fetch specific payment
+        pay_id = 2
+        payment_details = get_object_or_404(Payment, id=pay_id, user=request.user)
+        context['payment_details'] = payment_details
+        return context
     
