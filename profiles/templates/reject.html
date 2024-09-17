@@ -184,67 +184,63 @@
                             </div>
                         </form>
                     </nav>
-                    <div id="search-results" class="mt-2 list-group"></div>
                 </div>
+                <div id="search-results"></div>
                 {% if rejected_requests %}
                     {% for request in rejected_requests %}
-                        {% if request.sender == user %}
-                            <div class="text-white">
-                                Sent
-                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
-                            </div>
-                            <div class="view_user">
-                                <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
-                                <div class="view_user_img">
-                                    <a href="{% url 'profile' request.receiver.id %}">
-                                        <img src="{{ request.receiver.user_details.profile_pic.url }}"
-                                             alt="Receiver Profile Picture"
-                                             width="50"
-                                             height="50">
-                                    </a>
+                        <div class="request-item">
+                            {% if request.sender == user %}
+                                <div class="text-white">
+                                    Sent
+                                    <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 </div>
-                                <div class="msg">
-                                    <a href="{% url 'profile' request.receiver.id %}">
-                                        <span style="text-transform: capitalize;  color: white; ">{{ request.receiver.username }}</span>
-                                    </a>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
-                                </div>
-                                <!-- </a> -->
-                            </div>
-                        {% else %}
-                            <div class="text-white">
-                                Received
-                                <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
-                            </div>
-                            <div class="view_user">
-                                <a href="{% url 'profile' request.sender.id %}">
+                                <div class="view_user">
+                                    <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                                     <div class="view_user_img">
-                                        <img src="{{ request.sender.user_details.profile_pic.url }}"
-                                             alt="Receiver Profile Picture"
-                                             width="50"
-                                             height="50">
-                                    </a>
+                                        <a href="{% url 'profile' request.receiver.id %}">
+                                            <img src="{{ request.receiver.user_details.profile_pic.url }}"
+                                                 alt="Receiver Profile Picture"
+                                                 width="50"
+                                                 height="50">
+                                        </a>
+                                    </div>
+                                    <div class="msg">
+                                        <a href="{% url 'profile' request.receiver.id %}">
+                                            <span style="text-transform: capitalize;  color: white; ">{{ request.receiver.username }}</span>
+                                        </a>
+                                        <br>
+                                        <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
+                                    </div>
+                                    <!-- </a> -->
                                 </div>
-                                <div class="msg">
+                            {% else %}
+                                <div class="text-white">
+                                    Received
+                                    <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
+                                </div>
+                                <div class="view_user">
                                     <a href="{% url 'profile' request.sender.id %}">
-                                        <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
-                                    </a>
-                                    <br>
-                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                                        <div class="view_user_img">
+                                            <img src="{{ request.sender.user_details.profile_pic.url }}"
+                                                 alt="Receiver Profile Picture"
+                                                 width="50"
+                                                 height="50">
+                                        </a>
+                                    </div>
+                                    <div class="msg">
+                                        <a href="{% url 'profile' request.sender.id %}">
+                                            <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
+                                        </a>
+                                        <br>
+                                        <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                                    </div>
+                                    <!-- </a> -->
                                 </div>
-                                <!-- </a> -->
-                            </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     {% endfor %}
                 {% else %}
-                    {% if request.GET.search %}
-                        {% comment %} Message when no search results are found  {% endcomment %}
-                        <div class="text-white">No matching requests found.</div>
-                    {% else %}
-                        {% comment %} Message when no rejected requests are available {% endcomment %}
-                        <div class="text-white">Currently no requests rejected.</div>
-                    {% endif %}
+                    <div class="text-white">Currently no requests rejected.</div>
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
@@ -254,4 +250,61 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const requestItems = Array.from(document.querySelectorAll('.request-item'));  // Store as an array
+    
+        // Clear search input on page load
+        searchInput.value = '';
+    
+        // Event listener to prevent form submission
+        searchInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // Prevent the form from submitting
+                filterResults(searchInput.value.toLowerCase());
+            }
+        });
+    
+        // Listener for input changes
+        searchInput.addEventListener('input', function () {
+            filterResults(searchInput.value.toLowerCase());
+        });
+    
+        function filterResults(query) {
+            let hasVisibleItems = false;  // Track if any item is visible
+    
+            // Loop through each request item and adjust visibility based on the search term
+            requestItems.forEach(item => {
+                const textContent = item.textContent.toLowerCase();
+    
+                if (textContent.includes(query)) {
+                    item.style.display = '';  // Show the item
+                    hasVisibleItems = true;   // At least one item is visible
+                } else {
+                    item.style.display = 'none';  // Hide the item
+                }
+            });
+    
+            // Handle "no results" message
+            if (!hasVisibleItems && query !== '') {
+                // Show "no results" message if there are no visible items
+                if (!searchResults.querySelector('.no-results')) {
+                    const noResultsMessage = document.createElement('div');
+                    noResultsMessage.classList.add('no-results', 'text-white');
+                    noResultsMessage.textContent = 'No matching requests found.';
+                    searchResults.appendChild(noResultsMessage);
+                }
+            } else {
+                // Remove "no results" message if there are visible items
+                const noResultsMessage = searchResults.querySelector('.no-results');
+                if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
+            }
+        }
+    });
+    
+    </script>
 {% endblock scripts %}
