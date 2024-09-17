@@ -215,10 +215,11 @@
                             </div>
                         </form>
                     </nav>
-                    <div id="search-results" class="mt-2 list-group"></div>
                 </div>
+                <div id="search-results" class="mt-2 list-group"></div>
                 {% if sent_requests %}
                     {% for request in sent_requests %}
+                    <div class="request-item">
                         <div class="view_user">
                             <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
@@ -240,26 +241,21 @@
                                 <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>
                                 <form method="post"
                                       action="{% url 'delete_request' pk=request.id %}"
+                                      class="delete-request-form"
                                       style="display: inline">
                                     {% csrf_token %}
-                                    <button class="btn cross_icon">
+                                    <button class="btn ">
                                         <span style="font-size: 25px;">
                                             <i class="fa fa-times" aria-hidden="true"></i>
                                         </span>
                                     </button>
                                 </form>
                             </div>
-                            <!-- </a> -->
                         </div>
+                    </div>
                     {% endfor %}
                 {% else %}
-                    {% if request.GET.search %}
-                        {% comment %} Message when no search results are found  {% endcomment %}
-                        <div class="text-white">No matching requests found.</div>
-                    {% else %}
-                        {% comment %} Message when no received requests are available {% endcomment %}
                         <div class="text-white">Currently no requests received.</div>
-                    {% endif %}
                 {% endif %}
                 <div class="footer_nav">{% include "widget/menu.html" %}</div>
             </div>
@@ -269,11 +265,108 @@
 {% block footer %}
 {% endblock footer %}
 {% block scripts %}
-    {% if messages %}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                {% for message in messages %}swal("Alert!", "{{ message|escapejs }}", "{{ message.tags }}");{% endfor %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const requestItems = Array.from(document.querySelectorAll('.request-item'));  // Store as an array
+    
+        // Clear search input on page load
+        searchInput.value = '';
+    
+        // Event listener to prevent form submission
+        searchInput.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();  // Prevent the form from submitting
+                filterResults(searchInput.value.toLowerCase());
+            }
+        });
+    
+        // Listener for input changes
+        searchInput.addEventListener('input', function () {
+            filterResults(searchInput.value.toLowerCase());
+        });
+    
+        function filterResults(query) {
+            let hasVisibleItems = false;  // Track if any item is visible
+    
+            // Loop through each request item and adjust visibility based on the search term
+            requestItems.forEach(item => {
+                const textContent = item.textContent.toLowerCase();
+    
+                if (textContent.includes(query)) {
+                    item.style.display = '';  // Show the item
+                    hasVisibleItems = true;   // At least one item is visible
+                } else {
+                    item.style.display = 'none';  // Hide the item
+                }
             });
-        </script>
-    {% endif %}
+    
+            // Handle "no results" message
+            if (!hasVisibleItems && query !== '') {
+                // Show "no results" message if there are no visible items
+                if (!searchResults.querySelector('.no-results')) {
+                    const noResultsMessage = document.createElement('div');
+                    noResultsMessage.classList.add('no-results', 'text-white');
+                    noResultsMessage.textContent = 'No matching requests found.';
+                    searchResults.appendChild(noResultsMessage);
+                }
+            } else {
+                // Remove "no results" message if there are visible items
+                const noResultsMessage = searchResults.querySelector('.no-results');
+                if (noResultsMessage) {
+                    noResultsMessage.remove();
+                }
+            }
+        }
+    });
+    
+    $(document).ready(function() {
+        // Function to handle form submission with confirmation
+        function handleDeleteForm(formElement) {
+            Swal.fire({
+                title: "Delete Request",
+                text: "Are you sure you want to delete this request?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form if confirmed
+                    formElement.off('submit').submit();
+                } else {
+                    Swal.fire(
+                        'Cancelled',
+                        'The request was not deleted.',
+                        'info'
+                    );
+                }
+            });
+        }
+    
+        // Handle delete request form submission
+        $('.delete-request-form').on('submit', function(event) {
+            event.preventDefault();  // Prevent the form from submitting
+            handleDeleteForm($(this));  // Trigger the confirmation dialog
+        });
+    });
+    
+    // SweetAlert2 for Django messages
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire({
+                    title: "{{ message.tags|title }}",
+                    text: "{{ message|escapejs }}",
+                    icon: "{{ message.tags }}",
+                    confirmButtonText: "OK"
+                });
+            {% endfor %}
+        {% endif %}
+    });
+    
+    </script>
+    
 {% endblock scripts %}

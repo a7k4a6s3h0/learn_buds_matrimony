@@ -8,7 +8,7 @@ from U_auth.models import UserPersonalDetails, costume_user
 class InterestRequest(models.Model):
     sender=models.ForeignKey(costume_user, related_name="sent_requests", on_delete=models.CASCADE)
     receiver=models.ForeignKey(costume_user, related_name="received_requests", on_delete=models.CASCADE)
-    created_at=models.DateField(auto_now_add=True)
+    created_at=models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=[
         ('pending', 'Pending'),
         ('accepted', 'Accepted'),
