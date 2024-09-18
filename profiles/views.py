@@ -31,13 +31,14 @@ class UserProfileView(TemplateView):
         if user_id:
             user = costume_user.objects.get(id=user_id)
             user_details = UserPersonalDetails.objects.get(user=user) 
+            job_details = Job_Details.objects.get(user=user)
             additional_details = AdditionalDetails.objects.get(user=user)
             pictures = Pictures.objects.filter(user=user_details)
             context['user'] = user
             context['user_details'] = user_details
             context['additional_details'] = additional_details
             context['pictures'] = pictures
-            context['user'] = user
+            context['job_details'] = job_details
             return context
 
 

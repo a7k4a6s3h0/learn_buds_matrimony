@@ -1,20 +1,13 @@
 {% extends "base_files/base.html" %}
-
 {% load static %}
 {% load custom_tags %}
-
 {% block meta %}
-
 {% endblock meta %}
-
 {% block link %}
-<link rel="stylesheet" href="{% static 'css/updated_moveablenav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/updated_moveablenav.css' %}">
 {% endblock link %}
-
 {% block style %}
-
-<style>
-
+    <style>
     .custom-container{
         background-color: rgb(27, 26, 26);
         display: flex;
@@ -233,7 +226,7 @@
         .carousel-container {
             position: relative;
             width: 100%;
-            height: auto;
+            height: 200%;
         }
 
         .carousel-item {
@@ -313,125 +306,125 @@
 
     }
 
-</style>
-
+    </style>
 {% endblock style %}
-
 {% block header %}
 {% endblock header %}
-
 {% block content %}
-<div class="container-fluid custom-container">
-    <div class="profile-container">
-        <div class="carousel-container">
-            <nav class="navbar-custom">
-                <div class="nav-left">
-                    <i class='fas fa-angle-left' style='font-size:24px'></i>
-                </div>
-                <div class="nav-right">
-                    <div class="distance"><i class='fas fa-location-arrow' style='font-size:18px'></i>2.5 km
+    <div class="container-fluid custom-container">
+        <div class="profile-container">
+            <div class="carousel-container">
+                <nav class="navbar-custom">
+                    <div class="nav-left">
+                        <i class='fas fa-angle-left' style='font-size:24px'></i>
                     </div>
-                </div>
-            </nav>
-
-            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img src="{{user_details.profile_pic.url}}" class="d-block img-fluid" alt="Profile Picture">
-                    </div>
-                    {% if pictures %}
-                        {% for photo in pictures %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img src="{{photo.photos.url}}" class="d-block img-fluid" alt="extra Picture">
+                    <div class="nav-right">
+                        <div class="distance">
+                            <i class='fas fa-location-arrow' style='font-size:18px'></i>2.5 km
                         </div>
-                        {% endfor %}
-                    {% endif %}
+                    </div>
+                </nav>
+                <div id="carouselExampleControls"
+                     class="carousel slide"
+                     data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ user_details.profile_pic.url }}"
+                                 class="d-block img-fluid"
+                                 alt="Profile Picture">
+                        </div>
+                        {% if pictures %}
+                            {% for photo in pictures %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ photo.photos.url }}"
+                                         class="d-block img-fluid"
+                                         alt="extra Picture">
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <button class="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#carouselExampleControls"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#carouselExampleControls"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-            
-            <div class="profile-name">
-                <label>
-                    <h2>{{ user.username }}</h2>
-                </label>
-                <label>
-                    <h4>{{ user.email }}</h4>
-                </label>
-                <button type="button" class="profile-button" data-mdb-ripple-init>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
-                        class="image-fluid" alt="">
-                    {{ user.is_online|yesno:"Online,Offline" }}
-                </button>
-            </div>
-
-            {% include "widget/updated_moveablenav.html" %}
-        </div>
-        
-        <div class="user_details">
-            <div class="nav_button">
-                <div class="but_1" id="button_1">
-                    <a href="#" onclick="showAbout()">About</a>
+                <div class="profile-name">
+                    <label>
+                        <h2>{{ user.username }}</h2>
+                    </label>
+                    <label>
+                        <h4>{{ user.email }}</h4>
+                    </label>
+                    <button type="button" class="profile-button" data-mdb-ripple-init>
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeGWA3wIXqIM-zGxxIQJ4h42ygmb4nYquSKQ&s"
+                             class="image-fluid"
+                             alt="">
+                        {{ user.is_online|yesno:"Online,Offline" }}
+                    </button>
                 </div>
-                <div class="but_2" id="button_2">
-                    <a href="#" onclick="showContact()">Contact</a>
-                </div>
+                {% include "widget/updated_moveablenav.html" %}
             </div>
-
-            <!-- About Section (default visible) -->
-            <div class="about_user mt-3 ps-2" id="about_section">
-                <label for="title" style="font-size:15px; font-weight: bold;">About : </label>
-                <p>{{ user_details.bio|default:"No details provided." }}</p>
-
-                <div class="interest ps-2">
-                    <label for="title" style="font-size:15px; font-weight: bold;">Interests : </label>
-                    <div class="interest_flex">
-                        {% for interest in user_details.interests.all %}
-                        <span>{{ interest.interest }}</span>
-                        {% endfor %}
+            <div class="user_details">
+                <div class="nav_button">
+                    <div class="but_1" id="button_1">
+                        <a href="#" onclick="showAbout()">About</a>
+                    </div>
+                    <div class="but_2" id="button_2">
+                        <a href="#" onclick="showContact()">Contact</a>
                     </div>
                 </div>
-
-                <div class="hobbies ps-2">
-                    <label for="title" style="font-size:15px; font-weight: bold;">Hobbies : </label>
-                    <div class="hobby_flex">
-                        {% for hobby in user_details.hobbies.all %}
-                        <span>{{ hobby.hobby }}</span>
-                        {% endfor %}
+                <!-- About Section (default visible) -->
+                <div class="about_user mt-3 ps-4" id="about_section">
+                    <label for="title" style="font-size:15px; font-weight: bold;">About :</label>
+                    <p>{{ user_details.bio|default:"No details provided." }}</p>
+                    <div class="interest ">
+                        <label for="title" style="font-size:15px; font-weight: bold;">Interests :</label>
+                        <div class="interest_flex">
+                            {% for interest in user_details.interests.all %}<span>{{ interest.interest }}</span>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="hobbies  mt-4">
+                        <label for="title" style="font-size:15px; font-weight: bold;">Hobbies :</label>
+                        <div class="interest_flex">
+                            {% for hobby in user_details.hobbies.all %}<span>{{ hobby.hobby }}</span>{% endfor %}
+                        </div>
+                    </div>
+                    <div class="mt-3 ">
+                        {% if job_details %}<p>Job: {{ job_details.job_title }}</p>{% endif %}
                     </div>
                 </div>
-            </div>
-
-            <!-- Contact Section (initially hidden) -->
-            <div class="about_user mt-3 ps-2" id="contact_section" style="display: none;">
-                <label for="title" style="font-size:15px; font-weight: bold;">Contact Info : </label>
-                <p>Address: {{ user_details.user_location.address_details.town}} ,{{ user_details.user_location.address_details.state}}</p>
-                <p>Phone: {{ user.phone }}</p>
-                <p>Email: {{ user.email }}</p>
-                <p>Marital Status: {{ additional_details.married_status|yesno:"Married,Not Married" }}</p>
-                <p>Annual Income: {{ additional_details.annual_income }}</p>
-                <p>Family Type: {{ additional_details.family_type }}</p>
-                <!-- Other contact-related details can be added here -->
+                <!-- Contact Section (initially hidden) -->
+                <div class="about_user mt-3 ps-2"
+                     id="contact_section"
+                     style="display: none">
+                    <label for="title" style="font-size:15px; font-weight: bold;">Contact Info :</label>
+                    <p>
+                        Address: {{ user_details.user_location.address_details.village }}, {{ user_details.user_location.address_details.county }} {{ user_details.user_location.address_details.state_district }},{{ user_details.user_location.address_details.state }}
+                    </p>
+                    <p>Phone: {{ user.phone }}</p>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Marital Status: {{ additional_details.married_status }}</p>
+                    <p>Annual Income: {{ additional_details.annual_income }}</p>
+                    <p>Family Type: {{ additional_details.family_type }}</p>
+                    <!-- Other contact-related details can be added here -->
+                </div>
             </div>
         </div>
-    </div>
-{% endblock %}
-
-
-{% block footer %}
-{% endblock footer %}
-
-{% block scripts %}
-<script>
+    {% endblock %}
+    {% block footer %}
+    {% endblock footer %}
+    {% block scripts %}
+        <script>
     // Ensure the DOM is fully loaded before attaching the event listeners
     document.addEventListener('DOMContentLoaded', function () {
     
@@ -486,9 +479,8 @@
         // Show the About section by default on page load
         showAbout();
     });
-</script>
-
-<script>
+        </script>
+        <script>
     $(document).ready(function() {
         // SweetAlert2 for add to shortlist confirmation
         $('form.add-to-shortlist').on('submit', function(event) {
@@ -558,5 +550,5 @@
         {% endfor %}
     });
     {% endif %}
-</script>
-{% endblock scripts %}
+        </script>
+    {% endblock scripts %}
