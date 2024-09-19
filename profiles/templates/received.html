@@ -153,6 +153,8 @@
         .msg {
             margin-left: 10px;
             color: white;
+            font-size: 15px;
+
         }
 
         .cross_icon{
@@ -233,7 +235,7 @@
                                         <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
                                     </a>
                                     <br>
-                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                                    <span style="text-transform: capitalize;">{{ request.sender.user_details.bio|truncatechars:15 }}</span>
                                 </div>
                                 <div>
                                     <form method="post"
