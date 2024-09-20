@@ -1,5 +1,79 @@
 {% extends "base_files/admin_base.html" %}
 {% load static %}
 {% block admin_content %}
-home
+    <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
+        <div class=" text">USERS</div>
+        <div class="user-card card">
+            <div class="card-body">hello user</div>
+        </div>
+        <div class="user-card card mt-3">
+            <div class="card-body">hello user</div>
+        </div>
+        <div class="user-card card mt-3">
+            <div class="card-body">hello user</div>
+        </div>
+        <div class="point-chart">
+            <canvas id="myChart"></canvas>
+        </div>
 {% endblock admin_content %}
+{% block admin_scripts %}
+    <script>
+    // Data for the chart
+    const data = {
+      labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
+      datasets: [
+        {
+          label: 'Dataset',
+          data: [65, -59, 80, 81, 56, 55], // You can generate or fetch data here
+          borderColor: 'rgba(255, 99, 132, 1)',  // Replace Utils.CHART_COLORS.red
+          backgroundColor: 'rgba(255, 99, 132, 0.5)', // Replace Utils.transparentize
+          pointStyle: 'circle',
+          pointRadius: 10,
+          pointHoverRadius: 15
+        }
+      ]
+    };
+
+    // Chart configuration
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
+          }
+        }
+      }
+    };
+
+    // Render the chart
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, config);
+
+    // Actions to change the point style dynamically
+    const actions = [
+      {
+        name: 'pointStyle: circle (default)',
+        handler: (chart) => {
+          chart.data.datasets.forEach(dataset => {
+            dataset.pointStyle = 'circle';
+          });
+          chart.update();
+        }
+      },
+      {
+        name: 'pointStyle: cross',
+        handler: (chart) => {
+          chart.data.datasets.forEach(dataset => {
+            dataset.pointStyle = 'cross';
+          });
+          chart.update();
+        }
+      },
+      // Add other handlers for different point styles...
+    ];
+    </script>
+{% endblock admin_scripts %}
