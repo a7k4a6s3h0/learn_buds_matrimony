@@ -1,0 +1,22 @@
+@media (min-width: 769px) {
+    .user-card {
+        Width: 292.5px; 
+        Height: 70px; 
+        Top: 20px ;
+        Left: 50px;
+        border-radius: 18px;
+    }
+
+    .text{
+            padding-top: 20px;
+            padding-left: 55px;
+    }
+
+    .point-chart {
+        width: 500px;
+        height: 400px;
+        left: 100px;
+        margin-top: -250px;
+        margin-left: 400px;
+    }
+}
