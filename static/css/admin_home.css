@@ -14,9 +14,7 @@
 
     .point-chart {
         width: 500px;
-        height: 400px;
-        left: 100px;
-        margin-top: -250px;
-        margin-left: 400px;
+        /* height: 400px; */
+        margin-left: -60px;
     }
 }
