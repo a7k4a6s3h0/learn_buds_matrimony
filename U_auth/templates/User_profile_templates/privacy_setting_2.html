@@ -44,7 +44,7 @@
 
   /* Container for chat users */
   .chat_userview {
-    height: calc(100vh - 80px);
+    /* height: calc(100vh - 80px); */
     background-color: #343a40;
     padding: 10px;
   }
@@ -83,6 +83,7 @@
 
   .location_flex{
     display: flex;
+    flex-direction: column;
 
   }
 
@@ -92,6 +93,7 @@
     flex-direction: column;
     gap: 25px;
     align-items: center;
+    justify-content: space-between;
 
   }
 
@@ -321,7 +323,7 @@
 
   .add-item-btn {
       display: inline-block;
-      width: 95px;
+      /* width: 95px; */
       height: fit-content;
       padding: 5px 10px;
       margin: 5px;
@@ -457,7 +459,7 @@
 </div>
 {% endblock header %} 
 {% block content %}
-<div class="container-fluid bg-dark">
+<div class="container-fluid bg-dark vh-100">
   <div class="row chat-section" style="padding-top: 80px">
     <!-- Chat User View -->
     <div class="col-md-6 chat_userview">
@@ -744,7 +746,7 @@
           addElementsDiv: document.getElementById('add_elements_interest_hobbies'),
           button: document.getElementById('show_all_interest_hobbies'),
           items: {{ interest_hobbies_list|default:"[]"|safe }},
-          selectedItems: JSON.parse(localStorage.getItem('selectedItemsInterestHobbies')) || [],
+          selectedItems: JSON.parse(localStorage.getItem('interest_hobbies')) || [],
           inputField: document.getElementById('interest_hobbies_input')
       },
       qualifications: {
@@ -752,7 +754,7 @@
           addElementsDiv: document.getElementById('add_elements_qualifications'),
           button: document.getElementById('show_all_qualifications'),
           items: {{ qualifications_list|default:"[]"|safe }},
-          selectedItems: JSON.parse(localStorage.getItem('selectedItemsQualifications')) || [],
+          selectedItems: JSON.parse(localStorage.getItem('qualification')) || [],
           inputField: document.getElementById('qualification_input')
       },
       location: {
@@ -760,7 +762,7 @@
           addElementsDiv: document.getElementById('add_elements_location'),
           button: document.getElementById('show_all_location'),
           items: {{ location_list|default:"[]"|safe }},
-          selectedItems: JSON.parse(localStorage.getItem('selectedItemsLocation')) || [],
+          selectedItems: JSON.parse(localStorage.getItem('location')) || [],
           inputField: document.getElementById('location_input')
       },
       LifestyleChoice: {
@@ -768,13 +770,22 @@
         addElementsDiv: document.getElementById('add_elements_LifestyleChoice'),
         button: document.getElementById('show_all_LifestyleChoice'),
         items: {{ LifestyleChoice_list|default:"[]"|safe }},
-        selectedItems: JSON.parse(localStorage.getItem('selectedItemsLocation')) || [],
+        selectedItems: JSON.parse(localStorage.getItem('LifestyleChoice')) || [],
         inputField: document.getElementById('LifestyleChoice_input')
     }
   };
   
   function displayItems(section, filteredItems) {
+      if (!section.addElementsDiv || !section.showElementsDiv) {
+          console.error('addElementsDiv or showElementsDiv is null for section:', section);
+          return;
+      }
+
       const itemsContainer = section.showElementsDiv.querySelector('.items-container');
+      if (!itemsContainer) {
+          console.error('itemsContainer is null for section:', section);
+          return;
+      }
       itemsContainer.innerHTML = '';
   
       if (filteredItems.length === 0) {
@@ -796,11 +807,16 @@
   }
   
   function updateUI(section) {
-      const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
-      displayItems(section, availableItems);
-      renderSelectedItems(section);
-      updateInputField(section);
-  }
+    if (!section.showElementsDiv || !section.addElementsDiv) {
+        console.error('Missing DOM elements for section:', section);
+        return;
+    }
+
+    const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
+    displayItems(section, availableItems);
+    renderSelectedItems(section);
+    updateInputField(section);
+}
   
   function moveToSelected(section, item) {
       if (section.selectedItems.includes(item)) return;
