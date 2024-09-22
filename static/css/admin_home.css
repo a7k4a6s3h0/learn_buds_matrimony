@@ -34,9 +34,9 @@
     }
 
     .customer-chart {
-        width: 600px !important;
-        height: 400px !important;
-        margin-top: 80px;
+        width: 680px !important;
+        height: 250px !important;
+        margin-top: 30px;
         margin-left: 50px;
     }
 
@@ -55,8 +55,8 @@
     }
 
     .revenue-chart {
-        width: 830px;
-        height: 355px;
+        width: 250px !important;
+        height: 300px !important;
         margin-top: 25px;
         margin-left: 5px;
     }
@@ -64,14 +64,18 @@
     .income-chart {
         width: 650px !important;
         height: 250px !important;
-        margin-top: 80px;
+        margin-top: 20px;
         margin-left: 50px;
     }
 
     .income-card {
         width: 830px;
-        height: 400px;
+        height: 350px;
         margin-top: 25px;
         margin-left: 65px;
+    }
+    .text-font {
+        font-weight: bold;
+        font-size: 25px;
     }
 }
