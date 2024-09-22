@@ -28,12 +28,14 @@
             </div>
         </div>
         <div class="customer-card card">
+            <div class="text-font text">Customer Arrival</div>
             <canvas class="customer-chart" id="customerArrivalChart"></canvas>
         </div>
         <div class="revenue-card card">
             <canvas class="revenue-chart" id="revenueByModuleChart"></canvas>
         </div>
         <div class="income-card card">
+            <div class="text-font text">Incomes & Expenses</div>
             <canvas class="income-chart" id="incomesExpensesChart"></canvas>
         </div>
     </div>
@@ -154,14 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                },
-                legend: {
-                    display: false
-                }
-            },
             scales: {
                 x: {
                     title: {
@@ -249,16 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Incomes & Expenses',
-                    font: { size: 18 }
-                },
-                legend: {
-                    display: false
-                }
-            },
+            
             scales: {
                 x: {
                     title: {
