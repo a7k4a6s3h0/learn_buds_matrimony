@@ -2,7 +2,7 @@
     .user-card {
         Width: 292.5px; 
         Height: 70px; 
-        Top: 20px ;
+        margin-top: 25px;
         Left: 50px;
         border-radius: 18px;
     }
@@ -13,8 +13,16 @@
     }
 
     .point-chart {
-        width: 500px;
-        /* height: 400px; */
+        width: 500px !important;
+        height: 293px;
+        margin-top: 25px;
         margin-left: -60px;
+    }
+
+    .subcribers-chart {
+        width: 200px;
+        margin-top: 25px;
+        /* height: 400px; */
+        /* margin-left: -60px; */
     }
 }
