@@ -1,33 +1,46 @@
 {% extends "base_files/admin_base.html" %}
 {% load static %}
 {% block admin_content %}
-  <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
-  <div class="row">
-    <div class="col-4">
-      <div class="text">USERS</div>
-      <div class="user-card card">
-        <div class="card-body">hello user</div>
-      </div>
-      <div class="user-card card mt-3">
-        <div class="card-body">hello user</div>
-      </div>
-      <div class="user-card card mt-3">
-        <div class="card-body">hello user</div>
-      </div>
+    <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
+    <div class="row mb-5">
+        <div class="col-4">
+            <div class="text">USERS</div>
+            <div class="user-card card">
+                <div class="card-body">hello user</div>
+            </div>
+            <div class="user-card card mt-4">
+                <div class="card-body">hello user</div>
+            </div>
+            <div class="user-card card mt-4">
+                <div class="card-body">hello user</div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="text">Subscribes daily</div>
+            <div class="point-chart card">
+                <canvas id="dailySubscribesChart"></canvas>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="text">Subscribes daily</div>
+            <div class="subcribers-card card">
+                <canvas  class="subcribers-chart" id="subscribersChart"></canvas>
+            </div>
+        </div>
+        <div class="customer-card card">
+            <canvas class="customer-chart" id="customerArrivalChart"></canvas>
+        </div>
+        <div class="revenue-card card">
+            <canvas class="revenue-chart" id="revenueByModuleChart"></canvas>
+        </div>
+        <div class="income-card card">
+            <canvas class="income-chart" id="incomesExpensesChart"></canvas>
+        </div>
     </div>
-    <div class="col-5">
-      <div class="text">Subscribes daily</div>
-      <canvas class="point-chart card" id="dailySubscribesChart"></canvas>
-    </div>
-    <div class="col-3">
-      <div class="text">Subscribes daily</div>
-      <canvas class="subcribers-chart " id="subscribersChart"></canvas>
-    </div>
-  </div>
 {% endblock admin_content %}
 {% block admin_scripts %}
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
   // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Daily Subscribes Chart
@@ -112,7 +125,165 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // Customer Arrival Chart
+    const customerArrivalCtx = document.getElementById('customerArrivalChart').getContext('2d');
+    new Chart(customerArrivalCtx, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: 31}, (_, i) => i + 1), // Days 1-31
+            datasets: [{
+                label: 'Arrivals',
+                data: [450, 375, 0, 160, 300, 160, 150, 350, 210, 350, 320, 55, 280, 420, 275, 260, 350, 0, 210, 100, 60, 440, 420, 140, 440, 60, 230, 240, 420, 440, 350],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: false,
+                tension: 0,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }, {
+                label: 'Another Metric',
+                data: [300, 200, 430, 150, 300, 200, 220, 220, 350, 320, 170, 370, 270, 260, 300, 220, 350, 10, 210, 210, 60, 420, 140, 140, 430, 170, 230, 240, 240, 420, 350],
+                borderColor: 'rgba(153, 102, 255, 1)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                fill: false,
+                tension: 0,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day of Month'
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        autoSkip: true,
+                        maxTicksLimit: 31
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 600,
+                    title: {
+                        display: true,
+                        text: 'Number of Arrivals'
+                    },
+                    ticks: {
+                        stepSize: 150
+                    }
+                }
+            }
+        }
+    });
+
+    // Revenue by Module Chart
+    const revenueByModuleCtx = document.getElementById('revenueByModuleChart').getContext('2d');
+    new Chart(revenueByModuleCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Matrimony', 'Study Abroad', 'e-commerce', 'Job Portal', 'Dating'],
+            datasets: [{
+                data: [30, 20, 15, 10, 25], // Approximate percentages based on the image
+                backgroundColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)',
+                    'rgb(255, 99, 132)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Revenue by Module',
+                    font: { size: 18 }
+                },
+                subtitle: {
+                    display: true,
+                    position: 'bottom',
+                    text: 'Click each area to see details',
+                    font: { size: 14 }
+                },
+                legend: {
+                    position: 'left'
+                }
+            }
+        }
+    });
+
+    // Incomes & Expenses Chart
+    const incomesExpensesCtx = document.getElementById('incomesExpensesChart').getContext('2d');
+    new Chart(incomesExpensesCtx, {
+        type: 'bar',
+        data: {
+            labels: Array.from({length: 31}, (_, i) => i + 1),
+            datasets: [
+                {
+                    label: 'Income',
+                    data: [10000,2500,5000,6500,8000,7500,4500,3000,6000,9500,7000,9500,5500,9000,5000,3000,1500,0,9500,3500,2000,8000,6000,7500,6500,6000,9500,2000,3000,6000,2000,0],
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)'
+                },
+                {
+                    label: 'Expenses',
+                    data: [5500,4500,8500,0,8000,0,9500,0,7000,0,3500,5000,5000,5000,3000,0,1500,0,6000,8000,4000,0,0,0,2000,0,2500,0,5500,6500,2000],
+                    backgroundColor: 'rgba(255, 99, 132, 0.8)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Incomes & Expenses',
+                    font: { size: 18 }
+                },
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day of Month'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 10000,
+                    title: {
+                        display: true,
+                        text: 'Amount'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+
     // You can add more charts here as needed
 });
-  </script>
+    </script>
 {% endblock admin_scripts %}
