@@ -1,98 +1,118 @@
 {% extends "base_files/admin_base.html" %}
 {% load static %}
 {% block admin_content %}
-    <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
-    <div class="row">
-        <div class="col-4">
-            <div class=" text">USERS</div>
-            <div class="user-card card">
-                <div class="card-body">hello user</div>
-            </div>
-            <div class="user-card card mt-3">
-                <div class="card-body">hello user</div>
-            </div>
-            <div class="user-card card mt-3">
-                <div class="card-body">hello user</div>
-            </div>
-        </div>
-        <div class="point-chart">
-            <canvas id="myChart"></canvas>
-        </div>
+  <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
+  <div class="row">
+    <div class="col-4">
+      <div class="text">USERS</div>
+      <div class="user-card card">
+        <div class="card-body">hello user</div>
+      </div>
+      <div class="user-card card mt-3">
+        <div class="card-body">hello user</div>
+      </div>
+      <div class="user-card card mt-3">
+        <div class="card-body">hello user</div>
+      </div>
     </div>
+    <div class="col-5">
+      <div class="text">Subscribes daily</div>
+      <canvas class="point-chart card" id="dailySubscribesChart"></canvas>
+    </div>
+    <div class="col-3">
+      <div class="text">Subscribes daily</div>
+      <canvas class="subcribers-chart " id="subscribersChart"></canvas>
+    </div>
+  </div>
 {% endblock admin_content %}
 {% block admin_scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    // Data for the chart
-    const data = {
-      labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
-      datasets: [
-        {
-          label: 'Dataset',
-          data: [65, 100, 80, 81, 56, 155], // You can generate or fetch data here
-          borderColor: 'rgba(128, 90, 213, 1)',  // Replace Utils.CHART_COLORS.red
-          backgroundColor: 'rgba(128, 90, 213, 0.2)', // Replace Utils.transparentize
-          fill: true,
-          pointStyle: 'circle',
-          pointRadius: 10,
-          pointHoverRadius: 15
-        }
-      ]
-    };
-
-    // Chart configuration
-    const config = {
-      type: 'line',
-      data: data,
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
-          }
+  // Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Subscribes Chart
+    const dailySubscribesCtx = document.getElementById('dailySubscribesChart').getContext('2d');
+    new Chart(dailySubscribesCtx, {
+        type: 'line',
+        data: {
+            labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
+            datasets: [{
+                label: 'Dataset',
+                data: [65, 100, 80, 81, 56, 155],
+                borderColor: 'rgba(128, 90, 213, 1)',
+                backgroundColor: 'rgba(128, 90, 213, 0.2)',
+                fill: true,
+                pointStyle: 'circle',
+                pointRadius: 10,
+                pointHoverRadius: 15
+            }]
         },
-        scales: {
-          x: {
-            grid: {
-              display: false // Hide vertical grid lines
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Daily Subscribes'
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
             }
-          },
-          y: {
-            grid: {
-              display: false // Hide horizontal grid lines
-            }
-          }
         }
-      }
+    });
+
+    // Subscribers Chart
+    const subscribersCtx = document.getElementById('subscribersChart').getContext('2d');
+    new Chart(subscribersCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Subscribed Users', 'Unsubscribed Users'],
+            datasets: [{
+                label: 'User Subscriptions',
+                data: [75, 25],
+                backgroundColor: ['#6a55f1', '#e5e5e5'],
+                hoverOffset: 4,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                    }
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
+            cutout: '80%'
+        }
+    });
+
+    // Function to change point style of Daily Subscribes chart
+    window.changePointStyle = function(style) {
+        const chart = Chart.getChart('dailySubscribesChart');
+        if (chart) {
+            chart.data.datasets.forEach(dataset => {
+                dataset.pointStyle = style;
+            });
+            chart.update();
+        }
     };
 
-    // Render the chart
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, config);
-
-    // Actions to change the point style dynamically
-    const actions = [
-      {
-        name: 'pointStyle: circle (default)',
-        handler: (chart) => {
-          chart.data.datasets.forEach(dataset => {
-            dataset.pointStyle = 'circle';
-          });
-          chart.update();
-        }
-      },
-      {
-        name: 'pointStyle: cross',
-        handler: (chart) => {
-          chart.data.datasets.forEach(dataset => {
-            dataset.pointStyle = 'cross';
-          });
-          chart.update();
-        }
-      },
-      // Add other handlers for different point styles...
-    ];
+    // You can add more charts here as needed
+});
   </script>
 {% endblock admin_scripts %}
