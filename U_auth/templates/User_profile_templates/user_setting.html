@@ -53,7 +53,7 @@
     }
 
     .chat-section {
-        height: 100vh;
+        /* height: 100vh; */
         background-color: #343a40;
         display: flex;
         flex-direction: row;
@@ -107,7 +107,7 @@
     .user_setting {
         display: flex;
         flex-direction: column;
-        align-items: center; /* Vertically center align the flex items */
+        /* align-items: center; */
         gap: 20px; /* Gap between inner_setting divs */
         }
 
@@ -233,7 +233,8 @@
                 </div>
 
                 <div class="user_setting text-white" >
-                    {% for i in 6|number_rangeobj  %}
+                    {% comment %} {% for i in 6|number_rangeobj  %}
+                    {% endfor %} {% endcomment %}
                     <a href="{% url 'privacy_setting' %}">
                         <div class="inner_setting">
                             <div class="logo">
@@ -248,8 +249,74 @@
                             
                         </div>
                     </a>
+
                     <!-- <hr style="background-color: white;"> -->
-                    {% endfor %}
+
+                    <a href="{% url 'privacy_setting' %}">
+                        <div class="inner_setting">
+                            <div class="logo">
+                                <div class="icon_circle">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                            </div>
+                            <div class="logo_paragraph">
+                                <label for="title">Chat</label><br>
+                                <span>Chat, History</span>
+                            </div>
+                            
+                        </div>
+                    </a>
+
+
+                    <a href="{% url 'privacy_setting' %}">
+                        <div class="inner_setting">
+                            <div class="logo">
+                                <div class="icon_circle">
+                                    <i class="fa fa-bell"></i>
+                                </div>
+                            </div>
+                            <div class="logo_paragraph">
+                                <label for="title">Notifications</label><br>
+                                <span>messages</span>
+                            </div>
+                            
+                        </div>
+                    </a>
+
+
+                    <a href="{% url 'privacy_setting' %}">
+                        <div class="inner_setting">
+                            <div class="logo">
+                                <div class="icon_circle">
+                                    <i class="fas fa-hands-helping"></i>
+                                </div>
+                            </div>
+                            <div class="logo_paragraph">
+                                <label for="title">Help</label><br>
+                                <span>Contact,  Support</span>
+
+                            </div>
+                            
+                        </div>
+                    </a>
+
+
+                    <a href="{% url 'privacy_setting' %}">
+                        <div class="inner_setting">
+                            <div class="logo">
+                                <div class="icon_circle">
+                                    <i class="fa-solid fa-user-group"></i>
+                                </div>
+                            </div>
+                            <div class="logo_paragraph">
+                                <label for="title">Invite Friend</label><br>
+                                {% comment %} <span>Contact,  Support</span> {% endcomment %}
+
+                            </div>
+                            
+                        </div>
+                    </a>
+
                 </div>
 
 

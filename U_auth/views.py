@@ -866,6 +866,8 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
 
     def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
+        user_partner_details = PartnerPreference.objects.filter(user=self.request.user).first()
+        # print(user_partner_details.occupation)
         interst_hobbies_list = []
         qualification_list = []
         locations_list = []
@@ -891,6 +893,7 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         context['location_list'] = locations_list
         context['LifestyleChoice_list'] = LifestyleChoice_list
         context['occupation'] = [occupation.job_title for occupation in Job_Details.objects.all()]
+        context['user_partner_details'] = user_partner_details
         return context
 
     def get_form_kwargs(self) -> dict[str, Any]:
