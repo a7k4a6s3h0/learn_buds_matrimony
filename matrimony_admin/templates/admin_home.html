@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="{% static 'css/admin_home.css' %}">
     <div class="container">
         <div class="row">
-            <div class="col-3">
+            <div class="col-sm-3">
                 <div class="text">USERS</div>
                 <div class="rounded-4 card mt-4">
                     <div class="card-body py-4">hello user</div>
@@ -16,13 +16,13 @@
                     <div class="card-body py-4">hello user</div>
                 </div>
             </div>
-            <div class="col-6 ">
+            <div class="col-sm-6 ">
                 <div class="text ">Subscribes daily</div>
                 <div class="py-0 card mt-4">
                     <canvas id="dailySubscribesChart"></canvas>
                 </div>
             </div>
-            <div class="col-3 ">
+            <div class="col-sm-3 ">
                 <div class="text">Statistics</div>
                 <div class=" py-4 card mt-4">
                     <canvas class="subcribers-chart" id="subscribersChart"></canvas>
@@ -30,8 +30,8 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-9">
-                <div class="card">
+            <div class="col-sm-9">
+                <div class="customer-card card">
                     <div class="py-4 me-3 position-absolute top-0 end-0">
                         <i class="bi bi-gear"></i>
                     </div>
@@ -39,8 +39,8 @@
                     <canvas class="customer-chart" id="customerArrivalChart"></canvas>
                 </div>
             </div>
-            <div class="col-3">
-                <div class=" card">
+            <div class="col-sm-3">
+                <div class="revenue-card card">
                     <div class="py-4 me-3 position-absolute top-0 end-0">
                         <i class="bi bi-gear"></i>
                     </div>
@@ -49,31 +49,31 @@
             </div>
         </div>
         <div class="row mt-5 mb-5">
-            <div class="col-9">
-                <div class="card">
+            <div class="col-sm-9">
+                <div class="income-card card">
                     <div class="py-4 me-3 position-absolute top-0 end-0">
                         <i class="bi bi-gear"></i>
                     </div>
                     <div class=" text">Incomes & Expenses</div>
                     <canvas class="income-chart" id="incomesExpensesChart"></canvas>
                     <div class="row px-5 mt-3 ms-5">
-                        <div class="text col-3">
+                        <div class="text col-sm-3">
                             75,000
                             Income
                         </div>
-                        <div class="text col-3">
+                        <div class="text col-sm-3">
                             50,000
                             Expenses
                         </div>
-                        <div class="text col-3">
+                        <div class="text col-sm-3">
                             25,000
                             Profit
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="">
+            <div class="col-sm-3 blocked-users">
+                <div>
                     <p>blocked users</p>
                 </div>
                 <div class=" blocked-card p-2 card">
