@@ -51,7 +51,7 @@ class Qualifications(models.Model):
 
 
     def __str__(self):
-        return f"Hobby: {self.qualification}"
+        return f"Qualification: {self.qualification}"
     
 class Hobbies(models.Model):
     hobby = models.CharField(max_length=100)
