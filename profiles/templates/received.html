@@ -112,6 +112,7 @@
 
 
     .heart_icon{
+        margin-left: auto;
         padding-left: 25px;
         color: white;
     }
@@ -237,7 +238,7 @@
                                     <br>
                                     <span style="text-transform: capitalize;">{{ request.sender.user_details.bio|truncatechars:15 }}</span>
                                 </div>
-                                <div>
+                                <div class="cross_icon" >
                                     <form method="post"
                                           action="{% url 'handle_request' request.pk 'reject' %}"
                                           style="display: inline">
@@ -247,7 +248,7 @@
                                         </button>
                                     </form>
                                 </div>
-                                <div>
+                                <div class="heart_icon" >
                                     <form method="post"
                                           action="{% url 'handle_request' request.pk 'accept' %}"
                                           style="display: inline">

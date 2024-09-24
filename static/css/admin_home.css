@@ -43,7 +43,8 @@
     .text-font {
         font-weight: bold;
         font-size: 25px;
-    } 
+    }
+
 }
  
 /* common css for mobile and windw screen */
@@ -62,6 +63,24 @@
         height: 355px;
         overflow-y: auto;
     }
+
+.icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+.user-text {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+}
 
 /* mobille screen css */
 @media (max-width: 768px){
