@@ -1,7 +1,9 @@
 from datetime import timedelta
 from django.db import models
+from django.shortcuts import render
 from U_auth.models import costume_user
 from django.utils.text import slugify
+from django.views.generic import ListView
 # Create your models here.
 
 
@@ -27,6 +29,7 @@ class Subscription(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    subscription_type = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = "Subscription"
@@ -59,3 +62,11 @@ class SubscriptionINFO(models.Model):
 
     def __str__(self):
         return f"{self.sub.plan_type}_info"
+
+class SubscriptionManagementView(ListView):
+    model = Subscription
+    template_name = 'admin_subscription' 
+    context_object_name = 'subscriptions'  
+
+    def get_queryset(self):
+        return Subscription.objects.all()
