@@ -1,0 +1,208 @@
+{% extends "base_files/admin_base.html" %}
+{% load static %}
+
+{% block admin_title %}
+AdminSubscriptionManagement
+{% endblock admin_title %}
+
+
+{% block admin_style %}
+  <style>
+    *{
+      font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+      font-size: small;
+    }
+    #offcanvasRight {
+      width: 300px;
+      height: 500px;
+      margin-right: 40%;
+      margin-top: 2%;
+      border-radius: 5px;
+    }
+    table thead th {
+    background-color: #f1f1f1;
+}
+
+table tbody tr {
+    transition: background-color 0.1s;
+}
+
+table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.btn-outline-success {
+    min-width: 100px;
+}
+
+.dropdown-menu {
+    min-width: auto;
+}
+
+@media (max-width: 767.98px) {
+    .table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .btn-outline-primary,
+    .btn-outline-danger {
+        font-size: 12px;
+        padding: 3px 7px;
+    }
+    #offcanvasRight {
+    width: 300px;
+    height: 470px;
+    margin-right: 3%;
+    margin-top: 23%;
+    border-radius: 5px;
+}
+}
+</style>
+{% endblock admin_style %}  
+
+{% block admin_content %}
+    <div class="container-fluid">
+      <div class="row mt-4">
+        <div
+          class="col-md-12 d-flex justify-content-between flex-sm-row"
+        >
+          <h2>Subscription Management</h2>
+          <button
+            class="btn"
+            style="
+              width: 100px;
+              height: 40px;
+              background-color: black;
+              color: white;
+            "
+            >Add Plan</button
+          >
+        </div>
+      </div>
+    </div>  
+    <div class="container mt-5">
+      <table class="table table-responsive table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Duration</th>
+                <th>Subscription Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subscription in subscriptions %}
+            <tr style="margin-top: 5%;">
+                <td>{{subscription.plan_type}}</td>
+                <td><img src="NFT.png" alt="Plan Image"></td>
+                <td>{{subscription.price}}</td>
+                <td>{{subscription.description}}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{subscription.status}}
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item" href="#">Active</a></li>
+                            <li><a class="dropdown-item" href="#">Inactive</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td>{{subscription.start_date}}</td>
+                <td>{{subscription.subscription_type}}</td>
+                <!--offcanvas for editing-->
+                <td>
+                  <a href="#" class="btn btn-outline-primary btn-sm" 
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight">✏️</a>
+                  <div
+                  class="offcanvas offcanvas-end"
+                  tabindex="-1"
+                  id="offcanvasRight"
+                  aria-labelledby="offcanvasRightLabel"
+                >
+                  <div class="offcanvas-header">
+                    <h5 id="offcanvasRightLabel">Subscription Plan</h5>
+                    <button
+                      type="button"
+                      class="btn-close text-reset"
+                      data-bs-dismiss="offcanvas"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="offcanvas-body">
+                    <form>
+                      {% csrf_token %}
+                      <!-- Name Field -->
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          name="plan_type"
+                          class="form-control"
+                          placeholder="Name"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          name="price"
+                          class="form-control"
+                          placeholder=" Price"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          name="duration"
+                          class="form-control"
+                          placeholder="Duration"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          name="currency"
+                          name="currency"
+                          class="form-control"
+                          placeholder="Currency"
+                        />
+                      </div>
+                      <!-- Select Box Field -->
+                      <div class="mb-3">
+                        <select class="form-select" style="color:rgb(121, 121, 120);">
+                          <option value="option1">Subscription type</option>
+                          <option value="option2">Option 2</option>
+                          <option value="option3">Option 3</option>
+                        </select>
+                      </div>
+            
+                      <!-- Image Upload Field -->
+                      <div class="mb-3">
+                        <input type="file" class="form-control">
+                      </div>
+            
+                      <div class="mb-3">
+                        <textarea class="form-control" placeholder="Description"></textarea>
+                      </div>
+            
+                      <!-- Submit Button -->
+                       <div class="mt-4">
+                        <button type="submit" class="btn w-25" style="background-color: black;color: white;">Save</button>
+                        <button type="submit" class="btn w-25" style="background-color: red;color: white;">Cancel</button>
+                       </div>
+                    </form>
+                  </div>
+                </div>
+                    <button class="btn btn-outline-danger btn-sm">🗑️</button>
+                </td>
+            </tr>
+        </tbody>    
+    </div>
+{% endblock admin_content %}     
