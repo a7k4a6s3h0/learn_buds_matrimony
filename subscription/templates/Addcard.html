@@ -25,43 +25,20 @@
       </nav>
     </div>      
   </div>
-  <h2 id="head">Add Credit Card</h2>
-  <form>
+  <h2 id="head">Add Amount</h2>
+  <form id="payment-form" method="POST">
+    {% csrf_token %}
     <div class="mb-3">
-      <label for="cardName" class="form-label">Name</label>
-      <input type="text" class="form-control" id="cardName" />
+      <label for="cardName" class="form-label">Plan</label>
+      <input type="text" class="form-control" id="cardName" name='plan_type' readonly value='{{plan}}' />
     </div>
     <div class="mb-3">
-      <label for="cardNumber" class="form-label">Credit Card Number</label>
-      <input
-        type="text"
-        class="form-control"
-        id="cardNumber"
-        placeholder="****-****-****-**67"
-      />
+      <label for="cardNumber" class="form-label">Amount</label>
+      <input type="number" name="amount" class="form-control" id="cardName" readonly value='{{amount}}'/>
     </div>
     <div class="mb-3">
       <div class="scan-card" id="card">
         <i class="fas fa-qrcode" style="margin-right: 5px;"></i>Scan card
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 mb-3">
-        <label for="expDate" class="form-label">Express</label>
-        <input
-          type="date"
-          class="form-control"
-          id="expDate"
-        />
-      </div>
-      <div class="col-6 mb-3">
-        <label for="cvv" class="form-label">cvv</label>
-        <input
-          type="password"
-          class="form-control"
-          id="cvv"
-          value="******"
-        />
       </div>
     </div>
     <div class="footer-text" id="ft">
@@ -76,9 +53,94 @@
       <img id="im" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Amex" />
     </div>
     <button type="submit" class="btn w-100 mt-5" id="bt">
-      ADD PAYMENT METHOD
+      Pay
     </button>
   </form>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" style="backdrop-filter: blur(10px);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+      <div class="modal-body">
+        {% if exception %}
+        {{exception}}
+        {% else %}
+        {{status}}<br>
+        You can see Your payment DEtails by clicking "go to payment page" or go to where you come
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">go to Home</button>
+        <a href="{% url 'payment-details' %}" class="btn btn-primary">Go to payment Page</a>
+      </div>
+    </div>
+  </div>
 </div>
 
-    {% endblock content %}
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+
+    function show_popup(){
+      var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+      myModal.show();
+    }
+
+    document.querySelector("#payment-form").onsubmit = function (e) {
+      e.preventDefault();
+      fetch("{% url 'payment' %}", {
+        method: "POST",
+        body: new FormData(this),
+      })
+      .then((res) => {
+        // Log the raw response object
+        console.log("Raw response:", res);
+        return res.json(); // Parse the response to JSON
+        })
+        .then((data) => {
+          console.log(data,"data")
+          var options = {
+            key: data.razorpay_key_id,
+            amount: data.amount,
+            currency: "INR",
+            order_id: data.razorpay_order_id,
+            handler: function (response) {
+              console.log(response,"ooooooooo");
+              fetch("{% url 'payment-callback' %}", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: new URLSearchParams({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              }).then((response) => {
+                console.log(response,"last response")
+                // window.location.href = "";
+                show_popup()
+              });
+            },
+            "theme": {
+              "color": "#3f0047"
+          }
+          };
+          var rzp1 = new Razorpay(options);
+          rzp1.open();
+        });
+    };
+
+
+
+
+  </script>
+
+  {% endblock content %}

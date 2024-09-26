@@ -25,13 +25,19 @@ from django.views.generic import TemplateView
 # Create your views here.
 
 
-def error_404(request):
-    return render(request, 'Errors/404.html')
-
+def error_404(request, exception):
+    return render(request, 'Errors/404.html', status=404)
 
 def error_403(request):
     return render(request, 'Errors/403.html')
 
+def error_500(request):
+    return render(request, 'Errors/500.html', status=500)
+
+
+def trigger_500_error(request):
+    # Deliberately raise an exception to simulate a server error
+    raise ValueError("This is a manually triggered 500 error for testing purposes!")
 
 # ................................backend code starting..............................................
 
@@ -664,7 +670,7 @@ class ProfileEdit(RedirectNotAuthenticatedUserMixin, TemplateView):
         # Fetch user details and extra photos
         user_details = UserPersonalDetails.objects.get(user=request.user)
         extra_photos = Pictures.objects.filter(user=user_details) 
-        
+        print(extra_photos)
         # Add the details to context
         context = self.get_context_data(user_details=user_details, extra_photos=extra_photos)
         
@@ -674,31 +680,94 @@ class ProfileEdit(RedirectNotAuthenticatedUserMixin, TemplateView):
     
     def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
         # Handle POST data (like form submission)
-        user_details = UserPersonalDetails.objects.get(user=request.user)
+        field_dict = [(costume_user, 'username', 'email', 'phone'), 
+                    (UserPersonalDetails, 'profile_pic', 'bio', 'short_video'), 
+                    (Pictures, 'photos')]
         
-        # Get the data from the POST request
-        bio = request.POST.get('bio')
-        profile_pic = request.FILES.get('profile_pic')  # For file uploads
-        
-        # Update the user details if necessary
-        if bio:
-            user_details.bio = bio
-        if profile_pic:
-            user_details.profile_pic = profile_pic
-        
-        # Save the updated user details
-        # user_details.save()
+        # Loop through request.POST items
+        for key, value in request.POST.items():
+            if value:  # If the POST value is not empty
+                # print(f"{key}: {value}")  # Debugging
 
-        # redirect to the same page or another page after processing
-        messages.success(request, "Your Details Updated Sucessfully")
+                # Loop through field_dict and check only the fields 'username', 'email', 'phone'
+                for fields in field_dict:
+                    if key in fields[1:]:  # fields[1:] to skip the model name and only check field names
+                        print(f"{fields[0]}: Matched field '{key}' in the model...")  # Output the matched model
+
+                        # Handle user_data based on the model
+                        if fields[0] == costume_user:
+                            user_data = fields[0].objects.get(id=request.user.id)
+                        else:
+                            user_data = fields[0].objects.get(user=request.user)
+
+                        recieved_value = request.POST.get(key)    
+                        # Use setattr to dynamically update the model's field
+                        setattr(user_data, key, value)  # Dynamically set the field value
+                        user_data.save()  # Save the changes
+                        
+                        print(f"Updated {user_data, key} with {recieved_value}")  # Output the          
+        
+        # Print all uploaded files  
+        print("Files:")
+        # print(request.FILES.getlist('photos'))
+
+        for key, value in request.FILES.items():
+            print(f"{key}: {value}")
+            if value:  # If the POST value is not empty
+                for fields in field_dict:
+                    if key in fields[1:]:  # fields[1:] to skip the model name and only check field names
+                        print(f"{fields[0]}: Matched field '{key}' in the model...")
+
+                        if fields[0] == Pictures:
+                            user_details = UserPersonalDetails.objects.get(user=request.user)
+                            
+                            # Handle file uploads
+                            photo_list = request.FILES.getlist(key)  # Retrieve list of files for the key
+                            if photo_list:
+                                for photo in photo_list:
+                                    # Create a new record for each uploaded photo
+                                    fields[0].objects.create(user=user_details, photos=photo)
+                                messages.success(request, "Photos updated successfully")
+                                return redirect('profile_edit')
+                        else:
+                            # Handle other models (e.g., costume_user, UserPersonalDetails)
+                            user_data = fields[0].objects.get(user=request.user)
+
+                            recieved_value = request.FILES.getlist(key)  # Retrieve list of files for the key
+                            if recieved_value:
+                                for val in recieved_value:
+                                    # Use setattr to dynamically update the model's field
+                                    setattr(user_data, key, val)  # Dynamically set the field value
+                                    user_data.save()  # Save the changes
+
+                            print(f"Updated {user_data} with {recieved_value}")          
+
+        messages.success(request, "Data Updated Sucessfully")
         return redirect('profile_edit')
 
 class RemoveFiles(RedirectNotAuthenticatedUserMixin, View):
     
     def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
         # Handle POST data (like form submission)
+        id = kwargs.get('id')
+        print(f"ID: {id}")
+        which_one = kwargs.get('type')
+        print(f"Which one: {which_one}")
         user_details = UserPersonalDetails.objects.get(user=request.user)
-        extra_photos = Pictures.objects.filter(user=user_details)
+        if which_one == 'photos':
+            # Get the user's profile picture
+            extra_photos = Pictures.objects.filter(user=user_details)
+            for photo in extra_photos:
+                if photo.id == int(id):
+                    photo.delete()
+                    print(f"Deleted photo with id: {id}")
+                    messages.success(request, "Photo deleted successfully")
+
+        if which_one == 'reel':
+            # Get the user's reel
+            user_details.short_video = None
+            user_details.save()
+            messages.success(request, "reel deleted successfully")
 
         return redirect('profile_edit')
 
@@ -732,8 +801,10 @@ class ForgotPassword(RedirectNotAuthenticatedUserMixin, FormView):
 class UserSetting(RedirectNotAuthenticatedUserMixin, TemplateView):
     template_name = 'User_profile_templates/user_setting.html'
 
-    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
-        return super().get(request, *args, **kwargs)
+    def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
+        context =  super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
 
 class UserPrivacySetting(RedirectNotAuthenticatedUserMixin, TemplateView):
@@ -795,6 +866,8 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
 
     def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
+        user_partner_details = PartnerPreference.objects.filter(user=self.request.user).first()
+        # print(user_partner_details.occupation)
         interst_hobbies_list = []
         qualification_list = []
         locations_list = []
@@ -815,12 +888,12 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         for location in locations_obj:
             if location.address_details['state_district'] not in locations_list :
                 locations_list.append(location.address_details['state_district'])
-        print(interst_hobbies_list, qualification_list, locations_list)
         context['interest_hobbies_list'] = interst_hobbies_list
         context['qualifications_list'] = qualification_list
         context['location_list'] = locations_list
         context['LifestyleChoice_list'] = LifestyleChoice_list
         context['occupation'] = [occupation.job_title for occupation in Job_Details.objects.all()]
+        context['user_partner_details'] = user_partner_details
         return context
 
     def get_form_kwargs(self) -> dict[str, Any]:
@@ -829,12 +902,12 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         print(kwargs,"datas............!!!!!!!!!!!!!!11")
         return kwargs
     
-    def form_invalid(self, form: Any) -> HttpResponse:
-        details = form.save()
-        print(details)
-        return super().form_invalid(form)
+    def form_valid(self, form: Any) -> HttpResponse:
+        details = form.save(commit = True)
+        print(details,"details............!!!!!!!!!!!!!!11")
+        messages.success(self.request, "Data sucessfully Updated..!!")
+        return super().form_valid(form)
     
 
     def get_success_url(self) -> str:
-        return redirect('privacy_setting_sec')
-
+        return reverse('privacy_setting_sec')  

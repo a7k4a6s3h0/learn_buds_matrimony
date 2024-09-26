@@ -40,7 +40,7 @@
           </div>
         </a>
       </li>
-      <li><a class="dropdown-item  left-menu-items" href="#">My profile</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="{% url 'profile' %}">My profile</a></li>
       <li><a class="dropdown-item  left-menu-items" href="#">Sent request</a></li>
       <li><a class="dropdown-item left-menu-items" href="#">Viewed my profile</a></li>
       <li><a class="dropdown-item  left-menu-items" href="#">Accept request</a></li>
@@ -50,7 +50,7 @@
       <li><a class="dropdown-item left-menu-items " href="#">Shortlisted</a></li>
       <li><a class="dropdown-item left-menu-items " href="#">Contacted</a></li>
       <li><a class="dropdown-item left-menu-items " href="#">Message</a></li>
-      <li><a class="dropdown-item  left-menu-items " href="#">Settings</a></li>
+      <li><a class="dropdown-item  left-menu-items " href="{% url 'settings' %}">Settings</a></li>
       <li><a class="dropdown-item left-menu-items d-flex align-items-center justify-content-center p-3" href="{% url 'logout' %}">
           <i class="fa-solid fa-right-from-bracket fa-flip-horizontal me-2"></i> Logout
         </a></li>

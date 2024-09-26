@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http.response import HttpResponseRedirect
 import U_auth.permissions
 import django.contrib
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -52,6 +53,22 @@ class RedirectNotAuthenticatedUserMixin(UserPassesTestMixin):
 
         return redirect(reverse_lazy('auth_page'))
 
+class CheckSuperUserAuthendicated(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return not (user.is_authenticated and getattr(user, 'is_superuser', False))
+    
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('admin_home'))
+
+class CheckSuperUserNotAuthendicated(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return (user.is_authenticated and getattr(user, 'is_superuser', False))
+    
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('admin_login'))
+    
 class check_permissions:
     def __init__(self, get_response, user_email):
         self.get_response = get_response

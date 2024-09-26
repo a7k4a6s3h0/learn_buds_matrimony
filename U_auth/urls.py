@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from .import views
 
 
 urlpatterns = [
@@ -7,7 +7,8 @@ urlpatterns = [
 
     path('error_404/', views.error_404,name="error_404"),
     path('error_403/', views.error_403,name="error_403"),
-
+    path('error_500/', views.error_500,name="error_500"),
+    path('trigger-500/', views.trigger_500_error, name='trigger-500'), 
 
 
     path('', views.SignupView.as_view(), name='auth_page'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('check_type', views.UserType, name='check_type'),
     path('profile/', views.UserProfile.as_view(), name="profile"),
     path('profile_edit/', views.ProfileEdit.as_view(), name="profile_edit"),
+    path('remove_files/<str:type>/<int:id>/', views.RemoveFiles.as_view(), name='remove_files'),
     path('change_pass/',views.ForgotPassword.as_view(),name="change_pass"),
     path('settings/', views.UserSetting.as_view(), name="settings"),
     path('privacy_setting_sec/', views.UserPartnerPreferenceView_2.as_view(), name="privacy_setting_sec"),

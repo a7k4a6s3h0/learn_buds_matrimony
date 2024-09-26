@@ -2,16 +2,18 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
-import django.db.models
 from . manager import UserManager
 
 
 class Country_codes(models.Model):
-    country_code = models.CharField(max_length=10, unique=True)
+    calling_code = models.CharField(max_length=10, unique=True)
     country_name = models.CharField(max_length=100, unique=True)
     
     def __str__(self):
-        return self.country_code
+        return self.calling_code
+    
+    class Meta:
+        ordering = ['calling_code']  # Order by calling_code
 
 class languages(models.Model):
     language_name = models.CharField(max_length=100, unique=True)
@@ -49,7 +51,7 @@ class Qualifications(models.Model):
 
 
     def __str__(self):
-        return f"Hobby: {self.qualification}"
+        return f"Qualification: {self.qualification}"
     
 class Hobbies(models.Model):
     hobby = models.CharField(max_length=100)
@@ -62,8 +64,6 @@ class Interests(models.Model):
 
     def __str__(self):
         return f"Interest: {self.interest}"
-
-
 
 class Location(models.Model):
     longitude = models.FloatField()
@@ -91,7 +91,7 @@ class UserPersonalDetails(models.Model):
     interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
-    profile_pic = models.ImageField(upload_to='images/', default='default/default_pic.png', blank=True)
+    profile_pic = models.ImageField(upload_to='images/', default='images/default_pic.png')
     short_video = models.FileField(upload_to='videos/', null=True, blank=True)
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
@@ -217,11 +217,7 @@ class AdditionalDetails(models.Model):
         return f"{self.user.username}_extra_details"
 
 
-class Interest_and_Hobbie(models.Model):
-    name = models.CharField(max_length=100, unique=True)
 
-    def __str__(self):
-        return self.name
 
 class LifestyleChoice(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -253,8 +249,8 @@ class PartnerPreference(models.Model):
     age_max = models.IntegerField(default=35)
 
     preferred_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
-    preferred_location = models.ManyToManyField(Location)  # ForeignKey for locations
-    interests_hobbies = models.ManyToManyField(Interest_and_Hobbie)
+    interests = models.ManyToManyField(Interests)
+    hobbies = models.ManyToManyField(Hobbies)
     education_level = models.ManyToManyField(Qualifications)
    
     height_min = models.IntegerField(default=100)  # in cm
@@ -271,6 +267,14 @@ class PartnerPreference(models.Model):
 
     def __str__(self):
         return f"{self.user.username}"
+
+
+class Preferred_location(models.Model):
+    user = models.ForeignKey(PartnerPreference, on_delete=models.CASCADE)
+    location_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.user.user.username
 
 class OTP(models.Model):
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE)

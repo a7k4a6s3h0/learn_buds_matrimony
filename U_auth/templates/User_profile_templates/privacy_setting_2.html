@@ -44,7 +44,7 @@
 
   /* Container for chat users */
   .chat_userview {
-    height: calc(100vh - 80px);
+    /* height: calc(100vh - 80px); */
     background-color: #343a40;
     padding: 10px;
   }
@@ -83,6 +83,7 @@
 
   .location_flex{
     display: flex;
+    flex-direction: column;
 
   }
 
@@ -92,6 +93,7 @@
     flex-direction: column;
     gap: 25px;
     align-items: center;
+    justify-content: space-between;
 
   }
 
@@ -321,7 +323,7 @@
 
   .add-item-btn {
       display: inline-block;
-      width: 95px;
+      /* width: 95px; */
       height: fit-content;
       padding: 5px 10px;
       margin: 5px;
@@ -444,7 +446,9 @@
     <div class="col-md-12">
       <nav class="navbar-custom">
         <div class="nav-left">
+          <a href="{%url 'privacy_setting'%}" class="nav-link">
           <i class="fas fa-angle-left" style="font-size: 24px"></i>
+          </a>
         </div>
         <div class="nav-right">
           <div class="distance">Privacy & Setting</div>
@@ -455,7 +459,7 @@
 </div>
 {% endblock header %} 
 {% block content %}
-<div class="container-fluid bg-dark">
+<div class="container-fluid bg-dark vh-100">
   <div class="row chat-section" style="padding-top: 80px">
     <!-- Chat User View -->
     <div class="col-md-6 chat_userview">
@@ -514,13 +518,24 @@
                     </div>
                     <div class="slider-container">
                       <!-- Use class or data-* attribute instead of relying on id -->
+                    {% if user_partner_details.age_min %}
+                    <input type="range" class="minRange" min="0" max="100" value="{{user_partner_details.age_min}}" step="1" oninput="updateRange(this)">
+                    <input type="range" class="maxRange" min="0" max="100" value="{{user_partner_details.age_max}}" step="1" oninput="updateRange(this)">
+                    <div class="slider-values">
+                      <span  class="minValue">{{user_partner_details.age_min}}</span> - <span class="maxValue">{{user_partner_details.age_max}}</span>
+                      <input type="hidden" name="age_min" class="mininputs">
+                      <input type="hidden" name="age_max" class="maxinputs">
+                    </div>
+                    {% else %}
                     <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
                     <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
                     <div class="slider-values">
-                        <span  class="minValue">20</span> - <span class="maxValue">80</span>
-                        <input type="hidden" name="age_min" class="mininputs">
-                        <input type="hidden" name="age_max" class="maxinputs">
+                      <span  class="minValue">20</span> - <span class="maxValue">80</span>
+                      <input type="hidden" name="age_min" class="mininputs">
+                      <input type="hidden" name="age_max" class="maxinputs">
                     </div>
+                    {% endif %}
+                    
                     </div>                                          
                 </div>
                     <div class="right_row">
@@ -528,7 +543,11 @@
                             <label for="">Gender</label>
                         </div>
                         <select class="form-select" id="{{ label|slugify }}" name="preferred_gender">
+                          {% if user_partner_details.preferred_gender %}
+                          <option value="{{user_partner_details.preferred_gender}}">{{user_partner_details.preferred_gender}}</option>
+                          {% else %}
                           <option >select Gender</option>
+                          {% endif %}
                           <option value="M">Male</option>
                           <option value="F">Female</option>
                           <option value="O">Others</option>
@@ -596,13 +615,27 @@
                         </div>
                         <div class="slider-container">
                           <!-- Use class or data-* attribute instead of relying on id -->
-                        <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
-                        <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+                        {% if user_partner_details.height_min %}
+                        
+                        <input type="range" class="minRange" min="0" max="100" value="{{user_partner_details.height_min}}" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="{{user_partner_details.height_max}}" step="1" oninput="updateRange(this)">
                         <div class="slider-values">
-                            <span name='height_min' class="minValue">20</span> - <span name='height_max' class="maxValue">80</span>
+                            <span name='height_min' class="minValue">{{user_partner_details.height_min}}</span> - <span name='height_max' class="maxValue">{{user_partner_details.height_max}}</span>
                             <input type="hidden" name="height_min" class="mininputs">
                             <input type="hidden" name="height_max" class="maxinputs">
                           </div>
+                        {% else %}
+
+                        <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+
+                        <div class="slider-values">
+                          <span name='height_min' class="minValue">20</span> - <span name='height_max' class="maxValue">80</span>
+                          <input type="hidden" name="height_min" class="mininputs">
+                          <input type="hidden" name="height_max" class="maxinputs">
+                        </div>
+
+                        {% endif %}
                         </div>                                          
                     </div>
 
@@ -612,6 +645,19 @@
                         </div>
                         <div class="slider-container">
                           <!-- Use class or data-* attribute instead of relying on id -->
+                        {% if user_partner_details.weight_min %}
+
+
+                        <input type="range" class="minRange" min="0" max="100" value="{{user_partner_details.weight_min}}" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="{{user_partner_details.weight_max}}" step="1" oninput="updateRange(this)">
+                        <div class="slider-values">
+                            <span name="weight_min" class="minValue">{{user_partner_details.weight_min}}</span> - <span name="weight_max" class="maxValue">{{user_partner_details.weight_max}}</span>
+                            <input type="hidden" name="weight_min" class="mininputs">
+                            <input type="hidden" name="weight_max" class="maxinputs">
+                          </div>
+                        
+                        {% else %}
+                        
                         <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
                         <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
                         <div class="slider-values">
@@ -619,6 +665,7 @@
                             <input type="hidden" name="weight_min" class="mininputs">
                             <input type="hidden" name="weight_max" class="maxinputs">
                           </div>
+                        {% endif %}
                         </div>                                          
                     </div>
                     <div class="right_row">
@@ -642,7 +689,11 @@
                             <label for="">religion</label>
                         </div>
                         <select class="form-select" id="{{ label|slugify }}" name="religion">
+                          {% if user_partner_details.religion %}
+                          <option  value="{{ user_partner_details.religion }}">{{ user_partner_details.religion }}</option>
+                          {% else %}
                           <option >select Religion</option>
+                          {% endif %}
                           <option value="CH">Christianity</option>
                           <option value="IS">Islam</option>
                           <option value="HI">Hinduism</option>
@@ -659,7 +710,11 @@
                             <label for="">occupation</label>
                         </div>
                         <select name="occupation" id="occupation" class="form-control">
+                            {% if user_partner_details.occupation %}
+                            <option value={{user_partner_details.occupation}}>{{user_partner_details.occupation}}</option>
+                            {% else %}
                             <option >Select occupation</option>
+                            {% endif %}
                             {% for job in occupation %}
                             <option value="{{job}}">{{job}}</option>
                             {% endfor %}
@@ -742,7 +797,7 @@
           addElementsDiv: document.getElementById('add_elements_interest_hobbies'),
           button: document.getElementById('show_all_interest_hobbies'),
           items: {{ interest_hobbies_list|default:"[]"|safe }},
-          selectedItems: JSON.parse(localStorage.getItem('selectedItemsInterestHobbies')) || [],
+          selectedItems: JSON.parse(localStorage.getItem('interest_hobbies')) || [],
           inputField: document.getElementById('interest_hobbies_input')
       },
       qualifications: {
@@ -750,7 +805,7 @@
           addElementsDiv: document.getElementById('add_elements_qualifications'),
           button: document.getElementById('show_all_qualifications'),
           items: {{ qualifications_list|default:"[]"|safe }},
-          selectedItems: JSON.parse(localStorage.getItem('selectedItemsQualifications')) || [],
+          selectedItems: JSON.parse(localStorage.getItem('qualification')) || [],
           inputField: document.getElementById('qualification_input')
       },
       location: {
@@ -758,7 +813,7 @@
           addElementsDiv: document.getElementById('add_elements_location'),
           button: document.getElementById('show_all_location'),
           items: {{ location_list|default:"[]"|safe }},
-          selectedItems: JSON.parse(localStorage.getItem('selectedItemsLocation')) || [],
+          selectedItems: JSON.parse(localStorage.getItem('location')) || [],
           inputField: document.getElementById('location_input')
       },
       LifestyleChoice: {
@@ -766,13 +821,22 @@
         addElementsDiv: document.getElementById('add_elements_LifestyleChoice'),
         button: document.getElementById('show_all_LifestyleChoice'),
         items: {{ LifestyleChoice_list|default:"[]"|safe }},
-        selectedItems: JSON.parse(localStorage.getItem('selectedItemsLocation')) || [],
+        selectedItems: JSON.parse(localStorage.getItem('LifestyleChoice')) || [],
         inputField: document.getElementById('LifestyleChoice_input')
     }
   };
   
   function displayItems(section, filteredItems) {
+      if (!section.addElementsDiv || !section.showElementsDiv) {
+          console.error('addElementsDiv or showElementsDiv is null for section:', section);
+          return;
+      }
+
       const itemsContainer = section.showElementsDiv.querySelector('.items-container');
+      if (!itemsContainer) {
+          console.error('itemsContainer is null for section:', section);
+          return;
+      }
       itemsContainer.innerHTML = '';
   
       if (filteredItems.length === 0) {
@@ -794,11 +858,16 @@
   }
   
   function updateUI(section) {
-      const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
-      displayItems(section, availableItems);
-      renderSelectedItems(section);
-      updateInputField(section);
-  }
+    if (!section.showElementsDiv || !section.addElementsDiv) {
+        console.error('Missing DOM elements for section:', section);
+        return;
+    }
+
+    const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
+    displayItems(section, availableItems);
+    renderSelectedItems(section);
+    updateInputField(section);
+}
   
   function moveToSelected(section, item) {
       if (section.selectedItems.includes(item)) return;

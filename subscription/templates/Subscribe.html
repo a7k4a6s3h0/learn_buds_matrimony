@@ -194,107 +194,145 @@
   <div class="row chat-section" style="padding-top:10px;border-radius:20px;">
     <!-- Chat User View -->
     <div class="col-md-6 chat_userview">
+        
       <div class="inner">
         <h1 style="font-weight: bold; color: rgb(248, 247, 247)">
-          Prime Member
+          Choose Your plan
         </h1>
-        <span style="color: rgb(248, 247, 247); font-size: xx-large"
-          ><b>$79</b>/-month</span
-        >
+        <!-- <span style="color: rgb(248, 247, 247); font-size: xx-large"
+        ><b>$79</b>/-month</span -->
+        <!-- > -->
+        {% for details in subscription_details %}
         <div class="col-md-12" style="margin-top: 3%">
+          <input type="checkbox" name="checkboxGroup" id="checkbox_{{ forloop.counter }}">
+          <input type="hidden" name="plan_type" id="type_{{ forloop.counter }}" value="{{ details.plan_type }}">
           <span style="color: white; font-size: smaller">
             <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Daily Limits
+            {{ details.plan_type }}
           </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View up to 15 Profiles per Day<br />Send up to 15 Requests per Day
+          <p style="color: white; padding-left: 10%; font-size: small; margin-top: 1%; margin-right: 9%; margin-left: 40px; padding-top: 2%;">
+            {% for info in details.sub_info.all %}
+              {{ info.info }}<br>
+            {% endfor %}
           </p>
           <hr style="color: aliceblue" />
         </div>
-        <div class="col-md-12">
-          <span style="color: white; font-size: smaller">
-            <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Weekly Limits
-          </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View up to 90 Profiles per Week<br />Send up to 90 Requests per Week
-          </p>
-          <hr style="color: aliceblue" />
-        </div>
-        <div class="col-md-12">
-          <span style="color: white; font-size: smaller">
-            <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Monthly Limits
-          </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View up to 300 Profiles per Month<br />Send up to 300 Requests per
-            Month
-          </p>
-          <hr style="color: aliceblue" />
-        </div>
-        <div class="col-md-12">
-          <span style="color: white; font-size: smaller">
-            <i class="fa-solid fa-circle-check" style="color: white"></i>
-            Premium Limits
-          </span>
-          <p
-            style="
-              color: white;
-              padding-left: 10%;
-              font-size: small;
-              margin-top: 1%;
-              margin-right: 9%;
-              margin-left: 40px;
-              padding-top: 2%;
-            "
-          >
-            View Profiles Who Shortlisted You<br />Unlock Unlimited Messages<br />Unlock
-            Shortlisted Page<br />Short & filter Profiles
-          </p>
-          <hr style="color: aliceblue" />
+        {% endfor %} 
+        <input type="hidden" name="plan_type" id="type2">
+
+
           <div
             class="col-md-12"
             style="display: flex; justify-content: center; margin-top: 0%"
           >
-            <a href="{% url 'addpayment' %}" class="btn text-center" id="btn1"
+            <a href="#" class="btn text-center" id="btn1"
               >Subscribe</a
             >
           </div>
-        </div>
+        </div> 
+
       </div>
+      
     </div>
   </div>
 </div>
 {% endblock content %} 
 {% block footer %}{% endblock footer %} 
-{% block scripts%} {% endblock scripts %}
+{% block scripts%}
+<script>
+      // Select all checkboxes with the name 'checkboxGroup'
+  const checkboxes = document.querySelectorAll('input[name="checkboxGroup"]');
+
+  // Add event listeners to all checkboxes
+  checkboxes.forEach((checkbox, index) => {
+    checkbox.addEventListener('click', function () {
+      // Uncheck all checkboxes except the one that was clicked
+      let selected_plan = document.getElementById('type2');  // The hidden field where the selected plan will be stored
+
+      // Get the corresponding hidden input based on the checkbox index
+      let plan_data = document.getElementById('type_' + (index + 1));
+      
+      if (this.checked) {
+        selected_plan.value = plan_data.value;  // Set the value of the hidden input to type2
+        console.log("Selected Plan: ", selected_plan.value);
+      }
+
+      // Uncheck other checkboxes
+      checkboxes.forEach((cb, cbIndex) => {
+        if (cb !== this) {
+          cb.checked = false;  // Uncheck all other checkboxes
+          if (cbIndex !== index) {
+            // Clear the selected_plan value if it's a different checkbox
+            // selected_plan.value = ''; 
+          }
+        }
+      });
+    });
+  });
+
+  // Get the button element by its ID
+  const button = document.getElementById("btn1");
+
+  // Add the click event listener to the button
+  button.addEventListener("click", function(event) {
+      // Prevent the default behavior (e.g., if it's a form submission)
+      event.preventDefault();
+      let choosen_plan = document.getElementById('type2');
+      console.log(choosen_plan.value,"val")
+
+      // Display the SweetAlert2 confirmation dialog
+      Swal.fire({
+          title: "Are you sure?",
+          text: "Once deleted, you will not be able to recover this imaginary file!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it!",
+          cancelButtonText: "No, keep it",
+          dangerMode: true,
+      }).then((result) => {
+          if (result.isConfirmed) {
+              if (!choosen_plan.value) {
+                  Swal.fire("Please Select a plan..!!", {
+                      icon: "warning",
+                  });
+              } else {
+                // Call the server-side function to proceed with the selected plan
+                console.log("Selected Plan: ", choosen_plan.value);
+                // You can now proceed with submitting the selected plan or making an AJAX request
+
+
+                $.ajax({
+                  url: "{% url 'payment' %}?plan_type=" + choosen_plan.value,  // Pass dynamically chosen plan
+                  type: 'GET',
+                  success: function(response) {
+                      console.log(response);
+                      // You can now proceed with the response data
+                      // For example, you can redirect to a new page or display a success message
+                      window.location.href = response.redirect_url;
+
+                  },
+                  error: function(xhr, status, error) {
+                      swal.fire(
+                          'Error!',
+                          'There was an error processing the payment.',
+                          'error'
+                      );
+                  }
+              });
+
+              }
+
+          } else {
+              Swal.fire("Your imaginary file is safe!");
+          }
+      });
+  });
+
+  {% if messages %}    
+    {% for message in messages %}
+      Swal.fire("Alert..!", "{{ message}}", "{{message.tags}}");
+    {% endfor %}
+  {% endif %}
+
+</script>
+{% endblock scripts %}

@@ -1,20 +1,30 @@
-
 <!-- Desktop Navbar -->
 <div class="menu-bar-desktop">
-    <div class="menu-item">
-        <i class="fas fa-home"></i>
+    <div>
+        <form method="post"
+              class="add-to-shortlist"
+              action="{% url 'add_to_shortlist' user.pk %}">
+            {% csrf_token %}
+                <button class="btn menu-item">
+                    <i class="fa-solid fa-star"></i>
+                </button>
+        </form>
     </div>
     <div class="menu-item">
         <i class="fas fa-envelope"></i>
     </div>
-    <div class="menu-item">
-        <i class="fa fa-heart"></i>
+    <div>
+        <form class="send-request" method="post" action="{% url 'send_request' user.pk %}">
+            {% csrf_token %}
+                <button class="btn menu-item">
+                    <i class="fa fa-heart"></i>
+                </button>
+        </form>
     </div>
     <div class="menu-item" id="closeBtn">
-        <i class="fas fa-times"></i>
+        <i class="fas fa-times menu-item"></i>
     </div>
 </div>
-
 <!-- Mobile Navbar -->
 <div class="menu-bar-mobile">
     <div class="hamburger" id="hamburger">
@@ -23,22 +33,32 @@
         <div></div>
     </div>
     <div class="menu-content" id="menuContent">
-        <div class="menu-item">
-            <i class="fas fa-home"></i>
+        <div>
+            <form method="post"
+                  class="add-to-shortlist"
+                  action="{% url 'add_to_shortlist' user.pk %}">
+                {% csrf_token %}
+                    <button class="btn menu-item">
+                        <i class="fa-solid fa-star"></i>
+                    </button>
+            </form>
         </div>
         <div class="menu-item">
             <i class="fas fa-envelope"></i>
         </div>
-        <div class="menu-item">
-            <i class="fa fa-heart"></i>
+        <div>
+            <form class="send-request" method="post" action="{% url 'send_request' user.pk %}">
+                {% csrf_token %}
+                    <button class="btn menu-item">
+                        <i class="fa fa-heart"></i>
+                    </button>
+            </form>
         </div>
         <div class="menu-item" id="closeBtnMobile">
             <i class="fas fa-times"></i>
         </div>
     </div>
 </div>
-
-
 <script>
     // Desktop Navbar - No additional scripts required since it's static
 
@@ -120,5 +140,3 @@
         }
     });
 </script>
-
-

@@ -44,6 +44,12 @@ INSTALLED_APPS = [
     'U_messages',
     'subscription',
     'matrimony_admin',
+
+    'allauth',
+    'allauth.account',
+
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +60,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
+
+# AUTHENTICATION_BACKENDS = [
+
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     'django.contrib.auth.backends.ModelBackend',
+
+#     # `allauth` specific authentication methods, such as login by email
+#     'allauth.account.auth_backends.AuthenticationBackend',
+
+# ]
+
 
 ROOT_URLCONF = 'matrimony.urls'
 
@@ -107,6 +126,47 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/user.phonenumbers.read',  # Requests access to phone numbers
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#             'https://www.googleapis.com/auth/contacts.readonly'  # Google People API scope
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'FIELDS': ['email'],  # Phone numbers are not available directly
+#     }
+# }
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_REQUIRED = True
+
+# # settings.py
+# SOCIALACCOUNT_ADAPTER = 'U_auth.custom_adapter.CustomSocialAccountAdapter'
+
+# settings.py
+# SESSION_COOKIE_AGE = 60  # Session will expire in 1 minute
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -135,3 +195,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+RAZORPAY_KEY_ID = 'rzp_test_cc7cPplZgxsSFN'
+RAZORPAY_KEY_SECRET = 'HRh6AjXf6R4tah0dGmt5Kole'
+# LOGIN_REDIRECT_URL = 'auth_page'
+# LOGOUT_REDIRECT_URL = 'auth_page'
