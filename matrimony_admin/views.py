@@ -15,3 +15,7 @@ class NotifcationManagement(TemplateView):
         context['select_options'] = ['User 1', 'User 2', 'User 3']
         # Add other context variables if needed
         return context
+    
+
+def admin_profile(request):
+    return render(request,"admin_profile.html")
