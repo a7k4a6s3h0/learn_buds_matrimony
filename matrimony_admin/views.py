@@ -4,8 +4,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from .forms import AdminLoginForm
+from .forms import AdminLoginForm,AdminProfileForm
 from U_auth.permissions import *
+
 
 
 class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
@@ -48,3 +49,18 @@ class NotifcationManagement(TemplateView):
         context['select_options'] = ['User 1', 'User 2', 'User 3']
         # Add other context variables if needed
         return context
+    
+
+# def admin_profile(request):
+#     return render(request,"admin_profile.html")
+
+
+class admin_profile(CheckSuperUserNotAuthendicated,FormView):
+    template_name = "admin_profile.html"
+    form_class = AdminProfileForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['admin_details'] = self.request.user
+        return context
+    
