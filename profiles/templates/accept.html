@@ -158,7 +158,7 @@
         .msg {
             margin-left: 10px;
             color: white;
-            font-size: 10px;
+            font-size: 15px;
         }
 
         .volume_icon{
@@ -251,7 +251,7 @@
                                             <span style="text-transform: capitalize; color: white;">{{ request.receiver.username }}</span>
                                         </a>
                                         <br>
-                                        <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
+                                        <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio|truncatechars:15 }}</span>
                                     </div>
                                 </div>
                             {% else %}
@@ -273,7 +273,7 @@
                                             <span style="text-transform: capitalize; color: white;">{{ request.sender.username }}</span>
                                         </a>
                                         <br>
-                                        <span style="text-transform: capitalize;">{{ request.sender.user_details.bio }}</span>
+                                        <span style="text-transform: capitalize;">{{ request.sender.user_details.bio|truncatechars:15 }}</span>
                                     </div>
                                 </div>
                             {% endif %}

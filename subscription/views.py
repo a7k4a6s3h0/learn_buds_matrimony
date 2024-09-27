@@ -15,8 +15,8 @@ from django.contrib import messages
 from .models import Payment
 from django.urls import reverse
 from django.template.loader import get_template, render_to_string
-from xhtml2pdf import pisa
-from weasyprint import HTML
+# from xhtml2pdf import pisa
+# from weasyprint import HTML
 import tempfile
 
 from matrimony_admin.models import Subscription, SubscriptionINFO
