@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -93,11 +94,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'matrimony.wsgi.application'
+# WSGI_APPLICATION = 'matrimony.wsgi.application'
+ASGI_APPLICATION = "matrimony.asgi.application"
 AUTH_USER_MODEL = "U_auth.costume_user"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+# settings.py
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
 
 DATABASES = {
     'default': {
