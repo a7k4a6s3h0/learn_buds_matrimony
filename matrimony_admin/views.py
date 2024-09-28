@@ -4,6 +4,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
+
+from matrimony_admin.models import Subscription
 from .forms import AdminLoginForm
 from U_auth.permissions import *
 
@@ -48,3 +50,12 @@ class NotifcationManagement(TemplateView):
         context['select_options'] = ['User 1', 'User 2', 'User 3']
         # Add other context variables if needed
         return context
+    
+    
+class SubscriptionManagementView(TemplateView):
+    model = Subscription
+    template_name = 'admin_subscription.html' 
+    context_object_name = 'subscriptions'  
+
+    def get_queryset(self):
+        return Subscription.objects.all()
