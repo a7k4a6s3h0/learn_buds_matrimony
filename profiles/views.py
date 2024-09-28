@@ -22,6 +22,9 @@ from django.urls import reverse, reverse_lazy
 
 # Create your views here.
 
+class chat_pg(TemplateView):
+    template_name = 'col_chat.html'
+
 class UserProfileView(TemplateView):
     template_name = 'users_pr_view.html'
 
