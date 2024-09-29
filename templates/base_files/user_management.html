@@ -1,5 +1,4 @@
 {% load static %}
-{% comment %} <!DOCTYPE html> {% endcomment %}
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -72,7 +71,8 @@
                 <div class="content px-3">
                     <div class="d-flex justify-content-between align-items-center py-3">
                         <h2>User Management</h2>
-                        <button class="btn btn-dark">Add User</button>
+                        <!-- Button to open Add User Modal -->
+                        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
                     </div>
                     <table class="table table-striped align-middle">
                         <thead>
@@ -88,26 +88,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Repeat this block for each user -->
-                            <tr>
-                                <td><input type="checkbox" /></td>
-                                <td>
-                                    <img src="https://example.com/user1.jpg" class="rounded-circle me-2" width="30" height="30" alt="User Image">
-                                    John Abraham
-                                </td>
-                                <td>Male</td>
-                                <td>25</td>
-                                <td>Building No:134, kakana, kochi, kerala</td>
-                                <td>
-                                    <select class="form-select form-select-sm">
-                                        <option selected>Block</option>
-                                        <option value="1">Un-Block</option>
-                                    </select>
-                                </td>
-                                <td>Paid</td>
-                                <td><button class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil"></i></button></td>
-                            </tr>
-                            <!-- Repeat block ends -->
+                            {% for user in users %}
+    <tr>
+        <td><input type="checkbox" /></td>
+        <td>
+            <img src="{{ user.profile_pic.url }}" class="rounded-circle me-2" width="30" height="30" alt="User Image">
+            {{ user.user.username }}
+        </td>
+        <td>{{ user.get_gender_display }}</td>
+        <td>{{ user.age }}</td>
+        <td>{{ user.user_location }}</td>
+        <td>
+            <select class="form-select form-select-sm">
+                <option {% if user.user.is_active == False %}selected{% endif %}>Block</option>
+                <option value="1" {% if user.user.is_active == True %}selected{% endif %}>Un-Block</option>
+            </select>
+        </td>
+        <td>{{ user.subscription_status }}</td>
+        <td>
+            <a href="{% url 'edit_user' user.pk %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-pencil"></i>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -118,6 +122,45 @@
         {% block admin_footer %}
         {% endblock admin_footer %}
     </footer>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- jQuery (required for jQuery-based methods) -->
     <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <!-- Popper and Bootstrap JS -->
