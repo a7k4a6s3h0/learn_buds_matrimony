@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,17 +45,37 @@ INSTALLED_APPS = [
     'U_messages',
     'subscription',
     'matrimony_admin',
+
+    'allauth',
+    'allauth.account',
+
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
+
+# AUTHENTICATION_BACKENDS = [
+
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     'django.contrib.auth.backends.ModelBackend',
+
+#     # `allauth` specific authentication methods, such as login by email
+#     'allauth.account.auth_backends.AuthenticationBackend',
+
+# ]
+
 
 ROOT_URLCONF = 'matrimony.urls'
 
@@ -74,11 +95,21 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'matrimony.wsgi.application'
+# WSGI_APPLICATION = 'matrimony.wsgi.application'
+ASGI_APPLICATION = "matrimony.asgi.application"
 AUTH_USER_MODEL = "U_auth.costume_user"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+# settings.py
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
 
 DATABASES = {
     'default': {
@@ -107,6 +138,47 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/user.phonenumbers.read',  # Requests access to phone numbers
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#             'https://www.googleapis.com/auth/contacts.readonly'  # Google People API scope
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'FIELDS': ['email'],  # Phone numbers are not available directly
+#     }
+# }
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_REQUIRED = True
+
+# # settings.py
+# SOCIALACCOUNT_ADAPTER = 'U_auth.custom_adapter.CustomSocialAccountAdapter'
+
+# settings.py
+# SESSION_COOKIE_AGE = 60  # Session will expire in 1 minute
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -131,7 +203,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Enable compression and caching with WhiteNoise
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+RAZORPAY_KEY_ID = 'rzp_test_cc7cPplZgxsSFN'
+RAZORPAY_KEY_SECRET = 'HRh6AjXf6R4tah0dGmt5Kole'
+# LOGIN_REDIRECT_URL = 'auth_page'
+# LOGOUT_REDIRECT_URL = 'auth_page'

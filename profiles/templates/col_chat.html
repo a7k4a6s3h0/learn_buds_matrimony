@@ -1,5 +1,6 @@
 {% extends "base_files/base.html" %}
 {% load custom_tags %}
+{% load static %}
 {% block meta %}{% endblock meta %}
 
 {% block title %}send{% endblock title %}
@@ -205,4 +206,5 @@
 {% block footer %}{% endblock footer %}
 
 {% block scripts %}
+<script src="{% static 'js/web-scoket.js' %}"></script>
 {% endblock scripts %}

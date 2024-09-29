@@ -1,0 +1,241 @@
+{% extends "base_files/admin_base.html" %}
+{% load static %}
+{% block admin_style %}
+<style>
+    body {
+        background-color: #F0F6FF;
+    }
+
+    /* sidebar_2 styles */
+    .sidebar_2 {
+        width: 275px;
+        height: 500px;
+        border-radius: 20px;
+        margin: 20px;
+        border: 1px solid #e0e0e0;
+        margin-left: 55px;
+    }
+
+    .sidebar_2 .profile-picture img {
+        border: 3px solid #f1356d;
+    }
+
+    .sidebar_2 h5 {
+        margin-top: 10px;
+    }
+
+    .sidebar_2 p {
+        margin-bottom: 5px;
+    }
+
+    /* Staff section styles */
+    .staff-card {
+        margin-bottom: 20px;
+    }
+
+    .staff-member-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 8px;
+        text-align: center;
+        transition: transform 0.2s;
+        height: 160px;
+        margin-bottom: 10px; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .staff-member-card img {
+        width: 100%;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .staff-member-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Work Done styles */
+    .circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: conic-gradient(#007bff 72%, #e9ecef 72%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+
+    .circle strong {
+        font-size: 1.2em;
+    }
+
+    .rounded-rectangle {
+        border-radius: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .save-button {
+        width: 30%;
+        margin: auto 35%;
+        border-radius: 10px;
+    }
+
+    .total-work-done-card {
+        width: 250px;
+        height: 250px; 
+        margin: auto;
+    }
+
+    
+    .main-content {
+        padding: 20px;
+    }
+</style>
+{% endblock admin_style %}
+{% block admin_content %}
+<!-- sidebar_2 -->
+<div class="d-flex">
+    <div class="sidebar_2 bg-light p-3">
+        <div class="profile-picture text-center mb-3">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAACUCAMAAABSgr46AAAAY1BMVEX///8AAAD8/PwEBAT29vbv7+/k5OTy8vLS0tJeXl7Ozs4JCQm2trYODg6goKBZWVmRkZGrq6vc3Nw7OzvGxsa+vr6JiYlBQUEiIiJ2dnYoKChkZGRvb29+fn4uLi5KSkoXFxfmAKL2AAAEfElEQVR4nO2ca2/qMAyGk/QCpR290NJy5///ytMU2DgMWjcEG7M8HyZNmia/suM4jlMhHA6Hw+FwOBwOh8PhcDgcfwjV89unMEuWUbSbJ7OA2hLLdO5SwXwvL8TNqvgcJyrVavHzH3lnjkn4KbGqRJjsWknejzqvRcp6PqW2zRLTtBN15T/v/KPO2K9IHaAivQ3QK6Fpcf4ztigRNI8EnnyZ+qwFChEc/g/QW4mejPj6sEuiy8cePGtssmRCbaoh2jN5PKBQs2KrUIkSoE/KQ0htqjEzkEApS65LUW2BCmfUlppS9mwUV7TplKcH2zTzBVQoC2pTDZmtgVEqM6brEOjDljW1qWaood3+h5hnrpkuwAplTm2sCf5OPi5Ib5lTW2tC0YxQmFFba8IUHqNMFYaHET7cUVtrQgCt2TQs16HIPz1KRQkuaf6AwriiNtaI4gD3IcsdXwh41XZkesrfwRUy7QzDF6LHcx0KUYOduKI21Yzprwunh2ypbTVjAj8+8axplIigAuOS2lgjFHy7+OJ6k5iAFfLsYggxhyrkWtOIDKyQZ+WtoxR6BubqQwVV+MW16S2gLmTaERY61cA0bph29eHJdMlWIaioadKa6fGwpZSL4TvEmvckXzjcyohYCxT+w4mob7Y+tZFP0OaP1aBCrtejHa3pVf9+4cmGawfjhBLB0EXwguu80DdDHTfeLtQEx16BNbV9Fuh3Ist7tRv6SzeuJ8Nr+m/ZPkFhf7dmSW2eBfpHMDfU5lmgfwYz1jWbYlzViP4o9Ty5SDjXpS2TqteF3Zh7WgVsnRgkm16Bly5HPZ8y9KQSKt+AxxMXq1KxG4auUrA+zTriVaL6Ffx+tAtXHa/7nMdBow21oBw+299lMS8Ug1j1qzETX9eOlPpB2/s3wMsINqR/X6GUh+x9u4s6vGbj8std9tnb7h2+6fq7pdHPvd5vPfolfEhokE31Tn48pb9yZbr+ftOuyGarl+ObFOXaitCivrPGOr/88zcgtBifF4mtxuhdsmoIn0mAC+x+HsknbfQHBYL8IEdMrY8koY5SdSqwe54zP4Un45xa4vJiystI6JKNPtDBZ2bMISxUlUhGDOQbUxP6sFhIyHv05/AohzPB85XPsSebXXzBNniHNoltAppsE74+Qs8KPaLBN/uV2kMovrug9DPYF+6CN1AkmxEvmS1wJOjCFYgubItCgovGMe8LLbBGH53yB24krIOeTkO8LHMiwu7bIAepbr8hK7TUNhzBErmsQReIveuH+Aq9ErU47b+8folAmaGGKWpBc1aYotY1hvdnT4H7IBo/lcrus2doBOPusC2BWdaEIz4gZA/M58IjXjFb5ICosLJ70QQE8wUY/EtlNokRFeJ02X6BeLzAaObTKsQvaTrwzvkKsZFIo9CnKNpa8Mq2CXaTBl1hQKQQ7yYxRLp0ugXv6xIhydEC83Ax5jteNsGbIqZSiNdQ/HyFU5IDMOYReMwXdJ3CMeDdkzqFH6CQKNM4hfag2g+dQntQVd54CqnOh2YjJ/8AOv4/PpAOf4oAAAAASUVORK5CYII=" class="rounded-circle" width="80" height="80" alt="Profile">
+            <h5>{{admin_details.username}}</h5>
+            <p>Ahmedabad, Gujarat<br>India</p>
+        </div>
+        <div class="role mb-3">
+            <p><strong>Administrator</strong></p>
+        </div>
+        <div class="contact-info">
+            <p><i class="bi bi-phone"></i> +91 {{admin_details.phone}}</p>
+            <p><i class="bi bi-envelope"></i>{{admin_details.email}}</p>
+            <p><i class="bi bi-card-list"></i> PDT - I</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content w-100">
+        <div class="row">
+            <!-- Edit Profile Section -->
+            <div class="col-md-6">
+                <div class="card rounded-rectangle edit-profile-card mb-4">
+                    <div class="card-body">
+                        <h4>Edit Profile</h4>
+                        <form>
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">User Name</label>
+                                <input type="text" class="form-control" id="userName" placeholder="{{admin_details.username}}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">+91</span>
+                                    <input type="text" class="form-control" id="phone" placeholder="Phone Number">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="Change Password">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nationality" class="form-label">Nationality</label>
+                                <select class="form-select" id="nationality">
+                                    <option selected disabled>India</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="designation" class="form-label">Designation</label>
+                                <select class="form-select" id="designation">
+                                    <option selected disabled>UI Intern</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary save-button">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Section -->
+            <div class="col-md-6">
+                <div class="card rounded-rectangle staff-card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">Staff</h5>
+                            <a href="#" class="btn btn-link">View All</a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="staff-member-card">
+                                    <img src="./images/1520243295100.jpeg" alt="Emo stuff">
+                                    <p class="staff-name">Emo stuff</p>
+                                    <p>Role: Designer</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="staff-member-card">
+                                    <img src="./images/rrrr.avif" alt="Tim Burton">
+                                    <p class="staff-name">Tim Burton</p>
+                                    <p>Role: Developer</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="staff-member-card">
+                                    <img src="./images/5.-Take-Wedding-Planner’s-Help.jpg" alt="Halloween">
+                                    <p class="staff-name">Halloween!</p>
+                                    <p>Role: Content Creator</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="staff-member-card">
+                                    <img src="./images/Are-you-really-married.jpg" alt="Spooky Art">
+                                    <p class="staff-name">Spooky Art</p>
+                                    <p>Role: Illustrator</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="staff-member-card">
+                                    <img src="./images/ddd.avif" alt="Dark Art">
+                                    <p class="staff-name">Dark Art</p>
+                                    <p>Role: Photographer</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="staff-member-card">
+                                    <img src="./images/rrrr.avif" alt="Gothic Art">
+                                    <p class="staff-name">Gothic Art</p>
+                                    <p>Role: Visual Artist</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Work Done Section with increased height -->
+                <div class="total-work-done-card">
+                    <div class="card rounded-rectangle">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Total Work Done</h5>
+                            <div class="d-flex justify-content-center">
+                                <div class="circle">
+                                    <strong>5w: 2d</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock admin_content %}

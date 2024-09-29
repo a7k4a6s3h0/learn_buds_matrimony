@@ -1,0 +1,42 @@
+{% if type == 'image' %}
+<div class="form-group mb-3 d-flex justify-content-center align-items-center" style="height: 100%;">
+    <div class="image-upload-wrapper d-flex justify-content-center align-items-center">
+        <label for="{{ label|slugify }}" class="upload-icon">
+            {{ label }} <i class="fa-solid fa-plus"></i>
+        </label>
+        <input type="file" name="{{ name }}" class="form-control d-none" id="{{ label|slugify }}" accept="image/*" />
+    </div>
+</div>
+{% elif type == 'checkbox' %}
+<div class="form-group mb-3 d-flex align-items-center">
+    <input type="checkbox" id="{{ label|slugify }}" name="{{ name }}" class="form-check-input" />
+    <label for="{{ label|slugify }}" class="form-check-label ms-2">{{ label }}</label>
+</div>
+{% elif type == 'select' %}
+<div class="form-group mb-3">
+    <label for="{{ label|slugify }}" class="form-label">{{ label }}</label>
+    <select class="form-select" id="{{ label|slugify }}" name="{{ name }}">
+        <option value="" disabled selected>Select an option</option>
+        {% for option in select_options %}
+        <option value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+    </select>
+</div>
+{% else %}
+<div class="form-group mb-3">
+    {% if label == 'Location' %}
+    <div class="form-group mb-3">
+        <h3>Pick Your Location</h3>
+        <div id="map"></div>
+        <br>
+        <input type="text" id="location_lat" readonly>
+        <input type="text" id="location_lng" readonly>
+    </div>
+    <input type="hidden" id="locationInput" name="location">
+    <textarea id="location_address" name="address_details" cols="50"></textarea>
+    {% else %}
+    <input type="{{ type }}" name="{{ name }}" class="form-control" id="{{ label|slugify }}"
+        placeholder="{{ label }}" />
+    {% endif %}
+</div>
+{% endif %}

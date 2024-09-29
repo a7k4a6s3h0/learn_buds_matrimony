@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -6,11 +7,14 @@ from . manager import UserManager
 
 
 class Country_codes(models.Model):
-    country_code = models.CharField(max_length=10, unique=True)
+    calling_code = models.CharField(max_length=10, unique=True)
     country_name = models.CharField(max_length=100, unique=True)
     
     def __str__(self):
-        return self.country_code
+        return self.calling_code
+    
+    class Meta:
+        ordering = ['calling_code']  # Order by calling_code
 
 class languages(models.Model):
     language_name = models.CharField(max_length=100, unique=True)
@@ -39,16 +43,13 @@ class costume_user(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'phone', 'password']
 
-    def __str__(self):
-        return self.username if self.username else self.email
-
 
 class Qualifications(models.Model):
     qualification = models.CharField(max_length=50, blank=False)
 
 
     def __str__(self):
-        return f"Hobby: {self.qualification}"
+        return f"Qualification: {self.qualification}"
     
 class Hobbies(models.Model):
     hobby = models.CharField(max_length=100)
@@ -61,8 +62,6 @@ class Interests(models.Model):
 
     def __str__(self):
         return f"Interest: {self.interest}"
-
-
 
 class Location(models.Model):
     longitude = models.FloatField()
@@ -90,11 +89,13 @@ class UserPersonalDetails(models.Model):
     interests = models.ManyToManyField(Interests)
     hobbies = models.ManyToManyField(Hobbies)
     qualifications = models.ManyToManyField(Qualifications)
-    profile_pic = models.ImageField(upload_to='images/', default='img/default_pic.png', blank=True)
+    profile_pic = models.ImageField(upload_to='images/', default='images/default_pic.png')
     short_video = models.FileField(upload_to='videos/', null=True, blank=True)
     is_employer = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=False)
     is_jobseeker = models.BooleanField(default=False)
+    bio = models.CharField(max_length=100, blank=True, default='This user hasn’t added a bio yet. Stay tuned for more!')
+
 
     def __str__(self):
         return f"{self.user.username}_details"
@@ -103,11 +104,11 @@ class UserPersonalDetails(models.Model):
         verbose_name = "User Personal Detail"
         verbose_name_plural = "User Personal Details"
 
-    @property
-    def profile_pic_url(self):
-        if self.profile_pic:
-            return f"{settings.MEDIA_URL}{self.profile_pic}"
-        return ""
+    # @property
+    # def profile_pic_url(self):
+    #     if self.profile_pic:
+    #         return f"{settings.MEDIA_URL}{self.profile_pic}"
+    #     return ""
 
     @property
     def short_video_url(self):
@@ -203,7 +204,7 @@ class AdditionalDetails(models.Model):
     blood_group = models.CharField(max_length=50, blank=False)
     religion = models.CharField(choices=RELIGION_CHOICES, max_length=50, blank=False)
     caste_or_community = models.CharField(max_length=50, blank=False)
-    user_disabilities = models.ManyToManyField(Disabilities, verbose_name='disabilities')  # Corrected typo from 'user_disabilitys'
+    user_disabilities = models.ManyToManyField(Disabilities, verbose_name='disabilities') 
     complexion = models.CharField(null=True, max_length=50, blank=False)
 
     class Meta:
@@ -214,11 +215,7 @@ class AdditionalDetails(models.Model):
         return f"{self.user.username}_extra_details"
 
 
-class Interest_and_Hobbie(models.Model):
-    name = models.CharField(max_length=100, unique=True)
 
-    def __str__(self):
-        return self.name
 
 class LifestyleChoice(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -242,12 +239,7 @@ class PartnerPreference(models.Model):
         ('SI', 'Sikhism'),
         ('OT', 'Other'),
     ]
-    EDUCATION_LEVEL_CHOICES = [
-        ('High School', 'High School'),
-        ('Bachelors', 'Bachelors'),
-        ('Masters', 'Masters'),
-        ('Doctorate', 'Doctorate'),
-    ]
+
 
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE, related_name="partner_preference")
 
@@ -255,9 +247,9 @@ class PartnerPreference(models.Model):
     age_max = models.IntegerField(default=35)
 
     preferred_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, blank=False)
-    preferred_location = models.ManyToManyField(Location)  # ForeignKey for locations
-    interests_hobbies = models.ManyToManyField(Interest_and_Hobbie)
-    education_level = models.CharField(max_length=50, choices=EDUCATION_LEVEL_CHOICES)
+    interests = models.ManyToManyField(Interests)
+    hobbies = models.ManyToManyField(Hobbies)
+    education_level = models.ManyToManyField(Qualifications)
    
     height_min = models.IntegerField(default=100)  # in cm
     height_max = models.IntegerField(default=220)
@@ -273,6 +265,14 @@ class PartnerPreference(models.Model):
 
     def __str__(self):
         return f"{self.user.username}"
+
+
+class Preferred_location(models.Model):
+    user = models.ForeignKey(PartnerPreference, on_delete=models.CASCADE)
+    location_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.user.user.username
 
 class OTP(models.Model):
     user = models.OneToOneField(costume_user, on_delete=models.CASCADE)

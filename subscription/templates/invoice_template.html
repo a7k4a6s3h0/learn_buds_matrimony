@@ -1,0 +1,95 @@
+{% extends "base_files/base.html" %} 
+{% block meta %}
+  <meta name="description" content="Invoice details for unknown">
+{% endblock meta %}
+{% block title %}Invoice{% endblock title %}
+{% block link %}{%endblock link %} 
+
+{% block style %}
+    <style type="text/css">
+      * { margin:0; padding:0; text-indent:0; }
+      .s1 { color: #232323; font-family: Cambria, serif; font-size: 21.5pt; }
+      .s3 { color: #242424; font-family: Cambria, serif; font-size: 18.5pt; }
+      .s4, .s25 { color: #545454; font-family: Cambria, serif; font-size: 17pt; }
+      .s6 { color: #242424; font-family: Cambria, serif; font-size: 17.5pt; }
+      .s7, .s19, .s24 { color: #525252; font-family: Cambria, serif; font-size: 17pt; }
+      .s9 { color: #232323; font-family: Cambria, serif; font-size: 23pt; }
+      .s11 { color: #242424; font-family: Cambria, serif; font-size: 15pt; }
+      .s14 { color: #525252; font-family: Consolas, monospace; font-size: 16.5pt; }
+      .s16 { color: #5D5D5D; font-family: Cambria, serif; font-size: 17pt; }
+      .s17, .s28 { color: #343434; font-family: Cambria, serif; font-size: 18.5pt; }
+      .s18 { color: #343434; font-family: "Century Gothic", sans-serif; font-size: 20.5pt; }
+      .s22 { color: #525252; font-family: "Century Gothic", sans-serif; font-size: 17pt; }
+      .s26, .s27 { color: #525252; font-family: Consolas, monospace; font-size: 17pt; }
+      .s30 { color: #525252; font-family: Cambria, serif; font-size: 15.5pt; }
+      p { margin:0pt; color: #525252; font-family: Cambria, serif; font-size: 17pt; }
+      li { display: block; }
+      #l1 { padding-left: 0pt; }
+      #l1> li>*:first-child:before { content: "• "; color: black; font-family: Cambria, serif; }
+      table, tbody { vertical-align: top; overflow: visible; border-collapse: collapse; }
+    </style>
+
+{% endblock style %}
+
+{% block header %}
+
+{% endblock header %} 
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+    <p class="s1" style="padding-top: 4pt; text-align: right;">INVOICE NO: @456J3</p>
+    <p style="text-align: left;"><br/></p>
+    <p class="s3" style="padding-top: 5pt; padding-left: 5pt;">Invoice To</p>
+    <p class="s4" style="padding-top: 7pt; padding-left: 6pt;">Theme Vessel</p>
+    <p style="padding-top: 3pt; padding-left: 6pt;">info@themevessel.com</p>
+    <p style="padding-top: 3pt; padding-left: 5pt;">21-12 Green Street, Meherpur, Bangladesh</p>
+
+    <p style="padding-top: 11pt;"><br/></p>
+    <p class="s6" style="padding-left: 5pt;">Date</p>
+    <p class="s7" style="padding-top: 7pt; padding-left: 6pt;">Due Date: 21/10/2021</p>
+
+    <p style="text-align: left;"><br/></p>
+    <p class="s9" style="padding-left: 5pt;">Order Summary</p>
+    <p class="s11" style="padding-top: 8pt; text-align: right;">Bill To</p>
+    <p class="s7" style="padding-top: 9pt; padding-left: 5pt; text-align: right;">Apexo Inc, Billing, billing@apexo.com<br/>159 Terogho, Bangladesh</p>
+
+    <p style="padding-top: 6pt; text-align: left;"><br/></p>
+    <p class="s15" style="text-align: right;">Payment Method</p>
+    <p class="s16" style="padding-top: 6pt; text-align: right;">Credit Card</p>
+
+    <p style="text-align: left;"><br/></p>
+    <table style="margin-left: 34pt;">
+      <tr style="height: 49pt;">
+        <td style="width: 186pt;"><p class="s17" style="padding-top: 2pt;">Description</p></td>
+        <td style="width: 209pt;"><p class="s17" style="padding-top: 2pt; text-align: center;">Price</p></td>
+        <td style="width: 211pt;"><p class="s18" style="padding-left: 69pt;">VAT (20%)</p></td>
+        <td style="width: 139pt;"><p class="s17" style="padding-left: 91pt;">Total</p></td>
+      </tr>
+      <tr style="height: 130pt;">
+        <td><p class="s19" style="padding-left: 3pt;">Standard Plan</p><p class="s22" style="padding-left: 2pt;">Extra Plan</p></td>
+        <td><p class="s24" style="padding-left: 85pt;">$443.00</p><p class="s25" style="padding-left: 85pt;">$413.00</p></td>
+        <td><p class="s26" style="padding-left: 69pt;">$218.00</p><p class="s25" style="padding-left: 70pt;">$912.80</p></td>
+        <td><p class="s19" style="padding-left: 92pt;">$9243.00</p></td>
+      </tr>
+      <tr style="height: 43pt;">
+        <td><p class="s19" style="padding-left: 3pt;">Total Due</p></td>
+        <td></td>
+        <td></td>
+        <td><p class="s27" style="padding-left: 91pt;">$59,750.00</p></td>
+      </tr>
+    </table>
+
+    <p class="s28" style="padding-top: 5pt; padding-left: 5pt;">Important Note</p>
+    <ul id="l1">
+      <li><p class="s7" style="padding-top: 8pt; padding-left: 21pt;">Once the order is done, the payment cannot be refunded.</p></li>
+      <li><p class="s7" style="padding-top: 7pt; padding-left: 21pt;">Delivery might be delayed due to external dependencies.</p></li>
+      <li><p class="s30" style="padding-top: 7pt; padding-left: 21pt;">This is a computer-generated invoice and does not require a physical signature.</p></li>
+    </ul>
+    </div>
+</div>
+</div>
+{% endblock content %} 
+{% block footer %}{% endblock footer %} 
+{% block scripts%} {% endblock scripts %}

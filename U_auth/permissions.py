@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http.response import HttpResponseRedirect
 import U_auth.permissions
 import django.contrib
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -20,19 +21,31 @@ In this case, it redirects the authenticated user to the home page (or any page 
 preventing logged-in users from accessing these pages.
 '''
 
+# class RedirectAuthenticatedUserMixin(UserPassesTestMixin):
+#     def test_func(self):
+#         # This will return False if the user is authenticated, blocking access to the view.
+#         return not self.request.user.is_authenticated and self.request.is_completed 
+
+#     def handle_no_permission(self):
+#         # If the user is authenticated and tries to access the page like login or signup, redirect them
+#         return redirect(reverse_lazy('home'))  # Redirect to home page or any other page
+
 class RedirectAuthenticatedUserMixin(UserPassesTestMixin):
     def test_func(self):
-        # This will return False if the user is authenticated, blocking access to the view.
-        return not self.request.user.is_authenticated
+        # Ensure the user is authenticated and has the `is_completed` attribute set to True
+        user = self.request.user
+        print(getattr(user, 'is_completed', False), user)
+        return not (user.is_authenticated and getattr(user, 'is_completed', False))
 
     def handle_no_permission(self):
-        # If the user is authenticated and tries to access the page like login or signup, redirect them
-        return redirect(reverse_lazy('home'))  # Redirect to home page or any other page
-    
+        # Return False (i.e., redirect) only if the user is authenticated and `is_completed` is True
+        return redirect(reverse_lazy('home'))  # Redirect to home page or any other page    
+
 class RedirectNotAuthenticatedUserMixin(UserPassesTestMixin):
     def test_func(self):
+        user = self.request.user
         # This will return True if the user is not authenticated, blocking access to the view.
-        return self.request.user.is_authenticated
+        return (user.is_authenticated and getattr(user, 'is_completed', False))
     
     def handle_no_permission(self):
         # If the user is not authenticated and tries to access the authendication need pages like home or signup, redirect them
@@ -40,6 +53,22 @@ class RedirectNotAuthenticatedUserMixin(UserPassesTestMixin):
 
         return redirect(reverse_lazy('auth_page'))
 
+class CheckSuperUserAuthendicated(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return not (user.is_authenticated and getattr(user, 'is_superuser', False))
+    
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('admin_home'))
+
+class CheckSuperUserNotAuthendicated(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return (user.is_authenticated and getattr(user, 'is_superuser', False))
+    
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        return redirect(reverse_lazy('admin_login'))
+    
 class check_permissions:
     def __init__(self, get_response, user_email):
         self.get_response = get_response
@@ -94,8 +123,6 @@ class check_permissions:
                     
 
         # If all models exist
-        self.model_dict['status'] = False
-        self.model_dict['show_login_modal'] = True
-        return self.model_dict
+        return None
             
            

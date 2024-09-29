@@ -1,0 +1,944 @@
+{% extends "base_files/base.html" %} 
+{% load custom_tags %} 
+{% block title %}Privacy & Setting{% endblock title %} 
+{% block link %}{% endblock link %} 
+{% block style %}
+<style>
+  /* Custom styles for the messaging interface */
+  .navbar-custom {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    z-index: 10;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-left {
+    flex-shrink: 0;
+  }
+
+  .nav-right {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .navbar-custom i {
+    color: white;
+    padding-right: 8px;
+  }
+
+  .navbar-custom .distance {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+  }
+
+  /* Container for chat users */
+  .chat_userview {
+    /* height: calc(100vh - 80px); */
+    background-color: #343a40;
+    padding: 10px;
+  }
+
+  .main_div {
+    top: 0;
+    background-color: #343a40;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .inner_flex {
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-bottom-style: inset;
+  }
+
+  .content_flex {
+    width: 100%;
+    display: flex;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    gap: 10px;
+    font-size: 20px;
+    color: white;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-bottom-style: inset;
+  }
+
+  .location_flex{
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .inner_flex_1{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+    justify-content: space-between;
+
+  }
+
+
+  .inner_flex_2{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+  }
+
+  /* .second_row{
+    display: flex;
+    width: 500px;
+    justify-content: center;
+  } */
+
+  .col-10.col-md-11 {
+    padding-right: 0;
+  }
+
+  .chat-section {
+    background-color: #343a40;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .button_reset {
+    align-self: flex-end;
+    padding-top: 10px;
+    text-transform: capitalize;
+  }
+
+  /* Range Slider Styles */
+  .slider-container {
+    width: 300px;
+    padding-top: 15px;
+    /* margin-left: 100px; */
+    position: relative;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    position: absolute;
+    pointer-events: none;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+
+  input[type="range"]:focus {
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    background: #ddd;
+    border-radius: 5px;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 15px;
+    height: 15px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -5px;
+  }
+
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 5px;
+    cursor: pointer;
+    background: #ddd;
+    border-radius: 5px;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    pointer-events: all;
+    width: 15px;
+    height: 15px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .slider-values {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 8px;
+  }
+
+  /* Multi-Selector Styles */
+  .multi-selector-container {
+    color: black;
+    width: 300px;
+    /* margin: 20px; */
+    position: relative;
+  }
+
+  .multi-selector {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .title_row_2{
+    display: none;
+  }
+
+  .right_row{
+    width: 300px;
+  }
+
+  .selected-items {
+    /* width: 100%; */
+    /* margin-top: 10px; */
+    /* padding: 10px; */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 50px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    overflow: auto;
+  }
+
+  .selected-item {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .selected-item i {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  .location-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+  }
+
+  .location-dropdown.open {
+    display: block;
+  }
+
+  .location-item {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .location-item:hover {
+    background-color: #f1f1f1;
+  }
+
+  .multiselect-divgroup {
+    position: relative;
+  }
+
+  .selctbox_div {
+      display: flex;
+      width: 300px;
+      height: 50px;
+      border: 1px solid #ccc;
+      border-radius: 15px;
+      color: black;
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      padding: 10px;
+      background-color: #c2bfbf;
+      cursor: pointer;
+  }
+
+  .show_iteam {
+      display: none;
+      position: absolute;
+      top: 40px;
+      z-index: 1;
+      width: 300px;
+      height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      background-color: #b6dae6;
+      color: rgb(31, 27, 27);
+      padding: 10px;
+  }
+
+  .add_iteam {
+      display: none;
+      overflow-y: auto;
+      color: rgb(31, 27, 27);
+      padding: 10px;
+  }
+
+  .item-class {
+      padding: 5px;
+      margin: 5px 0;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+  }
+
+  .add-item-btn {
+      display: inline-block;
+      /* width: 95px; */
+      height: fit-content;
+      padding: 5px 10px;
+      margin: 5px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+  }
+
+  .add-item-btn .remove-icon {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #dc3545;
+      border-radius: 50%;
+      padding: 2px 5px;
+      color: #fff;
+      cursor: pointer;
+  }
+
+  .form-control {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+  }
+
+  .mb-2 {
+      margin-bottom: 8px;
+  }
+
+  @media (max-width: 576px) {
+    .main_div {
+      flex-direction: column;
+      background-color: black;
+    }
+
+    .chat-section {
+      position: relative;
+      background-color: rgb(80, 1, 80);
+      display: flex;
+      flex-direction: row;
+    }
+
+    /* Container for chat users */
+    .chat_userview {
+      height: 100%;
+      background-color: black;
+      border-top-right-radius: 45px;
+      border-top-left-radius: 45px;
+      margin-top: 30px;
+    }
+
+    .inner_flex {
+      display: flex;
+      /* justify-content: space-between; */
+      font-size: 20px;
+      color: white;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      border-bottom-style: inset;
+    }
+
+    .content_flex {
+        width: 100%;
+        display: flex;
+        /* flex-direction: column; */
+        /* align-items: center; */
+        gap: 10px;
+        font-size: 15px;
+        color: white;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        border-bottom-style: inset;
+        
+    }
+
+    .location_flex{
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .inner_flex_1{
+        display: none;
+    }
+
+    .title_row_2{
+        display: block;
+        padding-bottom: 5px;
+        font-size: 20px;
+    }
+
+    .inner_flex_2{
+        width: 100%;
+      align-items: center;
+    }
+
+    .slider-container {
+        width: 300px;
+        padding-top: 15px;
+        /* margin-left: 100px; */
+        position: relative;
+    }    
+
+    .button_reset button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+    }
+  }
+</style>
+{% endblock style %} 
+{% block header %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="navbar-custom">
+        <div class="nav-left">
+          <a href="{%url 'privacy_setting'%}" class="nav-link">
+          <i class="fas fa-angle-left" style="font-size: 24px"></i>
+          </a>
+        </div>
+        <div class="nav-right">
+          <div class="distance">Privacy & Setting</div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+{% endblock header %} 
+{% block content %}
+<div class="container-fluid bg-dark vh-100">
+  <div class="row chat-section" style="padding-top: 80px">
+    <!-- Chat User View -->
+    <div class="col-md-6 chat_userview">
+      <div class="main_div">
+        <div class="inner_flex">
+          <div class="first_row">
+            <label for="">Partner Preference</label><br />
+          </div>
+        </div>
+        <form action="{% url 'privacy_setting_sec' %}" method="post">
+          {% csrf_token %}
+        <div class="content_flex">
+            <div class="inner_flex_1">
+
+                <div class="title_row">
+                <label for="">Age Range</label><br />                                                 
+                </div>
+                <div class="title_row">
+                <label for="">gender</label>
+                </div>
+
+                <div class="title_row">
+                    <label for="">location</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">Interest and hobbies</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">Education Level</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">Height</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">weight</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">religion</label>
+                 </div>
+
+                 <div class="title_row">
+                    <label for="">occupation</label>
+                 </div>
+
+            </div>
+
+            <div class="inner_flex_2">
+                <div class="first_row">
+                    <div class="title_row_2">
+                        <label for="">Age Range</label>
+                    </div>
+                    <div class="slider-container">
+                      <!-- Use class or data-* attribute instead of relying on id -->
+                    {% if user_partner_details.age_min %}
+                    <input type="range" class="minRange" min="0" max="100" value="{{user_partner_details.age_min}}" step="1" oninput="updateRange(this)">
+                    <input type="range" class="maxRange" min="0" max="100" value="{{user_partner_details.age_max}}" step="1" oninput="updateRange(this)">
+                    <div class="slider-values">
+                      <span  class="minValue">{{user_partner_details.age_min}}</span> - <span class="maxValue">{{user_partner_details.age_max}}</span>
+                      <input type="hidden" name="age_min" class="mininputs">
+                      <input type="hidden" name="age_max" class="maxinputs">
+                    </div>
+                    {% else %}
+                    <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                    <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+                    <div class="slider-values">
+                      <span  class="minValue">20</span> - <span class="maxValue">80</span>
+                      <input type="hidden" name="age_min" class="mininputs">
+                      <input type="hidden" name="age_max" class="maxinputs">
+                    </div>
+                    {% endif %}
+                    
+                    </div>                                          
+                </div>
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">Gender</label>
+                        </div>
+                        <select class="form-select" id="{{ label|slugify }}" name="preferred_gender">
+                          {% if user_partner_details.preferred_gender %}
+                          <option value="{{user_partner_details.preferred_gender}}">{{user_partner_details.preferred_gender}}</option>
+                          {% else %}
+                          <option >select Gender</option>
+                          {% endif %}
+                          <option value="M">Male</option>
+                          <option value="F">Female</option>
+                          <option value="O">Others</option>
+                      </select>
+                    </div>
+
+                    <div>
+                        <div class="location_flex">
+                            <div class="title_row_2">
+                                <label for="">location</label>
+                            </div>
+                            
+                            <div class="add_iteam" id="add_elements_location"></div>
+                            <div class="multiselect-divgroup">
+                                <button type="button" class="selctbox_div" id="show_all_location">
+                                    <i class="fa-solid fa-caret-down"></i> Select Locations
+                                </button>
+                                <div class="show_iteam" id="show_elements_location"></div>
+                            </div>
+                            <!-- Hidden input to store selected hobbies -->
+                            <input type="hidden" name="preferred_location" id="location_input"> 
+
+                    </div>
+                    </div>
+
+                    <div class="fourth_row">
+                        <div class="location_flex">
+                            <div class="title_row_2">
+                                <label for="">hobbies & Habbits</label>
+                            </div>
+ 
+                            <div class="add_iteam" id="add_elements_interest_hobbies"></div>
+                            <div class="multiselect-divgroup">
+                                <button type="button" class="selctbox_div" id="show_all_interest_hobbies">
+                                    <i class="fa-solid fa-caret-down"></i> Select Hobbies&interests
+                                </button>
+                                <div class="show_iteam" id="show_elements_interest_hobbies"></div>
+                            </div>
+                            <!-- Hidden input to store selected hobbies -->
+                            <input type="hidden" name="interests_hobbies" id="interest_hobbies_input">
+    
+                        </div>
+                    </div>
+
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">Education level</label>
+                        </div>
+                    
+                    <div class="add_iteam" id="add_elements_qualifications"></div>
+                    <div class="multiselect-divgroup">
+                        <button type="button" class="selctbox_div" id="show_all_qualifications">
+                            <i class="fa-solid fa-caret-down"></i> Select Education
+                        </button>
+                        <div class="show_iteam" id="show_elements_qualifications"></div>
+                    </div>
+                    <!-- Hidden input to store selected hobbies -->
+                    <input type="hidden" name="education_level" id="qualification_input">
+                    </div>
+
+
+                    <div class="first_row">
+                        <div class="title_row_2">
+                            <label for="">height</label>
+                        </div>
+                        <div class="slider-container">
+                          <!-- Use class or data-* attribute instead of relying on id -->
+                        {% if user_partner_details.height_min %}
+                        
+                        <input type="range" class="minRange" min="0" max="100" value="{{user_partner_details.height_min}}" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="{{user_partner_details.height_max}}" step="1" oninput="updateRange(this)">
+                        <div class="slider-values">
+                            <span name='height_min' class="minValue">{{user_partner_details.height_min}}</span> - <span name='height_max' class="maxValue">{{user_partner_details.height_max}}</span>
+                            <input type="hidden" name="height_min" class="mininputs">
+                            <input type="hidden" name="height_max" class="maxinputs">
+                          </div>
+                        {% else %}
+
+                        <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+
+                        <div class="slider-values">
+                          <span name='height_min' class="minValue">20</span> - <span name='height_max' class="maxValue">80</span>
+                          <input type="hidden" name="height_min" class="mininputs">
+                          <input type="hidden" name="height_max" class="maxinputs">
+                        </div>
+
+                        {% endif %}
+                        </div>                                          
+                    </div>
+
+                    <div class="first_row">
+                        <div class="title_row_2">
+                            <label  for="">weight</label>
+                        </div>
+                        <div class="slider-container">
+                          <!-- Use class or data-* attribute instead of relying on id -->
+                        {% if user_partner_details.weight_min %}
+
+
+                        <input type="range" class="minRange" min="0" max="100" value="{{user_partner_details.weight_min}}" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="{{user_partner_details.weight_max}}" step="1" oninput="updateRange(this)">
+                        <div class="slider-values">
+                            <span name="weight_min" class="minValue">{{user_partner_details.weight_min}}</span> - <span name="weight_max" class="maxValue">{{user_partner_details.weight_max}}</span>
+                            <input type="hidden" name="weight_min" class="mininputs">
+                            <input type="hidden" name="weight_max" class="maxinputs">
+                          </div>
+                        
+                        {% else %}
+                        
+                        <input type="range" class="minRange" min="0" max="100" value="20" step="1" oninput="updateRange(this)">
+                        <input type="range" class="maxRange" min="0" max="100" value="80" step="1" oninput="updateRange(this)">
+                        <div class="slider-values">
+                            <span name="weight_min" class="minValue">20</span> - <span name="weight_max" class="maxValue">80</span>
+                            <input type="hidden" name="weight_min" class="mininputs">
+                            <input type="hidden" name="weight_max" class="maxinputs">
+                          </div>
+                        {% endif %}
+                        </div>                                          
+                    </div>
+                    <div class="right_row">
+                      <div class="title_row_2">
+                          <label for="">LifestyleChoice level</label>
+                      </div>
+                  
+                  <div class="add_iteam" id="add_elements_LifestyleChoice"></div>
+                  <div class="multiselect-divgroup">
+                      <button type="button" class="selctbox_div" id="show_all_LifestyleChoice">
+                          <i class="fa-solid fa-caret-down"></i> Select LifestyleChoice
+                      </button>
+                      <div class="show_iteam" id="show_elements_LifestyleChoice"></div>
+                  </div>
+                  <!-- Hidden input to store selected hobbies -->
+                  <input type="hidden" name="lifestyle_choices" id="LifestyleChoice_input">
+                  </div>
+
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">religion</label>
+                        </div>
+                        <select class="form-select" id="{{ label|slugify }}" name="religion">
+                          {% if user_partner_details.religion %}
+                          <option  value="{{ user_partner_details.religion }}">{{ user_partner_details.religion }}</option>
+                          {% else %}
+                          <option >select Religion</option>
+                          {% endif %}
+                          <option value="CH">Christianity</option>
+                          <option value="IS">Islam</option>
+                          <option value="HI">Hinduism</option>
+                          <option value="BU">Buddhism</option>
+                          <option value="SI">Sikhism</option>
+                          <option value="JE">Judaism</option>
+                          <option value="OT">Others</option>
+                  
+                      </select>
+                    </div>
+
+                    <div class="right_row">
+                        <div class="title_row_2">
+                            <label for="">occupation</label>
+                        </div>
+                        <select name="occupation" id="occupation" class="form-control">
+                            {% if user_partner_details.occupation %}
+                            <option value={{user_partner_details.occupation}}>{{user_partner_details.occupation}}</option>
+                            {% else %}
+                            <option >Select occupation</option>
+                            {% endif %}
+                            {% for job in occupation %}
+                            <option value="{{job}}">{{job}}</option>
+                            {% endfor %}
+                          </select>
+                    </div>
+                    <div class="right_row">  
+                      <button class="btn btn-primary w-100" type="submit">Save</button>
+                    </div>
+            </div>
+            {% if form.errors%}
+                <div class="alert alert-danger" role="alert">
+                    {% for field, errors in form.errors.items %}
+                        {% if field and field != '__all__' %}
+                        <div>
+                            {{field }}: {{ errors|join:', ' }}
+                        </div>
+                        {% else %}
+                        <div>
+                            {{ errors|join:', ' }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}       
+        </div>
+      </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      let sliders = document.querySelectorAll('.first_row');
+
+      sliders.forEach((slider, index) => {
+          let minRange = slider.querySelector('.minRange');
+          let maxRange = slider.querySelector('.maxRange');
+          let minValue = slider.querySelector('.minValue');
+          let maxValue = slider.querySelector('.maxValue');
+          let minInput = slider.querySelector('.mininputs');
+          let maxInput = slider.querySelector('.maxinputs');
+
+          // Assign unique IDs
+          minRange.id = `minRange_${index}`;
+          maxRange.id = `maxRange_${index}`;
+          minValue.id = `minValue_${index}`;
+          maxValue.id = `maxValue_${index}`;
+          minInput.id = `mininputs_${index}`;
+          maxInput.id = `maxinputs_${index}`;
+      });
+  });
+
+  function updateRange(inputElement) {
+      let parent = inputElement.closest('.first_row');
+      let minRange = parent.querySelector('.minRange');
+      let maxRange = parent.querySelector('.maxRange');
+      let minValue = parent.querySelector('.minValue');
+      let maxValue = parent.querySelector('.maxValue');
+      let minInput = parent.querySelector('.mininputs');
+      let maxInput = parent.querySelector('.maxinputs');
+
+      if (parseInt(minRange.value) > parseInt(maxRange.value)) {
+          minRange.value = maxRange.value;
+      }
+
+      minValue.innerText = minRange.value;
+      maxValue.innerText = maxRange.value;
+      minInput.value = minRange.value;
+      maxInput.value = maxRange.value;
+  }
+
+    
+
+    const sections = {
+      interest_hobbies: {
+          showElementsDiv: document.getElementById('show_elements_interest_hobbies'),
+          addElementsDiv: document.getElementById('add_elements_interest_hobbies'),
+          button: document.getElementById('show_all_interest_hobbies'),
+          items: {{ interest_hobbies_list|default:"[]"|safe }},
+          selectedItems: JSON.parse(localStorage.getItem('interest_hobbies')) || [],
+          inputField: document.getElementById('interest_hobbies_input')
+      },
+      qualifications: {
+          showElementsDiv: document.getElementById('show_elements_qualifications'),
+          addElementsDiv: document.getElementById('add_elements_qualifications'),
+          button: document.getElementById('show_all_qualifications'),
+          items: {{ qualifications_list|default:"[]"|safe }},
+          selectedItems: JSON.parse(localStorage.getItem('qualification')) || [],
+          inputField: document.getElementById('qualification_input')
+      },
+      location: {
+          showElementsDiv: document.getElementById('show_elements_location'),
+          addElementsDiv: document.getElementById('add_elements_location'),
+          button: document.getElementById('show_all_location'),
+          items: {{ location_list|default:"[]"|safe }},
+          selectedItems: JSON.parse(localStorage.getItem('location')) || [],
+          inputField: document.getElementById('location_input')
+      },
+      LifestyleChoice: {
+        showElementsDiv: document.getElementById('show_elements_LifestyleChoice'),
+        addElementsDiv: document.getElementById('add_elements_LifestyleChoice'),
+        button: document.getElementById('show_all_LifestyleChoice'),
+        items: {{ LifestyleChoice_list|default:"[]"|safe }},
+        selectedItems: JSON.parse(localStorage.getItem('LifestyleChoice')) || [],
+        inputField: document.getElementById('LifestyleChoice_input')
+    }
+  };
+  
+  function displayItems(section, filteredItems) {
+      if (!section.addElementsDiv || !section.showElementsDiv) {
+          console.error('addElementsDiv or showElementsDiv is null for section:', section);
+          return;
+      }
+
+      const itemsContainer = section.showElementsDiv.querySelector('.items-container');
+      if (!itemsContainer) {
+          console.error('itemsContainer is null for section:', section);
+          return;
+      }
+      itemsContainer.innerHTML = '';
+  
+      if (filteredItems.length === 0) {
+          const noResults = document.createElement('div');
+          noResults.textContent = 'No items found';
+          noResults.className = 'item-class text-muted';
+          itemsContainer.appendChild(noResults);
+      } else {
+          filteredItems.forEach(item => {
+              const newItem = document.createElement('div');
+              newItem.textContent = item;
+              newItem.className = 'item-class';
+              newItem.addEventListener('click', () => {
+                  moveToSelected(section, item);
+              });
+              itemsContainer.appendChild(newItem);
+          });
+      }
+  }
+  
+  function updateUI(section) {
+    if (!section.showElementsDiv || !section.addElementsDiv) {
+        console.error('Missing DOM elements for section:', section);
+        return;
+    }
+
+    const availableItems = section.items.filter(item => !section.selectedItems.includes(item));
+    displayItems(section, availableItems);
+    renderSelectedItems(section);
+    updateInputField(section);
+}
+  
+  function moveToSelected(section, item) {
+      if (section.selectedItems.includes(item)) return;
+      section.selectedItems.push(item);
+      updateLocalStorage(section);
+      updateUI(section);
+  }
+  
+  function renderSelectedItems(section) {
+      section.addElementsDiv.innerHTML = '';
+      section.selectedItems.forEach(item => {
+          const selectedItem = document.createElement('div');
+          selectedItem.className = 'add-item-btn';
+          selectedItem.innerHTML = `${item} <span class="remove-icon">&times;</span>`;
+          selectedItem.querySelector('.remove-icon').addEventListener('click', () => {
+              removeSelectedItem(section, item);
+          });
+          section.addElementsDiv.appendChild(selectedItem);
+      });
+      section.addElementsDiv.style.display = section.selectedItems.length > 0 ? 'flex' : 'none';
+  }
+  
+  function removeSelectedItem(section, item) {
+      section.selectedItems = section.selectedItems.filter(i => i !== item);
+      updateLocalStorage(section);
+      updateUI(section);
+  }
+  
+  function updateLocalStorage(section) {
+      const storageKey = section.inputField.id.replace('_input', ''); // Example: interest_hobbies -> selectedItemsInterestHobbies
+      localStorage.setItem(storageKey, JSON.stringify(section.selectedItems));
+  }
+  
+  function updateInputField(section) {
+      section.inputField.value = section.selectedItems.join(', ');
+  }
+  
+  Object.values(sections).forEach(section => {
+      section.button.addEventListener('click', () => {
+          section.showElementsDiv.style.display = 'block';
+          section.showElementsDiv.innerHTML = '';
+          const searchBox = document.createElement('input');
+          searchBox.setAttribute('type', 'text');
+          searchBox.setAttribute('placeholder', 'Search items...');
+          searchBox.className = 'form-control mb-2';
+          section.showElementsDiv.appendChild(searchBox);
+          const itemsContainer = document.createElement('div');
+          itemsContainer.className = 'items-container';
+          section.showElementsDiv.appendChild(itemsContainer);
+          updateUI(section);
+          searchBox.addEventListener('input', () => {
+              const searchTerm = searchBox.value.toLowerCase();
+              const filteredItems = section.items.filter(item => item.toLowerCase().includes(searchTerm) && !section.selectedItems.includes(item));
+              displayItems(section, filteredItems);
+          });
+      });
+      section.showElementsDiv.addEventListener('click', event => {
+          event.stopPropagation();
+      });
+  });
+  
+  document.addEventListener('click', event => {
+      Object.values(sections).forEach(section => {
+          if (!section.showElementsDiv.contains(event.target) && !event.target.matches(`#${section.button.id}`)) {
+              section.showElementsDiv.style.display = 'none';
+          }
+      });
+  });
+  
+  Object.values(sections).forEach(section => updateUI(section));
+  
+
+</script>
+{% endblock scripts %}
