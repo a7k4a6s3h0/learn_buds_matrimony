@@ -137,6 +137,9 @@
             const dataSubscribers = {{ data_subscribers|safe }};
             const labelsSubscribers = {{ labels_subscribers|safe }};
             const todayssubscribers = {{ todays_subscribers|safe }};
+            const labels = JSON.parse('{{ labels|safe }}');
+            const arrivalsData = JSON.parse('{{ arrivals|safe }}');
+            const activeUsersData = JSON.parse('{{ active_users|safe }}');
 
             // Check if canvas elements exist
             const dailySubscribesCtx = document.getElementById('dailySubscribesChart');
@@ -226,10 +229,10 @@
             new Chart(customerArrivalCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: Array.from({length: 31}, (_, i) => i + 1), // Days 1-31
+                    labels: labels, // Days 1-31
                     datasets: [{
                         label: 'Arrivals',
-                        data: [450, 375, 0, 160, 300, 160, 150, 350, 210, 350, 320, 55, 280, 420, 275, 260, 350, 0, 210, 100, 60, 440, 420, 140, 440, 60, 230, 240, 420, 440, 350],
+                        data: arrivalsData,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         fill: false,
@@ -238,7 +241,7 @@
                         pointHoverRadius: 8
                     }, {
                         label: 'Another Metric',
-                        data: [300, 200, 430, 150, 300, 200, 220, 220, 350, 320, 170, 370, 270, 260, 300, 220, 350, 10, 210, 210, 60, 420, 140, 140, 430, 170, 230, 240, 240, 420, 350],
+                        data: activeUsersData,
                         borderColor: 'rgba(153, 102, 255, 1)',
                         backgroundColor: 'rgba(153, 102, 255, 0.2)',
                         fill: false,
@@ -264,13 +267,14 @@
                         },
                         y: {
                             beginAtZero: true,
-                            max: 600,
+                            max: 5,
+                            min: 0,
                             title: {
                                 display: true,
                                 text: 'Number of Arrivals'
                             },
                             ticks: {
-                                stepSize: 150
+                                stepSize: 2
                             }
                         }
                     }
@@ -281,9 +285,9 @@
             new Chart(revenueByModuleCtx.getContext('2d'), {
                 type: 'pie',
                 data: {
-                    labels: ['Matrimony',],
+                    labels: ['Matrimony', 'Dating'],
                     datasets: [{
-                        data: {{ matrimony_revenue|safe }}, // Approximate percentages based on the image
+                        data: [{{ matrimony_revenue|safe }}], // Approximate percentages based on the image
                         backgroundColor: [
                             'rgb(54, 162, 235)',
                             'rgb(75, 192, 192)',

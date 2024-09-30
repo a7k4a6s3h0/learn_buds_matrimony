@@ -7,7 +7,9 @@ from django.urls import reverse_lazy
 from .forms import AdminLoginForm,AdminProfileForm
 from U_auth.permissions import *
 
-from django.db.models import Sum
+from U_auth.models import costume_user
+from django.db.models import Sum, Count, Q
+from django.db.models.functions import TruncDay
 from subscription.models import Payment
 from django.utils import timezone
 from datetime import timedelta
@@ -32,15 +34,42 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
 
         # todays subscribers
         todays_subscribers = []
-        subscribers_count = Payment.objects.filter(status='subsricbed').count()
-        unsubscribers_count = Payment.objects.filter(status='unsubsricbed').count()
-        todays_subscribers.append([subscribers_count, unsubscribers_count])
+        subscribers_count = Payment.objects.filter(status='200').count()
+        unsubscribers_count = Payment.objects.filter(status='unsub').count()
+        todays_subscribers = [subscribers_count, unsubscribers_count]
+
+        # Get the current month and year
+        now = timezone.now()
+        first_day_of_month = now.replace(day=1)
+        last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+
+        # Fetch users who joined this month
+        new_users = costume_user.objects.filter(date_joined__gte=first_day_of_month, date_joined__lte=last_day_of_month)
+
+        # Initialize arrays for arrivals and active users
+        arrivals = [0] * 31  # Array for the days of the month (1-31)
+        active_users = [0] * 31  # Array for the active users each day
+
+        # Count new users per day
+        for user in new_users:
+            arrivals[user.date_joined.day - 1] += 1
+
+        for day in range(1, 31):
+            # Fetch the count of active users for the given day
+            active_users[day - 1] = costume_user.objects.filter(last_login__date=now.replace(day=day).date()).count()
+
+        # Add data to context
+        context['labels'] = list(range(1, 32))  # Days of the month
+        context['arrivals'] = arrivals
+        context['active_users'] = active_users
+
 
         # Aggregate the total revenue for payments with status 200
         matrimony_revenue = Payment.objects.filter(status=200).aggregate(total_revenue=Sum('amount'))['total_revenue']
         context['matrimony_revenue'] = matrimony_revenue
         #Debugging
-        print(matrimony_revenue,'matrimony_revenue')
+        # print(matrimony_revenue,'matrimony_revenue')
+
 
         context['labels_subscribers'] = labels_subscribers
         context['data_subscribers'] = data_subscribers
