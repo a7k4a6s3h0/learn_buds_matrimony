@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from .forms import AdminLoginForm,AdminProfileForm
 from U_auth.permissions import *
 
+from django.db.models import Sum
 from subscription.models import Payment
 from django.utils import timezone
 from datetime import timedelta
@@ -34,6 +35,12 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         subscribers_count = Payment.objects.filter(status='subsricbed').count()
         unsubscribers_count = Payment.objects.filter(status='unsubsricbed').count()
         todays_subscribers.append([subscribers_count, unsubscribers_count])
+
+        # Aggregate the total revenue for payments with status 200
+        matrimony_revenue = Payment.objects.filter(status=200).aggregate(total_revenue=Sum('amount'))['total_revenue']
+        context['matrimony_revenue'] = matrimony_revenue
+        #Debugging
+        print(matrimony_revenue,'matrimony_revenue')
 
         context['labels_subscribers'] = labels_subscribers
         context['data_subscribers'] = data_subscribers
