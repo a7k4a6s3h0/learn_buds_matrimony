@@ -6,16 +6,16 @@
     }
 
     .point-chart {
-        width: 500px !important;
-        height: 250px;
-        margin-top: 25px;
-        margin-left: -60px;
+        /* width: 500px !important; */
+        height: 310px;
+        /* margin-top: 25px; */
+        /* margin-left: -60px; */
     }
 
     .subcribers-chart {
-        width: 200px !important;
+        width: 235px !important;
         margin-top: 25px;
-        height: 200px !important;
+        height: 235px !important;
         margin-left: 50px;
     }
 

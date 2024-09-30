@@ -46,13 +46,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 ">
+            <div class="col-sm-5 ">
                 <div class="text ">Subscribes daily</div>
                 <div class="py-3 card mt-4">
-                    <canvas id="dailySubscribesChart"></canvas>
+                    <canvas class="mt-5" id="dailySubscribesChart"></canvas>
                 </div>
             </div>
-            <div class="col-sm-3 ">
+            <div class="col-sm-4 ">
                 <div class="text">Statistics</div>
                 <div class=" py-4 card mt-4">
                     <canvas class="subcribers-chart" id="subscribersChart"></canvas>
@@ -128,234 +128,251 @@
     </div>
 {% endblock admin_content %}
 {% block admin_scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+<script>
   // Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Daily Subscribes Chart
-    const dailySubscribesCtx = document.getElementById('dailySubscribesChart').getContext('2d');
-    new Chart(dailySubscribesCtx, {
-        type: 'line',
-        data: {
-            labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6'],
-            datasets: [{
-                label: 'Dataset',
-                data: [65, 100, 80, 81, 56, 155],
-                borderColor: 'rgba(128, 90, 213, 1)',
-                backgroundColor: 'rgba(128, 90, 213, 0.2)',
-                fill: true,
-                pointStyle: 'circle',
-                pointRadius: 10,
-                pointHoverRadius: 15
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Daily Subscribes'
-                }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    }
-                }
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        try {
+            // Daily Subscribes Chart
+            const dataSubscribers = {{ data_subscribers|safe }};
+            const labelsSubscribers = {{ labels_subscribers|safe }};
+            const todayssubscribers = {{ todays_subscribers|safe }};
+
+            // Check if canvas elements exist
+            const dailySubscribesCtx = document.getElementById('dailySubscribesChart');
+            const subscribersCtx = document.getElementById('subscribersChart');
+            const customerArrivalCtx = document.getElementById('customerArrivalChart');
+            const revenueByModuleCtx = document.getElementById('revenueByModuleChart');
+            const incomesExpensesCtx = document.getElementById('incomesExpensesChart');
+
+            if (!dailySubscribesCtx || !subscribersCtx || !customerArrivalCtx || !revenueByModuleCtx || !incomesExpensesCtx) {
+                console.error("One or more canvas elements are missing");
+                return;
             }
-        }
-    });
 
-    // Subscribers Chart
-    const subscribersCtx = document.getElementById('subscribersChart').getContext('2d');
-    new Chart(subscribersCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Subscribed Users', 'Unsubscribed Users'],
-            datasets: [{
-                label: 'User Subscriptions',
-                data: [75, 25],
-                backgroundColor: ['#6a55f1', '#e5e5e5'],
-                hoverOffset: 4,
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        usePointStyle: true,
-                    }
+            // Daily Subscribes Chart
+            new Chart(dailySubscribesCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: labelsSubscribers,
+                    datasets: [{
+                        label: 'Daily Subscribes',
+                        data: dataSubscribers,
+                        borderColor: 'rgba(128, 90, 213, 1)',
+                        backgroundColor: 'rgba(128, 90, 213, 0.2)',
+                        fill: true,
+                        pointStyle: 'circle',
+                        pointRadius: 10,
+                        pointHoverRadius: 15
+                    }]
                 },
-                tooltip: {
-                    enabled: true
-                }
-            },
-            cutout: '80%'
-        }
-    });
-
-    // Function to change point style of Daily Subscribes chart
-    window.changePointStyle = function(style) {
-        const chart = Chart.getChart('dailySubscribesChart');
-        if (chart) {
-            chart.data.datasets.forEach(dataset => {
-                dataset.pointStyle = style;
-            });
-            chart.update();
-        }
-    };
-
-    // Customer Arrival Chart
-    const customerArrivalCtx = document.getElementById('customerArrivalChart').getContext('2d');
-    new Chart(customerArrivalCtx, {
-        type: 'line',
-        data: {
-            labels: Array.from({length: 31}, (_, i) => i + 1), // Days 1-31
-            datasets: [{
-                label: 'Arrivals',
-                data: [450, 375, 0, 160, 300, 160, 150, 350, 210, 350, 320, 55, 280, 420, 275, 260, 350, 0, 210, 100, 60, 440, 420, 140, 440, 60, 230, 240, 420, 440, 350],
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                fill: false,
-                tension: 0,
-                pointRadius: 5,
-                pointHoverRadius: 8
-            }, {
-                label: 'Another Metric',
-                data: [300, 200, 430, 150, 300, 200, 220, 220, 350, 320, 170, 370, 270, 260, 300, 220, 350, 10, 210, 210, 60, 420, 140, 140, 430, 170, 230, 240, 240, 420, 350],
-                borderColor: 'rgba(153, 102, 255, 1)',
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                fill: false,
-                tension: 0,
-                pointRadius: 5,
-                pointHoverRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Day of Month'
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Daily Subscribes'
+                        }
                     },
-                    ticks: {
-                        stepSize: 1,
-                        autoSkip: true,
-                        maxTicksLimit: 31
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    max: 600,
-                    title: {
-                        display: true,
-                        text: 'Number of Arrivals'
-                    },
-                    ticks: {
-                        stepSize: 150
-                    }
-                }
-            }
-        }
-    });
-
-    // Revenue by Module Chart
-    const revenueByModuleCtx = document.getElementById('revenueByModuleChart').getContext('2d');
-    new Chart(revenueByModuleCtx, {
-        type: 'pie',
-        data: {
-            labels: ['Matrimony', 'Study Abroad', 'e-commerce', 'Job Portal', 'Dating'],
-            datasets: [{
-                data: [30, 20, 15, 10, 25], // Approximate percentages based on the image
-                backgroundColor: [
-                    'rgb(54, 162, 235)',
-                    'rgb(75, 192, 192)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)',
-                    'rgb(255, 99, 132)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Revenue by Module',
-                    font: { size: 18 }
-                },
-                subtitle: {
-                    display: true,
-                    position: 'bottom',
-                    text: 'Click each area to see details',
-                    font: { size: 14 }
-                },
-                legend: {
-                    position: 'left'
-                }
-            }
-        }
-    });
-
-    // Incomes & Expenses Chart
-    const incomesExpensesCtx = document.getElementById('incomesExpensesChart').getContext('2d');
-    new Chart(incomesExpensesCtx, {
-        type: 'bar',
-        data: {
-            labels: Array.from({length: 31}, (_, i) => i + 1),
-            datasets: [
-                {
-                    label: 'Income',
-                    data: [10000,2500,5000,6500,8000,7500,4500,3000,6000,9500,7000,9500,5500,9000,5000,3000,1500,0,9500,3500,2000,8000,6000,7500,6500,6000,9500,2000,3000,6000,2000,0],
-                    backgroundColor: 'rgba(54, 162, 235, 0.8)'
-                },
-                {
-                    label: 'Expenses',
-                    data: [5500,4500,8500,0,8000,0,9500,0,7000,0,3500,5000,5000,5000,3000,0,1500,0,6000,8000,4000,0,0,0,2000,0,2500,0,5500,6500,2000],
-                    backgroundColor: 'rgba(255, 99, 132, 0.8)'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Day of Month'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    max: 10000,
-                    title: {
-                        display: true,
-                        text: 'Amount'
-                    },
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value.toLocaleString();
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            }
                         }
                     }
                 }
-            }
-        }
-    });
+            });
 
-    // You can add more charts here as needed
-});
-    </script>
+            // Subscribers Chart
+            new Chart(subscribersCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Subscribed Users', 'Unsubscribed Users'],
+                    datasets: [{
+                        label: 'User Subscriptions',
+                        data: todayssubscribers,
+                        backgroundColor: ['#6a55f1', '#e5e5e5'],
+                        hoverOffset: 4,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            align: 'center',
+                            labels: {
+                                boxWidth: 10, // Adjusts the size of the box (circle)
+                                padding: 20,
+                                usePointStyle: true,
+                            }
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    cutout: '80%'
+                }
+            });
+
+            // Customer Arrival Chart
+            new Chart(customerArrivalCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 31}, (_, i) => i + 1), // Days 1-31
+                    datasets: [{
+                        label: 'Arrivals',
+                        data: [450, 375, 0, 160, 300, 160, 150, 350, 210, 350, 320, 55, 280, 420, 275, 260, 350, 0, 210, 100, 60, 440, 420, 140, 440, 60, 230, 240, 420, 440, 350],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: false,
+                        tension: 0,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }, {
+                        label: 'Another Metric',
+                        data: [300, 200, 430, 150, 300, 200, 220, 220, 350, 320, 170, 370, 270, 260, 300, 220, 350, 10, 210, 210, 60, 420, 140, 140, 430, 170, 230, 240, 240, 420, 350],
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        fill: false,
+                        tension: 0,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Day of Month'
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                autoSkip: true,
+                                maxTicksLimit: 31
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 600,
+                            title: {
+                                display: true,
+                                text: 'Number of Arrivals'
+                            },
+                            ticks: {
+                                stepSize: 150
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Revenue by Module Chart
+            new Chart(revenueByModuleCtx.getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: ['Matrimony', 'Study Abroad', 'e-commerce', 'Job Portal', 'Dating'],
+                    datasets: [{
+                        data: [30, 20, 15, 10, 25], // Approximate percentages based on the image
+                        backgroundColor: [
+                            'rgb(54, 162, 235)',
+                            'rgb(75, 192, 192)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)',
+                            'rgb(255, 99, 132)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Revenue by Module',
+                            font: { size: 18 }
+                        },
+                        subtitle: {
+                            display: true,
+                            position: 'bottom',
+                            text: 'Click each area to see details',
+                            font: { size: 14 }
+                        },
+                        legend: {
+                            position: 'left'
+                        }
+                    }
+                }
+            });
+
+            // Incomes & Expenses Chart
+            new Chart(incomesExpensesCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: Array.from({length: 31}, (_, i) => i + 1),
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: [10000,2500,5000,6500,8000,7500,4500,3000,6000,9500,7000,9500,5500,9000,5000,3000,1500,0,9500,3500,2000,8000,6000,7500,6500,6000,9500,2000,3000,6000,2000,0],
+                            backgroundColor: 'rgba(54, 162, 235, 0.8)'
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [5500,4500,8500,0,8000,0,9500,0,7000,0,3500,5000,5000,5000,3000,0,1500,0,6000,8000,4000,0,0,0,2000,0,2500,0,5500,6500,2000],
+                            backgroundColor: 'rgba(255, 99, 132, 0.8)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Day of Month'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 10000,
+                            title: {
+                                display: true,
+                                text: 'Amount'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
+
+        // Function to change point style of Daily Subscribes chart
+        // window.changePointStyle = function(style) {
+        //     const chart = Chart.getChart('dailySubscribesChart');
+        //     if (chart) {
+        //         chart.data.datasets.forEach(dataset => {
+        //             dataset.pointStyle = style;
+        //         });
+        //         chart.update();
+        //     }
+        // };
+    });
+</script>
 {% endblock admin_scripts %}
