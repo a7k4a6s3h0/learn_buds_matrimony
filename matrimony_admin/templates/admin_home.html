@@ -134,12 +134,12 @@
         
         try {
             // Daily Subscribes Chart
-            const dataSubscribers = {{ data_subscribers|safe }};
-            const labelsSubscribers = {{ labels_subscribers|safe }};
-            const todayssubscribers = {{ todays_subscribers|safe }};
-            const labels = JSON.parse('{{ labels|safe }}');
-            const arrivalsData = JSON.parse('{{ arrivals|safe }}');
-            const activeUsersData = JSON.parse('{{ active_users|safe }}');
+            // const dataSubscribers = {{ data_subscribers|safe }};
+            // const labelsSubscribers = {{ labels_subscribers|safe }};
+            // const todayssubscribers = {{ todays_subscribers|safe }};
+            // const labels = {{ label|safe }};
+            // const arrivalsData = {{ arrivals|safe }};
+            // const activeUsersData = {{ active_users|safe }};
 
             // Check if canvas elements exist
             const dailySubscribesCtx = document.getElementById('dailySubscribesChart');
@@ -157,10 +157,10 @@
             new Chart(dailySubscribesCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: labelsSubscribers,
+                    labels: {{ labels_subscribers|safe }},
                     datasets: [{
                         label: 'Daily Subscribes',
-                        data: dataSubscribers,
+                        data: {{ data_subscribers|safe }},
                         borderColor: 'rgba(128, 90, 213, 1)',
                         backgroundColor: 'rgba(128, 90, 213, 0.2)',
                         fill: true,
@@ -199,7 +199,7 @@
                     labels: ['Subscribed Users', 'Unsubscribed Users'],
                     datasets: [{
                         label: 'User Subscriptions',
-                        data: todayssubscribers,
+                        data: {{ todays_subscribers|safe }},
                         backgroundColor: ['#6a55f1', '#e5e5e5'],
                         hoverOffset: 4,
                         borderWidth: 0
@@ -229,10 +229,10 @@
             new Chart(customerArrivalCtx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: labels, // Days 1-31
+                    labels: {{ label|safe }}, // Days 1-31
                     datasets: [{
                         label: 'Arrivals',
-                        data: arrivalsData,
+                        data: {{ arrivals|safe }},
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         fill: false,
@@ -241,7 +241,7 @@
                         pointHoverRadius: 8
                     }, {
                         label: 'Another Metric',
-                        data: activeUsersData,
+                        data: {{ active_users|safe }},
                         borderColor: 'rgba(153, 102, 255, 1)',
                         backgroundColor: 'rgba(153, 102, 255, 0.2)',
                         fill: false,

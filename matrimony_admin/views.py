@@ -34,8 +34,8 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
 
         # todays subscribers
         todays_subscribers = []
-        subscribers_count = Payment.objects.filter(status='200').count()
-        unsubscribers_count = Payment.objects.filter(status='unsub').count()
+        subscribers_count = Payment.objects.filter(status='200', created_at__date=today).count()
+        unsubscribers_count = Payment.objects.filter(status='unsub', created_at__date=today).count()
         todays_subscribers = [subscribers_count, unsubscribers_count]
 
         # Get the current month and year
@@ -59,7 +59,7 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
             active_users[day - 1] = costume_user.objects.filter(last_login__date=now.replace(day=day).date()).count()
 
         # Add data to context
-        context['labels'] = list(range(1, 32))  # Days of the month
+        context['label'] = list(range(1, 32))  # Days of the month
         context['arrivals'] = arrivals
         context['active_users'] = active_users
 
