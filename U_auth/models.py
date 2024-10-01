@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -42,16 +43,13 @@ class costume_user(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'phone', 'password']
 
-    def __str__(self):
-        return self.username if self.username else self.email
-
 
 class Qualifications(models.Model):
     qualification = models.CharField(max_length=50, blank=False)
 
 
     def __str__(self):
-        return f"Hobby: {self.qualification}"
+        return f"Qualification: {self.qualification}"
     
 class Hobbies(models.Model):
     hobby = models.CharField(max_length=100)

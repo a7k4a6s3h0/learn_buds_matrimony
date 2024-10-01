@@ -63,3 +63,12 @@ class SubscriptionINFO(models.Model):
     def __str__(self):
         return f"{self.sub.plan_type}_info"
 
+
+class BlockedUserInfo(models.Model):
+    user = models.OneToOneField(costume_user, related_name="blocked_user", on_delete=models.CASCADE)
+    reason = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    times = models.IntegerField(default=0)
+
+

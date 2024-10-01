@@ -22,6 +22,9 @@ from django.urls import reverse, reverse_lazy
 
 # Create your views here.
 
+class chat_pg(TemplateView):
+    template_name = 'col_chat.html'
+
 class UserProfileView(TemplateView):
     template_name = 'users_pr_view.html'
 
@@ -31,13 +34,14 @@ class UserProfileView(TemplateView):
         if user_id:
             user = costume_user.objects.get(id=user_id)
             user_details = UserPersonalDetails.objects.get(user=user) 
+            job_details = Job_Details.objects.get(user=user)
             additional_details = AdditionalDetails.objects.get(user=user)
             pictures = Pictures.objects.filter(user=user_details)
             context['user'] = user
             context['user_details'] = user_details
             context['additional_details'] = additional_details
             context['pictures'] = pictures
-            context['user'] = user
+            context['job_details'] = job_details
             return context
 
 
@@ -146,7 +150,6 @@ class RejectedRequestView(RedirectNotAuthenticatedUserMixin, ListView):
             Q(receiver=self.request.user, status='rejected')
         )
         search_query = self.request.GET.get('search')
-        print(search_query)
         if search_query:
             queryset = queryset.filter(
                 Q(sender__username__icontains=search_query) |
@@ -175,7 +178,15 @@ class ShortlistView(LoginRequiredMixin, ListView):
     ordering = ["-created at"]
 
     def get_queryset(self):
-        return Shortlist.objects.filter(user=self.request.user)
+        queryset = Shortlist.objects.filter(user=self.request.user)
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                Q(shortlisted_user__username__icontains=search_query) |
+                Q(shortlisted_user__first_name__icontains=search_query) |
+                Q(shortlisted_user__user_details__bio__icontains=search_query)
+            )
+        return queryset
 
 class AddToShortlistView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
@@ -204,13 +215,7 @@ class RemoveFromShortlistView(LoginRequiredMixin, View):
         else:
             messages.success(request, "User removed from your shortlist.")
             return redirect(reverse('shortlist'))
-        # except Exception as e:
-        #     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        #         return JsonResponse({'status': 'error', 'message': f'Error removing user: {str(e)}'})
-        #     else:
-        #         messages.error(request, f"Error removing user: {str(e)}")
-      
-        return redirect(reverse('shortlist'))
+        
 
 class ShortlistByView(LoginRequiredMixin, ListView):
     model = Shortlist
@@ -219,4 +224,12 @@ class ShortlistByView(LoginRequiredMixin, ListView):
     ordering = ["-created at"]
 
     def get_queryset(self):
-        return Shortlist.objects.filter(shortlisted_user=self.request.user)
+        queryset = Shortlist.objects.filter(shortlisted_user=self.request.user)
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                Q(user__username__icontains=search_query) |
+                Q(user__first_name__icontains=search_query) |
+                Q(user__user_details__bio__icontains=search_query)
+            )
+        return queryset

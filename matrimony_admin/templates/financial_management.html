@@ -16,19 +16,19 @@ financial management page
         justify-content: space-between;
     }
     .items_1{
-        width: 200px;
-        height: 200px;
-        background-color: brown;
+        width: 300px;
+        /* height: 200px; */
+        background-color: rgb(230, 225, 225);
     }
     .items_2{
         width: 200px;
-        height: 200px;
-        background-color: rgb(168, 111, 111);
+        /* height: 200px; */
+        background-color: rgb(250, 238, 238);
     }
     .items_3{
         width: 400px;
-        height: 200px;
-        background-color: rgb(42, 165, 50);
+        /* height: 200px; */
+        background-color: rgb(241, 246, 241);
     }
 </style>
 
@@ -50,9 +50,40 @@ financial management page
         <h1>Financial Management</h1>
     </div>
     <div class="main_layer pt-3">
-        <div class="items_1"></div>
-        <div class="items_2"></div>
-        <div class="items_3"></div>
+        <div class="items_1 row align-items-center">
+
+          <div class="col-md-3"><i class="fa-solid fa-user-group"></i></div>
+          <div class="col-md-9">
+            <label for="title">Total Users</label>
+            <label for="count">100</label>
+            <label for="details">+ 20% than last Month</label>
+            
+          </div>
+
+
+        </div>
+        <div class="items_2 row align-items-center">
+          <div class="col-md-3"><i class="fa-solid fa-user-group"></i></div>
+          <div class="col-md-9">
+            <label for="title">Total Subscribers</label>
+            <label for="count">100</label>
+            <label for="details">- 20% than last Month</label>
+          </div>
+        </div>
+        <div class="items_3 row align-items-center">
+          <div class="col-md-2"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+          <div class="col-md-6">
+            <label for="title">Subscribtions per month</label>
+            <label for="count">100</label>
+            <label for="details">+ 20% than last Month</label>
+          </div>
+
+          <div class="col-md-4">
+           <canvas id="myChart2"></canvas>
+
+          </div>
+
+        </div>
 
     </div>
     <div class="chart_section pt-3">
@@ -130,6 +161,17 @@ financial management page
                   </tr>
                 </tbody>
               </table>
+
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                   <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                   <li class="page-item"><a class="page-link" href="#">1</a></li>
+                   <li class="page-item"><a class="page-link" href="#">2</a></li>
+                   <li class="page-item"><a class="page-link" href="#">3</a></li>
+                   <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+             </nav>
+
         </div>
         <div class="col-md-6">
             <div class="table_tile pt-2">
@@ -165,6 +207,16 @@ financial management page
                   </tr>
                 </tbody>
               </table>
+
+              <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                   <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                   <li class="page-item"><a class="page-link" href="#">1</a></li>
+                   <li class="page-item"><a class="page-link" href="#">2</a></li>
+                   <li class="page-item"><a class="page-link" href="#">3</a></li>
+                   <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+             </nav>
         </div>
     </div>
 </div>
@@ -174,8 +226,7 @@ financial management page
 {% block admin_scripts %}
 <script>
     const ctx = document.getElementById('myChart');
-  
-    new Chart(ctx, {
+    const myChart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -193,5 +244,43 @@ financial management page
         }
       }
     });
+
+    const ctx2 = document.getElementById('myChart2');
+    const myChart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        datasets: [{
+          data: [12, 19, 3],  // Your data points
+          borderWidth: 3,     // Thickness of the line (make it more visible)
+          borderColor: '#007bff',  // Line color (customizable, use any color code)
+          fill: false,        // Disable filling under the line
+          tension: 0.4        // Add some curve to the line (optional)
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            display: false   // Hide X-axis
+          },
+          y: {
+            display: false,  // Hide Y-axis
+            beginAtZero: true,  // Ensure that Y-axis starts at zero
+            min: 0,          // Minimum value for the Y-axis to ensure the line shows up
+            max: Math.max(...[12, 19, 3]) + 5  // Max Y value is slightly above the largest data point
+          }
+        },
+        plugins: {
+          legend: {
+            display: false  // Hide the legend if not needed
+          }
+        },
+        elements: {
+          point: {
+            radius: 0       // Hide data points (circles) on the line
+          }
+        }
+      }
+    });
+
   </script>
 {% endblock admin_scripts %}

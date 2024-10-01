@@ -162,6 +162,8 @@
         .msg {
             margin-left: 10px;
             color: white;
+            font-size: 15px;
+
         }
 
         .cross_icon{
@@ -221,7 +223,6 @@
                     {% for request in sent_requests %}
                     <div class="request-item">
                         <div class="view_user">
-                            <!-- {% comment %} <a onclick="open_chat()" href="#" id="but"> {% endcomment %} -->
                             <div class="view_user_img">
                                 <a href="{% url 'profile' request.receiver.id %}">
                                     <img src="{{ request.receiver.user_details.profile_pic.url }}"
@@ -235,7 +236,7 @@
                                     <span style="text-transform: capitalize; color: white;">{{ request.receiver.username }}</span>
                                 </a>
                                 <br>
-                                <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio }}</span>
+                                <span style="text-transform: capitalize;">{{ request.receiver.user_details.bio|truncatechars:15 }}</span>
                             </div>
                             <div class="cross_icon">
                                 <span style="color: white;">{{ request.created_at|time:"g:i a" }}</span>

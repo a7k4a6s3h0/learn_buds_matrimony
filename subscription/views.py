@@ -15,7 +15,7 @@ from django.contrib import messages
 from .models import Payment
 from django.urls import reverse
 from django.template.loader import get_template, render_to_string
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 # from weasyprint import HTML
 import tempfile
 
