@@ -3,7 +3,7 @@ const sendBtn = document.getElementById('send-btn');
 var WEB_PROTOCOL = window.location.protocol;  // Use window.location.protocol for 'http:' or 'https:'
 var HOST_URL = window.location.host;  // Use window.location.host for 'hostname:port'
 var WS_START = 'ws://';  // Default to WebSocket (ws://)
-var CHAT_URL = '/ws/chat/username/';  // Ensure proper URL format
+var CHAT_URL = '/ws/chat/aebb407b-842a/';  // Ensure proper URL format
 
 // Check if the protocol is HTTPS, then use 'wss://'
 if (WEB_PROTOCOL === 'https:') {
@@ -63,6 +63,7 @@ socket.onmessage = function(event) {
             chatMessage.innerHTML = `
                 <div class="row text-white pt-3 justify-content-end">
                     <div class="col-auto chat-message-right">
+                        <p>${data.timestamp}</p>
                         <p>${data.username}: ${data.message}</p>
                     </div>
                 </div>

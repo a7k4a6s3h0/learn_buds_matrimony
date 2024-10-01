@@ -11,7 +11,7 @@ class ChatRoom(models.Model):
           ('group', 'group')
      ]
 
-     room_name = models.CharField(max_length=255)
+     room_name = models.CharField(max_length=255, blank=True)
      room_type = models.CharField(choices=ROOM_TYPE,max_length=255)
      users = models.ManyToManyField(costume_user)
 
@@ -31,7 +31,7 @@ class ChatInfo(models.Model):
           ('reciever', 'reciever'),
      ]
      
-     chat_name = models.CharField(max_length=20)
+     chat_name = models.ForeignKey(ChatRoom,  on_delete=models.CASCADE,  related_name='chatroom_data')
      messages = models.CharField(max_length=255)
      created_at = models.DateTimeField(auto_now_add=True)
      updated_at = models.DateTimeField(auto_now=True)
