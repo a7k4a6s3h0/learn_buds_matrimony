@@ -33,16 +33,15 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
             data_subscribers.append(subscribers_count)
 
         # todays subscribers
-        todays_subscribers = []
-        subscribers_count = Payment.objects.filter(status='200', created_at__date=today).count()
-        unsubscribers_count = Payment.objects.filter(status='unsub', created_at__date=today).count()
-        todays_subscribers = [subscribers_count, unsubscribers_count]
+        total_subscribers = []
+        subscribers_count = Payment.objects.filter(status='200').count()
+        unsubscribers_count = Payment.objects.filter(status='unsub').count()
+        total_subscribers = [subscribers_count, unsubscribers_count]
 
         # Get the current month and year
         now = timezone.now()
         first_day_of_month = now.replace(day=1)
         last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(day=1) - timedelta(days=1)
-
         # Fetch users who joined this month
         new_users = costume_user.objects.filter(date_joined__gte=first_day_of_month, date_joined__lte=last_day_of_month)
 
@@ -73,7 +72,7 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
 
         context['labels_subscribers'] = labels_subscribers
         context['data_subscribers'] = data_subscribers
-        context['todays_subscribers'] = todays_subscribers
+        context['total_subscribers'] = total_subscribers
 
         return context
 

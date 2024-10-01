@@ -199,7 +199,7 @@
                     labels: ['Subscribed Users', 'Unsubscribed Users'],
                     datasets: [{
                         label: 'User Subscriptions',
-                        data: {{ todays_subscribers|safe }},
+                        data: {{ total_subscribers|safe }},
                         backgroundColor: ['#6a55f1', '#e5e5e5'],
                         hoverOffset: 4,
                         borderWidth: 0
@@ -353,11 +353,11 @@
                                 display: true,
                                 text: 'Amount'
                             },
-                            ticks: {
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString();
-                                }
-                            }
+                            // ticks: {
+                            //     callback: function(value) {
+                            //         return '$' + value.toLocaleString();
+                            //     }
+                            // }
                         }
                     }
                 }
