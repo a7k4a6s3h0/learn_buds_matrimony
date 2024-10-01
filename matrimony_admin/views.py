@@ -32,11 +32,26 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
             subscribers_count = Payment.objects.filter(created_at__date=day).count()
             data_subscribers.append(subscribers_count)
 
-        # todays subscribers
+        # total subscribers
         total_subscribers = []
         subscribers_count = Payment.objects.filter(status='200').count()
         unsubscribers_count = Payment.objects.filter(status='unsub').count()
         total_subscribers = [subscribers_count, unsubscribers_count]
+
+        # 3. Data for the income chart (Revenue per day for the current month)
+        daily_revenue_data = (
+            Payment.objects.filter(created_at__month=today.month)
+            .annotate(day=TruncDay('created_at'))
+            .values('day')
+            .annotate(daily_income=Sum('amount'))
+            .order_by('day')
+        )
+
+        # Prepare daily income data for the income chart
+        days = [day for day in range(1, 32)]  # Days 1 to 31 of the month
+        daily_income = {entry['day'].day: float(entry['daily_income'] )for entry in daily_revenue_data}
+        income_data = [daily_income.get(day, 0) for day in days]  # Default income to 0 if no data for a day
+        total_income = sum(income_data) #total income till today
 
         # Get the current month and year
         now = timezone.now()
@@ -67,9 +82,10 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         matrimony_revenue = Payment.objects.filter(status=200).aggregate(total_revenue=Sum('amount'))['total_revenue']
         context['matrimony_revenue'] = matrimony_revenue
         #Debugging
-        # print(matrimony_revenue,'matrimony_revenue')
+        # print(income_data,'matrimony_revenue')
 
-
+        context['total_income'] = total_income
+        context['income_data'] = income_data
         context['labels_subscribers'] = labels_subscribers
         context['data_subscribers'] = data_subscribers
         context['total_subscribers'] = total_subscribers

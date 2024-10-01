@@ -88,7 +88,7 @@
                     <canvas class="income-chart" id="incomesExpensesChart"></canvas>
                     <div class="row px-5 mt-3 ms-5">
                         <div class="text col-sm-3">
-                            75,000
+                            {{ total_income|floatformat:0 }}
                             Income
                         </div>
                         <div class="text col-sm-3">
@@ -133,14 +133,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         
         try {
-            // Daily Subscribes Chart
-            // const dataSubscribers = {{ data_subscribers|safe }};
-            // const labelsSubscribers = {{ labels_subscribers|safe }};
-            // const todayssubscribers = {{ todays_subscribers|safe }};
-            // const labels = {{ label|safe }};
-            // const arrivalsData = {{ arrivals|safe }};
-            // const activeUsersData = {{ active_users|safe }};
-
             // Check if canvas elements exist
             const dailySubscribesCtx = document.getElementById('dailySubscribesChart');
             const subscribersCtx = document.getElementById('subscribersChart');
@@ -184,6 +176,7 @@
                             }
                         },
                         y: {
+                            beginAtZero: true,
                             grid: {
                                 display: false
                             }
@@ -267,8 +260,6 @@
                         },
                         y: {
                             beginAtZero: true,
-                            max: 5,
-                            min: 0,
                             title: {
                                 display: true,
                                 text: 'Number of Arrivals'
@@ -326,7 +317,7 @@
                     datasets: [
                         {
                             label: 'Income',
-                            data: [10000,2500,5000,6500,8000,7500,4500,3000,6000,9500,7000,9500,5500,9000,5000,3000,1500,0,9500,3500,2000,8000,6000,7500,6500,6000,9500,2000,3000,6000,2000,0],
+                            data: {{ income_data|safe }},
                             backgroundColor: 'rgba(54, 162, 235, 0.8)'
                         },
                         {
@@ -348,7 +339,6 @@
                         },
                         y: {
                             beginAtZero: true,
-                            max: 10000,
                             title: {
                                 display: true,
                                 text: 'Amount'
