@@ -35,15 +35,15 @@ class ChatInfo(models.Model):
      messages = models.CharField(max_length=255)
      created_at = models.DateTimeField(auto_now_add=True)
      updated_at = models.DateTimeField(auto_now=True)
-     user = models.ForeignKey(costume_user, on_delete=models.CASCADE,  related_name='chat_info')
-     user_type = models.CharField(choices=USER_TYPES, max_length=20)
-
+     sender = models.ForeignKey(costume_user, on_delete=models.CASCADE,  related_name='chat_senderinfo')
+     # user_type = models.CharField(choices=USER_TYPES, max_length=20)
+     receiver = models.ForeignKey(costume_user, on_delete=models.CASCADE,  related_name='chat_receiverinfo')
      class Meta:
           verbose_name = "ChatInfo"
           verbose_name_plural = "ChatInfos"
 
      def __str__(self):
-          return self.chat_name
+          return self.chat_name.room_type
 
 
 
