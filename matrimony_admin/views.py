@@ -1,7 +1,7 @@
 import json
 import os
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView,DetailView
+from django.views.generic import TemplateView,DetailView,ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
@@ -170,10 +170,13 @@ class NotifcationManagement(TemplateView):
         # Add other context variables if needed
         return context
     
-class SubscriptionManagementView(DetailView):
+    
+    
+class SubscriptionManagementView(ListView):
     model = Subscription
     template_name = 'admin_subscription.html' 
     context_object_name = 'subscriptions'  
 
-    # def get_queryset(self):
-    #     return Subscription.objects.all()    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
