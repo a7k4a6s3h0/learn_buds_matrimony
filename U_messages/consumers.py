@@ -40,17 +40,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     # change user online status
                     await self.change_online_status(user, True)
                     
-                    # Fetch user chat History
-                    chat_history = await self.get_user_chat_history(chat_room_data)
-                    print(chat_history,"chat history")
-                    # Send chat history to the client asynchronously
 
-                    msg_history = {
-                        'type': 'send_history_message',
-                        'chat_data': chat_history
-                    }
-                    await self.send_history_message(msg_history)
-
+                    # Updation user onile status in real time
+                    user_status = await self.get_user_online_details(user)
+                    await self.send_user_online_status(user_status)
+                    
                     print(user.username, "name")
                     self.username = user.username  # Store the username for later use
 
@@ -58,6 +52,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     await self.channel_layer.group_add(
                         self.room_group_name, self.channel_name
                     )
+
+                    # Fetch user chat History
+                    chat_history = await self.get_user_chat_history(chat_room_data)
+ 
+                    # Send chat history to the client asynchronously
+
+                    msg_history = {
+                        'type': 'send_history_message',
+                        'chat_data': chat_history
+                    }
+                    await self.send_history_message(msg_history)
 
             else:
                 # Send warning message to the user
@@ -110,17 +115,37 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_chat_history(self, room_data):
-        print(f"Fetching chat history for room: {room_data}")
+        # print(f"Fetching chat history for room: {room_data}")
         chat_info_queryset = ChatInfo.objects.filter(chat_name=room_data).order_by('-created_at')
-        
-        # Debug print the queryset
-        print(chat_info_queryset, 'val')
-        
-        # Convert queryset to a list
+
         chat_history = list(chat_info_queryset)
-        print(f"Chat history fetched: {chat_history}")
         
         return chat_history
+    
+    @database_sync_to_async
+    def get_user_online_details(self , user):
+        users = ChatRoom.objects.get(room_name = self.room_name)
+
+        print(users,"users1111111111111111")
+        for people in users.users.all():
+            if people !=  user:
+                reciever = people
+                print(reciever.username,  "reciever")
+
+        reciver_data = {
+                'username': reciever.username,
+                'is_online': reciever.is_online
+            }
+        return reciver_data
+    
+    async def broadcast_user_status(self, event):
+        print(f"Broadcasting user status: {event}")
+        user_status = event['user_status']
+
+        # Send the user status to WebSocket (i.e., to all users in the room)
+        await self.send(text_data=json.dumps({
+            'user_status': user_status
+        }))
 
     @database_sync_to_async
     def prepare_history_data(self, chat_obj):
@@ -135,6 +160,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'timestamp': chat_data.created_at.strftime('%Y-%m-%d %H:%M:%S'),
                 'updated_at': chat_data.updated_at.strftime('%Y-%m-%d %H:%M:%S')
             }
+            
             history_data.append(history_entry)
 
         return history_data
@@ -146,6 +172,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Disconnect the user after sending the warning
         await self.close(code=4001)
 
+    async def send_user_online_status(self,  user_status):
+        print("in  send_user_online_status")
+        await self.send(text_data=json.dumps({"user_status": user_status}))
+
     # Send history_message message to WebSocket
     async def send_history_message(self, msg_data):
         chat_obj = msg_data['chat_data']
@@ -153,20 +183,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Prepare history data asynchronously
         history_data = await self.prepare_history_data(chat_obj)
 
-        print(history_data, 'history_data')
 
         await self.send(text_data=json.dumps({"history_message": history_data}))
-
-
-        # data_set = {
-        #     "type": "chat_message",
-        #     "username": self.username,
-        #     'isSender': True,
-        #     "message": message,
-        #     'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),  # Include current timestamp
-        #     "channel_name": self.channel_name  # Include the sender's channel_name
-        # }
-
 
 
     async def disconnect(self, close_code):
@@ -178,7 +196,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # Change the user's status to offline
             await self.change_online_status(user, False)
 
+            print(user.username,"disconnected")
 
+            user_status = await self.get_user_online_details(user)
+
+            # Get all channel names in the room except the disconnected one
+        all_users_in_group = await self.channel_layer.group_channels(self.room_group_name)
+        for channel_name in all_users_in_group:
+            if channel_name != self.channel_name:  # Exclude the disconnected user
+                await self.send_user_online_status(user_status)
+
+
+           
         # Leave room group asynchronously
         await self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
@@ -252,3 +281,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return None
         
         return True
+    
+
+

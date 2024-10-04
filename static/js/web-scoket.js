@@ -48,7 +48,16 @@ socket.onmessage = function(event) {
     } else if (data.history_message) {
         // Process chat history
         displayChatHistory(data.history_message);
-    } else {
+    }
+    else if (data.user_status){
+        const result = data.user_status
+        console.log(result.username)
+        const name = document.getElementById('user-name');
+        name.innerHTML = result.username
+        const online_status = document.getElementById('status');
+        online_status.innerHTML = result.is_online
+    }
+    else {
         // Display the chat message
         displayChatMessage(data);
     }
