@@ -218,6 +218,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             "username": self.username,
             'isSender': True,
             "message": message,
+            'is_online':self.scope['user'].is_online,
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),  # Include current timestamp
             "channel_name": self.channel_name  # Include the sender's channel_name
         }
