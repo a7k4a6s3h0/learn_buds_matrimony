@@ -4,7 +4,7 @@ const sendBtn = document.getElementById('send-btn');
 // Use window.location for WebSocket URL
 const WEB_PROTOCOL = window.location.protocol;  // 'http:' or 'https:'
 const HOST_URL = window.location.host;          // 'hostname:port'
-const CHAT_URL = '/ws/chat/aebb407b-842a/';    // Ensure proper URL format
+const CHAT_URL = "/ws/chat/984d54a2-4106/";    // Ensure proper URL format
 
 // Set WebSocket protocol based on HTTPS
 const WS_START = WEB_PROTOCOL === 'https:' ? 'wss://' : 'ws://'; // Default to WebSocket (ws://)
@@ -61,10 +61,16 @@ function displayChatHistory(history) {
     history.forEach(chatData => {
         const chatMessage = document.createElement('div');
         chatMessage.innerHTML = `
-            <div class="row text-white pt-3 ${chatData.isSender ? '' : 'justify-content-end'}">
-                <div class="col-auto ${chatData.isSender ? 'chat-message-left' : 'chat-message-right'}">
-                    <p>${chatData.timestamp}</p>
-                    <p>${chatData.username}: ${chatData.message}</p>
+            <div class="row text-white pt-3 ${
+              chatData.isSender ? "" : "justify-content-end"
+            }">
+                <div class="col-auto ${
+                  chatData.isSender ? "chat-message-left" : "chat-message-right"
+                }">
+                    <p class="float-end" style="font-size: x-small;">${
+                      chatData.timestamp
+                    }</p>
+                    <p class='fs-5'> ${chatData.message}</p>
                 </div>
             </div>
         `;
@@ -81,10 +87,16 @@ function displayChatMessage(data) {
     const chatMessage = document.createElement('div');
 
     chatMessage.innerHTML = `
-        <div class="row text-white pt-3 ${data.isSender ? '' : 'justify-content-end'}">
-            <div class="col-auto ${data.isSender ? 'chat-message-left' : 'chat-message-right'}">
-                <p>${data.timestamp}</p>
-                <p>${data.username}: ${data.message}</p>
+        <div class="row text-white pt-3 ${
+          data.isSender ? "" : "justify-content-end"
+        }">
+            <div class="col-auto ${
+              data.isSender ? "chat-message-left" : "chat-message-right"
+            }">
+                <p class="float-end" style="font-size: x-small;">${
+                  data.timestamp
+                }</p>
+                <p class='fs-5'>${data.message}</p>
             </div>
         </div>
     `;
