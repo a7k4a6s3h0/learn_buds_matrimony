@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 from .forms import AdminLoginForm,AdminProfileForm
+from .models import BlockedUserInfo
 from U_auth.permissions import *
 
 from U_auth.models import costume_user
@@ -76,6 +77,18 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         context['label'] = list(range(1, 32))  # Days of the month
         context['arrivals'] = arrivals
         context['active_users'] = active_users
+        
+        blocked_users = BlockedUserInfo.objects.select_related("user", "user__user_details").all()
+        for blocked_user in blocked_users:
+            user = blocked_user.user
+            profile_pic = None
+            
+            # Check if user has a user_details record
+            if hasattr(user, 'user_details'):
+                profile_pic = user.user_details.profile_pic
+                
+            reason = blocked_user.reason
+            print(f"User: {user.username}, Profile Pic: {profile_pic}, Reason: {reason}")
 
 
         # Aggregate the total revenue for payments with status 200
@@ -83,12 +96,13 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         context['matrimony_revenue'] = matrimony_revenue
         #Debugging
         # print(income_data,'matrimony_revenue')
-
+        
         context['total_income'] = total_income
         context['income_data'] = income_data
         context['labels_subscribers'] = labels_subscribers
         context['data_subscribers'] = data_subscribers
         context['total_subscribers'] = total_subscribers
+        context['blocked_users'] = blocked_users
 
         return context
 

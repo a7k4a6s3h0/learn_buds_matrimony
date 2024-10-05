@@ -13,9 +13,7 @@
                         </div>
                     </div>
                     <div class="user-text">
-                        <div>
-                            24k 
-                        </div>
+                        <div>24k</div>
                         <div class="ms-3">Active users</div>
                     </div>
                 </div>
@@ -26,10 +24,8 @@
                         </div>
                     </div>
                     <div class="user-text">
-                        <div>
-                            89 
-                        </div>
-                       <div class="ms-3"> Total users</div>
+                        <div>89</div>
+                        <div class="ms-3">Total users</div>
                     </div>
                 </div>
                 <div class="rounded-4 card mt-4">
@@ -39,9 +35,7 @@
                         </div>
                     </div>
                     <div class="user-text">
-                        <div>
-                            857
-                        </div>
+                        <div>857</div>
                         <div class="ms-3">Subscirbes</div>
                     </div>
                 </div>
@@ -104,31 +98,37 @@
             </div>
             <div class="col-sm-3 blocked-users">
                 <div>
-                    <p>blocked users</p>
+                    <p>Blocked users</p>
                 </div>
                 <div class=" blocked-card p-2 card">
-                    {% for k in "00000000" %}
-                        <div>
-                            <div class="user_img">
-                                <img class="img-fluid user_img"
-                                     src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
-                                     alt="">
-                            </div>
-                            <div class="msg">
-                                <span style="text-transform: capitalize;">Username</span>
+                    {% if blocked_users %}
+                        {% for blocked_user in blocked_users %}
+                            <div>
+                                <div class="user_img">
+                                    <img class="img-fluid user_img"
+                                         src="{{ blocked_user.user.user_details.profile_pic.url }}"
+                                         alt="No img">
+                                </div>
+                                <div class="msg">
+                                    <span style="text-transform: capitalize;">{{ blocked_user.user.username }}</span>
+                                    <br>
+                                    <span style="text-transform: capitalize;">{{ blocked_user.reason|truncatechars:10 }}</span>
+                                </div>
                                 <br>
-                                <span style="text-transform: capitalize;">hello how are you</span>
                             </div>
-                            <br>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                    <div class="mt-3">
+                        <span style="text-transform: capitalize;">Zero user have blocked till</span>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 {% endblock admin_content %}
 {% block admin_scripts %}
-<script>
+    <script>
   // Wait for the DOM to be fully loaded
     document.addEventListener('DOMContentLoaded', function() {
         
@@ -368,5 +368,5 @@
         //     }
         // };
     });
-</script>
+    </script>
 {% endblock admin_scripts %}
