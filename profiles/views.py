@@ -1,11 +1,15 @@
 import json
 from django.http import JsonResponse
+from django.http.request import HttpRequest as HttpRequest
+from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import redirect, render
 
 #profile display imports :
 from django.shortcuts import render, get_object_or_404
 from U_auth.models import *
 from django.http import JsonResponse
+
+from U_messages.models import ChatRoom
 
 #for  interest-request
 from .models import InterestRequest,Shortlist
@@ -233,3 +237,29 @@ class ShortlistByView(LoginRequiredMixin, ListView):
                 Q(user__user_details__bio__icontains=search_query)
             )
         return queryset
+    
+
+class CreateChat(TemplateView):
+    # Don't Forgott to add template name here ...!!!!
+    template_name = ''
+
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        user = request.user
+        other_id = kwargs.get('id')
+
+        try:
+            # Fetch the other user from the database using the provided ID
+            other_user = costume_user.objects.get(id=other_id)
+        except costume_user.DoesNotExist:
+            # Handle the case where the other user doesn't exist (you could return an error)
+            return HttpResponse('Other user not found.', status=404)
+
+        # Create a new chat room with both users
+        chat_obj = ChatRoom.objects.create(room_type='normal')
+
+        # Add both users to the chat room
+        chat_obj.users.set([user, other_user])
+
+        # Redirect to the chat page or return a success response
+        return super().get(request, *args, **kwargs)
+

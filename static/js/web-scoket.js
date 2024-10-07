@@ -1,30 +1,119 @@
-var WEB_PROTOCOL = window.location.protocol;  // Use window.location.protocol for 'http:' or 'https:'
-var HOST_URL = window.location.host;  // Use window.location.host for 'hostname:port'
-var WS_START = 'ws://';  // Default to WebSocket (ws://)
-var CHAT_URL = '/ws/chat/username/';  // Ensure proper URL format
+// Select the button by its ID
+const sendBtn = document.getElementById('send-btn');
 
-// Check if the protocol is HTTPS, then use 'wss://'
-if (WEB_PROTOCOL === 'https:') {
-    WS_START = 'wss://';  // Secure WebSocket (wss://)
-}
+// Use window.location for WebSocket URL
+const WEB_PROTOCOL = window.location.protocol;  // 'http:' or 'https:'
+const HOST_URL = window.location.host;          // 'hostname:port'
+const CHAT_URL = "/ws/chat/984d54a2-4106/";    // Ensure proper URL format
+
+// Set WebSocket protocol based on HTTPS
+const WS_START = WEB_PROTOCOL === 'https:' ? 'wss://' : 'ws://'; // Default to WebSocket (ws://)
 
 // Create WebSocket connection
-const socket = new WebSocket(WS_START + HOST_URL + CHAT_URL);
+const socket = new WebSocket(`${WS_START}${HOST_URL}${CHAT_URL}`);
 
-// On receiving a message
+// When the WebSocket connection is open
+socket.onopen = function() {
+    console.log("WebSocket connection established!");
+};
+
+// Add a 'click' event listener to the button
+sendBtn.addEventListener('click', function() {
+    // Get the text input value
+    const inputField = document.getElementById('input_message');
+    const text = inputField.value.trim();  // Trim whitespace
+    console.log("Send button clicked!", text);
+
+    // Send the message to the server if WebSocket is open
+    if (socket.readyState === WebSocket.OPEN) {
+        if (text) {  // Check if the message is not empty
+            socket.send(JSON.stringify({ 'message': text }));
+            inputField.value = '';  // Clear input field
+        } else {
+            alert('Please enter a message to send.');
+        }
+    } else {
+        alert('WebSocket is not open. Ready state: ' + socket.readyState);
+        console.log('WebSocket is not open. Ready state: ', socket.readyState);
+    }
+});
+
+// On receiving a message from the server
 socket.onmessage = function(event) {
     const data = JSON.parse(event.data);
-    console.log('Message from server: ', data.message);
+    console.log('Message from server: ', data);
+
+    if (data.Warning_Message) {
+        alert(data.Warning_Message);
+    } else if (data.history_message) {
+        // Process chat history
+        displayChatHistory(data.history_message);
+    } else {
+        // Display the chat message
+        displayChatMessage(data);
+    }
 };
 
-// When the connection is open, send a message to the server
-socket.onopen = function() {
-    socket.send(JSON.stringify({ 'message': 'Hello Server!' }));
-};
+// Function to display chat history
+function displayChatHistory(history) {
+    const chatLog = document.getElementById('chat-log');
 
-// Optionally handle connection close
+    history.forEach(chatData => {
+        const chatMessage = document.createElement('div');
+        chatMessage.innerHTML = `
+            <div class="row text-white pt-3 ${
+              chatData.isSender ? "" : "justify-content-end"
+            }">
+                <div class="col-auto ${
+                  chatData.isSender ? "chat-message-left" : "chat-message-right"
+                }">
+                    <p class="float-end" style="font-size: x-small;">${
+                      chatData.timestamp
+                    }</p>
+                    <p class='fs-5'> ${chatData.message}</p>
+                </div>
+            </div>
+        `;
+        chatLog.appendChild(chatMessage);
+    });
+
+    // Scroll to the bottom of the chat log to show the latest messages
+    chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+// Function to display a single chat message
+function displayChatMessage(data) {
+    const chatLog = document.getElementById('chat-log');
+    const chatMessage = document.createElement('div');
+
+    chatMessage.innerHTML = `
+        <div class="row text-white pt-3 ${
+          data.isSender ? "" : "justify-content-end"
+        }">
+            <div class="col-auto ${
+              data.isSender ? "chat-message-left" : "chat-message-right"
+            }">
+                <p class="float-end" style="font-size: x-small;">${
+                  data.timestamp
+                }</p>
+                <p class='fs-5'>${data.message}</p>
+            </div>
+        </div>
+    `;
+
+    chatLog.appendChild(chatMessage);
+
+    // Scroll to the bottom of the chat log to show the latest message
+    chatLog.scrollTop = chatLog.scrollHeight;
+}
+
+// Handle WebSocket close event
 socket.onclose = function(event) {
-    console.log('Connection closed', event);
+    if (event.code === 4001) {
+        console.log('Disconnected: ', event.reason);
+    } else {
+        console.log('Disconnected: ', event);
+    }
 };
 
 // Optionally handle errors

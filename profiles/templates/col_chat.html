@@ -9,7 +9,6 @@
 
 {% block style %}
 <style>
-
     .menu-icon {
         display: flex;
         justify-content: space-between;
@@ -106,7 +105,7 @@
     }
 
     .chat-message-left {
-        background-color: #343a40;
+        background-color: #8C6A8D;
         padding: 10px;
         border-radius: 15px;
         max-width: 75%;
@@ -114,23 +113,25 @@
     }
 
     .chat-message-right {
-        background-color: #007bff;
+        background-color: #E8F1FF;
         padding: 10px;
         border-radius: 15px;
         max-width: 75%;
-        color: white;
+        color: black;
         margin-bottom: 10px;
     }
 
     .row.align-items-center.mt-3 {
-        margin-top: auto;
+        margin: 0;
         background-color: #343a40;
         padding: 10px;
-        position: sticky;
+        position: fixed; /* Ensures it stays fixed at the bottom */
         bottom: 0;
+        left: 0;
         width: 100%;
-        z-index: 10;
+        z-index: 999;
     }
+
 
     .chat_userview {
         overflow-y: auto;
@@ -157,40 +158,31 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12 col-md-12 p-0 bg-secondary">
+        <div class="col-12 col-md-12 p-0 vh-100">
             <div class="view_user" style="border-bottom: inset; border-color: darkgray;">
-                <div class="view_user_img">
-                    <img class="img-fluid" src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY=" alt="">
+                <div class="view_user_img ms-3">
+                    <img class="img-fluid"
+                        src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                        alt="">
                 </div>
                 <div class="msg">
                     <span style="text-transform: capitalize;">Username</span><br>
                     <span style="text-transform: capitalize; color: green;">online</span>
                 </div>
-                <div class="chat_setting">
+                <div class="chat_setting me-3">
                     <i class="fas fa-bars" style="font-size: 25px;"></i>
                 </div>
             </div>
 
             <!-- Chat session -->
-            <div class="chat-container">
-                {% for i in ""|random_range %}
-                <div class="row text-white pt-3">
-                    <div class="col-auto chat-message-left">
-                        <p>username: hey{{i}}</p>
-                    </div>
-                </div>
-                <div class="row text-white pt-3 justify-content-end">
-                    <div class="col-auto chat-message-right">
-                        <p>username: hello{{i}}</p>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+            <div class="chat-container" id="chat-log">
 
+            </div>
+            <br>
             <!-- Chat input field -->
             <div class="row align-items-center mt-3">
                 <div class="col-10 col-md-11">
-                    <input type="text" class="form-control" id="message" placeholder="Type a message">
+                    <input type="text" class="form-control" id="input_message" placeholder="Type a message">
                 </div>
                 <div class="col-2 col-md-1 text-center">
                     <button class="btn btn-primary" id="send-btn">
@@ -198,8 +190,11 @@
                     </button>
                 </div>
             </div>
+
         </div>
     </div>
+
+
 </div>
 {% endblock content %}
 
@@ -207,4 +202,4 @@
 
 {% block scripts %}
 <script src="{% static 'js/web-scoket.js' %}"></script>
-{% endblock scripts %}
+{% endblock scripts %} - this is the code
