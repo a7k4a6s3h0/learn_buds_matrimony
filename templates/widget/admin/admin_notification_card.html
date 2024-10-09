@@ -27,3 +27,58 @@
         </div>
     </div>
 </div>
+
+<form method="POST" enctype="multipart/form-data" class="container mt-4 ">
+    {% csrf_token %}
+    <div class="mb-3">
+        <h2>Create Notification</h2>
+    </div>
+
+    {{ form.as_p }} <!-- Renders the form fields with Bootstrap classes -->
+
+    <!-- Additional input field for ID -->
+    <div id="id_input_container" class="mb-3" style="display: none;">
+        <label for="id_input" class="form-label">Enter ID:</label>
+        <input type="text" id="id_input" name="get_id" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Notification</button>
+</form>
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const audienceTypeField = document.getElementById('audience_type');
+        const idInputContainer = document.getElementById('id_input_container');
+
+        // Trigger the change event on page load to set the initial state
+        audienceTypeField.dispatchEvent(new Event('change'));
+
+        if (audienceTypeField) {
+            audienceTypeField.addEventListener('change', function () {
+                const selectedValue = audienceTypeField.value;
+
+                // Show or hide the ID input field based on the selected value
+                if (selectedValue === 'id') {
+                    idInputContainer.style.display = 'block'; // Show the ID input field
+                } else {
+                    idInputContainer.style.display = 'none'; // Hide the ID input field
+                }
+
+                // You can perform different actions based on the selected value
+                if (selectedValue === 'id') {
+                    console.log("ID selected");
+                } else if (selectedValue === 'selected') {
+                    console.log("Selected option chosen");
+                } else if (selectedValue === 'location') {
+                    console.log("Location selected");
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+    
