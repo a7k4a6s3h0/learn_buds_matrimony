@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="user-text">
-                        <div>24k</div>
+                        <div>{{ current_active }}</div>
                         <div class="ms-3">Active users</div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="user-text">
-                        <div>89</div>
+                        <div>{{ total_users }}</div>
                         <div class="ms-3">Total users</div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="user-text">
-                        <div>857</div>
+                        <div>{{ subscribers_count }}</div>
                         <div class="ms-3">Subscirbes</div>
                     </div>
                 </div>
@@ -105,12 +105,16 @@
                         {% for blocked_user in blocked_users %}
                             <div>
                                 <div class="user_img">
-                                    <img class="img-fluid user_img"
-                                         src="{{ blocked_user.user.user_details.profile_pic.url }}"
-                                         alt="No img">
+                                    <a href="{% url 'profile' blocked_user.user.id %}">
+                                        <img class="img-fluid user_img"
+                                             src="{{ blocked_user.user.user_details.profile_pic.url }}"
+                                             alt="No img">
+                                    </a>
                                 </div>
                                 <div class="msg">
-                                    <span style="text-transform: capitalize;">{{ blocked_user.user.username }}</span>
+                                    <a href="{% url 'profile' blocked_user.user.id %}">
+                                        <span style="text-transform: capitalize;">{{ blocked_user.user.username }}</span>
+                                    </a>
                                     <br>
                                     <span style="text-transform: capitalize;">{{ blocked_user.reason|truncatechars:10 }}</span>
                                 </div>
@@ -118,9 +122,9 @@
                             </div>
                         {% endfor %}
                     {% else %}
-                    <div class="mt-3">
-                        <span style="text-transform: capitalize;">Zero user have blocked till</span>
-                    </div>
+                        <div class="mt-3">
+                            <span style="text-transform: capitalize;">Zero user have blocked till</span>
+                        </div>
                     {% endif %}
                 </div>
             </div>
