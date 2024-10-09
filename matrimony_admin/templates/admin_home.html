@@ -86,11 +86,11 @@
                             Income
                         </div>
                         <div class="text col-sm-3">
-                            50,000
+                            {{ total_expense|floatformat:0 }}
                             Expenses
                         </div>
                         <div class="text col-sm-3">
-                            25,000
+                            {{ profit|floatformat:0 }}
                             Profit
                         </div>
                     </div>
@@ -317,7 +317,7 @@
             new Chart(incomesExpensesCtx.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: Array.from({length: 31}, (_, i) => i + 1),
+                    labels: {{ labels|safe }},
                     datasets: [
                         {
                             label: 'Income',
@@ -326,7 +326,7 @@
                         },
                         {
                             label: 'Expenses',
-                            data: [5500,4500,8500,0,8000,0,9500,0,7000,0,3500,5000,5000,5000,3000,0,1500,0,6000,8000,4000,0,0,0,2000,0,2500,0,5500,6500,2000],
+                            data: {{ expense_data|safe }},
                             backgroundColor: 'rgba(255, 99, 132, 0.8)'
                         }
                     ]

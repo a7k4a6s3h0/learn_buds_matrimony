@@ -2,12 +2,12 @@ import json
 import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView,DetailView,ListView
+from django.views.generic import TemplateView, DetailView, ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm
+from .forms import AdminLoginForm, AdminProfileForm, NotificationDetailsForm
 from .models import BlockedUserInfo
 from U_auth.permissions import *
 
@@ -21,10 +21,11 @@ from datetime import timedelta
 from U_auth.models import *
 from matrimony_admin.models import Subscription
 from U_auth.permissions import *
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, F, Case, When, DecimalField
 from django.db.models.functions import TruncMonth, TruncDay
 from datetime import datetime
-from U_messages.models import NotificationDetails,AmidUsers
+from U_messages.models import NotificationDetails, AmidUsers
+
 
 class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
     template_name = "admin_home.html"
@@ -51,25 +52,58 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         total_subscribers = [subscribers_count, unsubscribers_count]
 
         # 3. Data for the income chart (Revenue per day for the current month)
-        daily_revenue_data = (
-            Payment.objects.filter(created_at__month=today.month)
-            .annotate(day=TruncDay("created_at"))
+        daily_financial_data = (
+            Add_expense.objects.filter(date__month=today.month, date__lte=today)
+            .annotate(day=TruncDay("date"))
             .values("day")
-            .annotate(daily_income=Sum("amount"))
+            .annotate(
+                daily_income=Sum(
+                    Case(
+                        When(cr__gt=F("dr"), then=F("cr") - F("dr")),
+                        default=0,
+                        output_field=DecimalField(),
+                    )
+                ),
+                daily_expense=Sum(
+                    Case(
+                        When(dr__gt=F("cr"), then=F("dr") - F("cr")),
+                        default=0,
+                        output_field=DecimalField(),
+                    )
+                ),
+            )
             .order_by("day")
         )
 
-        # Prepare daily income data for the income chart
-        days = [day for day in range(1, 32)]  # Days 1 to 31 of the month
+        # Prepare daily income and expense data for the chart
+        days = [
+            day for day in range(1, today.day + 1)
+        ]  # Days 1 to current day of the month
         daily_income = {
-            entry["day"].day: float(entry["daily_income"])
-            for entry in daily_revenue_data
+            entry["day"].day: float(entry["daily_income"] or 0)
+            for entry in daily_financial_data
         }
-        income_data = [
-            daily_income.get(day, 0) for day in days
-        ]  # Default income to 0 if no data for a day
-        total_income = sum(income_data)  # total income till today
+        daily_expense = {
+            entry["day"].day: float(entry["daily_expense"] or 0)
+            for entry in daily_financial_data
+        }
 
+        income_data = [daily_income.get(day, 0) for day in days]
+        expense_data = [daily_expense.get(day, 0) for day in days]
+
+        total_income = sum(income_data)
+        total_expense = sum(expense_data)
+        profit = total_income - total_expense
+
+        # Add financial data to context
+        context["labels"] = days
+        context["income_data"] = income_data
+        context["expense_data"] = expense_data
+        context["total_income"] = total_income
+        context["total_expense"] = total_expense
+        context["profit"] = profit
+
+        # customer arrivals
         # Get the current month and year
         now = timezone.now()
         first_day_of_month = now.replace(day=1)
@@ -162,21 +196,21 @@ class FinancialManagement(TemplateView):
 class NotifcationManagement(FormView):
     template_name = "notification_management.html"
     form_class = NotificationDetailsForm
-    success_url = 'notification_management'
-
+    success_url = "notification_management"
 
     def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
         form = self.form_class(request.POST)
         if form.is_valid():
             notification = form.save(commit=True)
         return super().post(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # context = ['users'] = costume_user.objects.all()
-        context['select_options'] = ['User 1', 'User 2', 'User 3']
+        context["select_options"] = ["User 1", "User 2", "User 3"]
         # Add other context variables if needed
         return context
+
     # def get_success_url(self) -> str:
     #     return reverse_lazy('notification_management')
 
@@ -188,32 +222,35 @@ class NotifcationManagement(FormView):
 class admin_profile(CheckSuperUserNotAuthendicated, FormView):
     template_name = "admin_profile.html"
     form_class = AdminProfileForm
-    
-    
+
+
 class SubscriptionManagementView(ListView):
     model = Subscription
-    template_name = 'admin_subscription.html' 
-    context_object_name = 'subscriptions'  
+    template_name = "admin_subscription.html"
+    context_object_name = "subscriptions"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
-    
 
-#arjun
+
+# arjun
 
 from django.views.generic import CreateView, ListView
 from django.urls import reverse_lazy
 from .models import Add_expense
 from .forms import AddExpenseForm  # Assuming you have a form for your model
 
+
 class AddExpenseView(CreateView):
     model = Add_expense
     form_class = AddExpenseForm  # Use the form you created for AddExpense
-    template_name = 'add_expense.html'  # Your template for adding expenses
-    success_url = reverse_lazy('add_expense')  # Redirect after successful submission
+    template_name = "add_expense.html"  # Your template for adding expenses
+    success_url = reverse_lazy("add_expense")  # Redirect after successful submission
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['expenses'] = Add_expense.objects.all()  # Fetch all expenses for display
+        context["expenses"] = (
+            Add_expense.objects.all()
+        )  # Fetch all expenses for display
         return context
