@@ -7,9 +7,17 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from .forms import AdminLoginForm,AdminProfileForm,NotificationDetailsForm
-from .models import *
+from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm
+from .models import BlockedUserInfo
+from U_auth.permissions import *
+
+from U_auth.models import costume_user
+from django.db.models import Sum, Count, Q
+from django.db.models.functions import TruncDay
 from subscription.models import Payment
+from django.utils import timezone
+from datetime import timedelta
+
 from U_auth.models import *
 from matrimony_admin.models import Subscription
 from U_auth.permissions import *
@@ -24,141 +32,128 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Aggregate payments by month and count number of subscribers
-        monthly_subscriber_data = Payment.objects.annotate(month=TruncMonth('created_at')).values('month').annotate(subscriber_count=Count('id')).order_by('month')
+        # Get today's date
+        today = timezone.now().date()
 
-        # Prepare data for chart: List of month names and counts
-        months = [entry['month'].strftime('%B') for entry in monthly_subscriber_data]
-        monthly_subscriber_counts = [entry['subscriber_count'] for entry in monthly_subscriber_data]
+        # 1. Data for the subscribers chart
+        labels_subscribers = []
+        data_subscribers = []
+        for i in range(6, -1, -1):
+            day = today - timedelta(days=i)
+            labels_subscribers.append(day.strftime("%b %d"))
+            subscribers_count = Payment.objects.filter(created_at__date=day).count()
+            data_subscribers.append(subscribers_count)
 
-        #Debigging
-        print(months,"months")
-        print(monthly_subscriber_counts,'monthly_subscriber_counts')
+        # total subscribers
+        total_subscribers = []
+        subscribers_count = Payment.objects.filter(status="200").count()
+        unsubscribers_count = Payment.objects.filter(status="unsub").count()
+        total_subscribers = [subscribers_count, unsubscribers_count]
 
-        # Add to context for use in the template
-        context['months'] = months  # List of month names
-        context['monthly_subscriber_counts'] = monthly_subscriber_data  # List of counts
+        # 3. Data for the income chart (Revenue per day for the current month)
+        daily_revenue_data = (
+            Payment.objects.filter(created_at__month=today.month)
+            .annotate(day=TruncDay("created_at"))
+            .values("day")
+            .annotate(daily_income=Sum("amount"))
+            .order_by("day")
+        )
 
-        # Aggregate payments by day and count the number of subscribed and unsubscribed users
-        daily_subscriber_data = Payment.objects.annotate(day=TruncDay('created_at')).values('day').annotate(
-            subscribed_count=Count('id', filter=Q(status='subscribed')),
-            unsubscribed_count=Count('id', filter=Q(status='unsubscribed'))
-        ).order_by('day')
+        # Prepare daily income data for the income chart
+        days = [day for day in range(1, 32)]  # Days 1 to 31 of the month
+        daily_income = {
+            entry["day"].day: float(entry["daily_income"])
+            for entry in daily_revenue_data
+        }
+        income_data = [
+            daily_income.get(day, 0) for day in days
+        ]  # Default income to 0 if no data for a day
+        total_income = sum(income_data)  # total income till today
 
-        # Prepare data for chart: List of day names and subscriber/unsubscriber counts
-        daily = [entry['day'].strftime('%d %B') for entry in daily_subscriber_data]  # Format as '01 January'
-        subscribed_counts = [entry['subscribed_count'] for entry in daily_subscriber_data]
-        unsubscribed_counts = [entry['unsubscribed_count'] for entry in daily_subscriber_data]
+        # Get the current month and year
+        now = timezone.now()
+        first_day_of_month = now.replace(day=1)
+        last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(
+            day=1
+        ) - timedelta(days=1)
+        # Fetch users who joined this month
+        new_users = costume_user.objects.filter(
+            date_joined__gte=first_day_of_month, date_joined__lte=last_day_of_month
+        )
 
-        # Add to context for use in the template
-        context['daily'] = daily  # List of day names
-        context['subscribed_counts'] = subscribed_counts  # List of subscribed counts
-        context['unsubscribed_counts'] = unsubscribed_counts  # List of unsubscribed counts
+        # Initialize arrays for arrivals and active users
+        arrivals = [0] * 31  # Array for the days of the month (1-31)
+        active_users = [0] * 31  # Array for the active users each day
 
-        #Debigging
-        print(daily,"daily")
-        print(subscribed_counts,'daily_subscriber_counts')
-        print(unsubscribed_counts,'unsubscribed_counts')
+        # Count new users per day
+        for user in new_users:
+            arrivals[user.date_joined.day - 1] += 1
+
+        for day in range(1, 31):
+            # Fetch the count of active users for the given day
+            active_users[day - 1] = costume_user.objects.filter(
+                last_login__date=now.replace(day=day).date()
+            ).count()
+
+        # Add data to context
+        context["label"] = list(range(1, 32))  # Days of the month
+        context["arrivals"] = arrivals
+        context["active_users"] = active_users
+
+        current_active = costume_user.objects.filter(
+            last_login__date=now.date()
+        ).count()
+        total_users = costume_user.objects.count()
+        blocked_users = BlockedUserInfo.objects.select_related(
+            "user", "user__user_details"
+        ).all()
 
         # Aggregate the total revenue for payments with status 200
-        matrimony_revenue = Payment.objects.filter(status=200).aggregate(total_revenue=Sum('amount'))['total_revenue']
-        context['matrimony_revenue'] = matrimony_revenue
+        matrimony_revenue = Payment.objects.filter(status=200).aggregate(
+            total_revenue=Sum("amount")
+        )["total_revenue"]
 
-        #Debugging
-        print(matrimony_revenue,'matrimony_revenue')
-        
-        # Aggregate active and total users per day, including today's new users
-        customer_data = costume_user.objects.annotate(day=TruncDay('date_joined')).values('day').annotate(
-            new_users=Count('id'),  # Count of users who joined each day
-            active_user_count=Count('id', filter=Q(is_active=True)),  # Count of active users
-            total_users=Count('id')  # Total users (up to the current day)
-        ).order_by('day')
-
-        
-        # result = self.read_or_write_json('users_details.json', customer_data)
-        # if result:
-        #     print(result,"datas...........!!!!")
-
-
-        # Convert day to digit format for display (e.g., '01', '02', etc.)
-        day_in_digit = [entry['day'].strftime('%d') for entry in customer_data]
-
-        # Output can be added to the context for a template or further processing
-        context['customer_data'] = customer_data
-        context['day_in_digit'] = day_in_digit
-
-        # Debugging
-        # customer_data output example
-        '''<QuerySet [{'day': datetime.datetime(2024, 9, 27, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')), 
-        'new_users': 1, 'active_user_count': 1, 'total_users': 1}]> customer_data'''
-        
-        print(customer_data,  'customer_data')
-        print(day_in_digit, 'day_in_digit')
+        context["matrimony_revenue"] = matrimony_revenue
+        context["current_active"] = current_active
+        context["total_users"] = total_users
+        context["subscribers_count"] = subscribers_count
+        context["total_income"] = total_income
+        context["income_data"] = income_data
+        context["labels_subscribers"] = labels_subscribers
+        context["data_subscribers"] = data_subscribers
+        context["total_subscribers"] = total_subscribers
+        context["blocked_users"] = blocked_users
 
         return context
-    
-
-    # def read_or_write_json(self, file_path, default_content):
-    #     # Check if the file exists and is non-empty
-    #     if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
-    #         # If file exists and has content, read the JSON data
-    #         with open(file_path, 'r') as json_file:
-    #             try:
-    #                 data = json.load(json_file)
-    #                 print("Data loaded successfully:", data)
-    #                 # Assuming default_content is today's data and data is yesterday's data
-    #                 percentage_change = self.calculate_percentage_change(default_content, data)
-                    
-    #                 # After calculating, update the file with today's data
-    #                 self.write_today_data(file_path, default_content)
-    #                 return percentage_change  # Return the calculated percentage change
-                    
-    #             except json.JSONDecodeError:
-    #                 print("Error reading JSON file.")
-    #                 return None
-    #     else:
-    #         # If the file does not exist or is empty, write the default content (today's data)
-    #         self.write_today_data(file_path, default_content)
-    #         return default_content  # Return the default content
-
-    # # Separate function to handle writing today's data
-    # def write_today_data(self, file_path, today_data):
-    #     with open(file_path, 'w') as json_file:
-    #         json.dump(today_data, json_file, indent=4)
-    #         print(f"Today's content written to {file_path}.")
-
-    # # Calculate percentage change (e.g., today's vs. yesterday's data)
-    # def calculate_percentage_change(self, today_data, yesterday_data):
-    #     # Assuming you're comparing specific numerical values
-    #     if yesterday_data == 0:
-    #         return 0  # Avoid division by zero
-    #     return ((today_data - yesterday_data) / yesterday_data) * 100
 
 
 def usr_mng(request):
-    return render(request,"user_manage.html")
+    return render(request, "user_manage.html")
 
-class AdminLoginView(CheckSuperUserAuthendicated ,FormView):
-    template_name = 'admin_login.html'
+
+class AdminLoginView(CheckSuperUserAuthendicated, FormView):
+    template_name = "admin_login.html"
     form_class = AdminLoginForm
-    success_url = reverse_lazy('admin_home')
+    success_url = reverse_lazy("admin_home")
 
     def form_valid(self, form):
-        email = form.cleaned_data.get('email')
-        password = form.cleaned_data.get('password')
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
 
         user = authenticate(email=email, password=password)
         if user is not None:
             login(self.request, user)
             return super().form_valid(form)
         else:
-            messages.error(self.request, 'Invalid credentials')
+            messages.error(self.request, "Invalid credentials")
             return self.form_invalid(form)
-    
-class AdminLogoutView(CheckSuperUserNotAuthendicated ,TemplateView):
+
+
+class AdminLogoutView(CheckSuperUserNotAuthendicated, TemplateView):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return redirect('admin_login')
+        return redirect("admin_login")
+
 
 class FinancialManagement(TemplateView):
     template_name = "financial_management.html"
@@ -190,7 +185,7 @@ class NotifcationManagement(FormView):
 #     return render(request,"admin_profile.html")
 
 
-class admin_profile(CheckSuperUserNotAuthendicated,FormView):
+class admin_profile(CheckSuperUserNotAuthendicated, FormView):
     template_name = "admin_profile.html"
     form_class = AdminProfileForm
     
