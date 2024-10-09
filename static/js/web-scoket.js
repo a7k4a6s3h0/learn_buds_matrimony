@@ -4,7 +4,7 @@ const sendBtn = document.getElementById('send-btn');
 // Use window.location for WebSocket URL
 const WEB_PROTOCOL = window.location.protocol;  // 'http:' or 'https:'
 const HOST_URL = window.location.host;          // 'hostname:port'
-const CHAT_URL = "/ws/chat/984d54a2-4106/";    // Ensure proper URL format
+const CHAT_URL = "/ws/chat/aebb407b-842a/";    // Ensure proper URL format
 
 // Set WebSocket protocol based on HTTPS
 const WS_START = WEB_PROTOCOL === 'https:' ? 'wss://' : 'ws://'; // Default to WebSocket (ws://)

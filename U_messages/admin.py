@@ -4,3 +4,5 @@ from .models import *
 
 admin.site.register(ChatRoom)
 admin.site.register(ChatInfo)
+admin.site.register(NotificationDetails)
+admin.site.register(AmidUsers)
