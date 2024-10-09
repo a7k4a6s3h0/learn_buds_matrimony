@@ -41,15 +41,15 @@
         </a>
       </li>
       <li><a class="dropdown-item  left-menu-items" href="{% url 'profile' %}">My profile</a></li>
-      <li><a class="dropdown-item  left-menu-items" href="#">Sent request</a></li>
-      <li><a class="dropdown-item left-menu-items" href="#">Viewed my profile</a></li>
-      <li><a class="dropdown-item  left-menu-items" href="#">Accept request</a></li>
-      <li><a class="dropdown-item  left-menu-items" href="#">Reject</a></li>
-      <li><a class="dropdown-item left-menu-items " href="#">Received</a></li>
-      <li><a class="dropdown-item left-menu-items" href="#">Shortlisted by</a></li>
-      <li><a class="dropdown-item left-menu-items " href="#">Shortlisted</a></li>
-      <li><a class="dropdown-item left-menu-items " href="#">Contacted</a></li>
-      <li><a class="dropdown-item left-menu-items " href="#">Message</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="{% url 'sented_request' %}">Sent request</a></li>
+      <li><a class="dropdown-item left-menu-items" href="{% url 'matches' %}">Matches</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="{% url 'accepted_request' %}">Accept request</a></li>
+      <li><a class="dropdown-item  left-menu-items" href="{% url 'rejected_request' %}">Reject</a></li>
+      <li><a class="dropdown-item left-menu-items " href="{% url 'received_request' %}">Received</a></li>
+      <li><a class="dropdown-item left-menu-items" href="{% url 'shortlist_by' %}">Shortlisted by</a></li>
+      <li><a class="dropdown-item left-menu-items " href="{% url 'shortlist' %}">Shortlisted</a></li>
+      <li><a class="dropdown-item left-menu-items " href="{% url 'accepted_request' %}">Contacted</a></li>
+      <li><a class="dropdown-item left-menu-items " href="{% url 'accepted_request' %}">Message</a></li>
       <li><a class="dropdown-item  left-menu-items " href="{% url 'settings' %}">Settings</a></li>
       <li><a class="dropdown-item left-menu-items d-flex align-items-center justify-content-center p-3" href="{% url 'logout' %}">
           <i class="fa-solid fa-right-from-bracket fa-flip-horizontal me-2"></i> Logout

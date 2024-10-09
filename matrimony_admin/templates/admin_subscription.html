@@ -92,21 +92,20 @@ table tbody tr:hover {
                 <th>Description</th>
                 <th>Status</th>
                 <th>Duration</th>
-                <th>Subscription Type</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for subscription in subscriptions %}
+            {% for i in subscriptions %}
             <tr style="margin-top: 5%;">
-                <td>{{subscription.plan_type}}</td>
+                <td>{{i.plan_type}}</td>
                 <td><img src="NFT.png" alt="Plan Image"></td>
-                <td>{{subscription.price}}</td>
-                <td>{{subscription.description}}</td>
+                <td>{{i.price}}</td>
+                <td>{{i.description}}</td>
                 <td>
                     <div class="dropdown">
                         <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{subscription.status}}
+                            {{i.status}}
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Active</a></li>
@@ -114,8 +113,7 @@ table tbody tr:hover {
                         </ul>
                     </div>
                 </td>
-                <td>{{subscription.start_date}}</td>
-                <td>{{subscription.subscription_type}}</td>
+                <td>{{i.start_date}}</td>
                 <!--offcanvas for editing-->
                 <td>
                   <a href="#" class="btn btn-outline-primary btn-sm" 
@@ -203,6 +201,7 @@ table tbody tr:hover {
                     <button class="btn btn-outline-danger btn-sm">🗑️</button>
                 </td>
             </tr>
-        </tbody>    
+            {% endfor %} 
+        </tbody>   
     </div>
-{% endblock admin_content %}     
+    {% endblock admin_content %}     
