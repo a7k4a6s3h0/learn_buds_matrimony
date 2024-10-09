@@ -72,3 +72,48 @@ class BlockedUserInfo(models.Model):
     times = models.IntegerField(default=0)
 
 
+#arjun
+
+#ARJUN 
+class Add_expense(models.Model):
+    # Auto-incrementing field for serial number (sl_no)
+    sl_no = models.AutoField(primary_key=True)
+    
+    # Date field to store the date of the expense
+    date = models.DateField()
+
+    # Invoice number for the expense
+    invoice_number = models.CharField(max_length=100, unique=True)
+
+    # Choices for the category field
+    CATEGORY_CHOICES = [
+        ('OTHER', 'Other'),
+        ('OFFICE', 'Office'),
+        ('DARING', 'Daring'),
+        ('MISCELLANEOUS', 'Miscellaneous'),
+    ]
+
+    # Category field with predefined options
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+
+    # Description of the expense
+    description = models.CharField(max_length=15)
+
+    # Remark with a max length of 15 characters
+    remark = models.CharField(max_length=15)
+
+    # DR (debit) - an integer field
+    dr = models.IntegerField()
+
+    # CR (credit) - another integer field
+    cr = models.IntegerField()
+
+    # Image field to store an invoice image
+    invoice = models.FileField(upload_to='invoices/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Add Expense"
+        verbose_name_plural = "Add Expenses"
+
+    def __str__(self):
+        return f"{self.invoice_number} - {self.category}"
