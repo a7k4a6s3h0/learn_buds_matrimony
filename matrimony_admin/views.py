@@ -2,7 +2,7 @@ import json
 import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,DetailView,ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
@@ -11,6 +11,7 @@ from .forms import AdminLoginForm,AdminProfileForm,NotificationDetailsForm
 from .models import *
 from subscription.models import Payment
 from U_auth.models import *
+from matrimony_admin.models import Subscription
 from U_auth.permissions import *
 from django.db.models import Count, Sum, Q
 from django.db.models.functions import TruncMonth, TruncDay
@@ -183,7 +184,6 @@ class NotifcationManagement(FormView):
         return context
     # def get_success_url(self) -> str:
     #     return reverse_lazy('notification_management')
-    
 
 
 # def admin_profile(request):
@@ -193,9 +193,13 @@ class NotifcationManagement(FormView):
 class admin_profile(CheckSuperUserNotAuthendicated,FormView):
     template_name = "admin_profile.html"
     form_class = AdminProfileForm
+    
+    
+class SubscriptionManagementView(ListView):
+    model = Subscription
+    template_name = 'admin_subscription.html' 
+    context_object_name = 'subscriptions'  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admin_details'] = self.request.user
         return context
-    

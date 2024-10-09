@@ -29,7 +29,7 @@ class Subscription(models.Model):
     status = models.CharField(max_length=100, choices=STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    subscription_type = models.CharField(max_length=100)
+
 
     class Meta:
         verbose_name = "Subscription"
@@ -71,10 +71,4 @@ class BlockedUserInfo(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     times = models.IntegerField(default=0)
 
-class SubscriptionManagementView(ListView):
-    model = Subscription
-    template_name = 'admin_subscription' 
-    context_object_name = 'subscriptions'  
 
-    def get_queryset(self):
-        return Subscription.objects.all()
