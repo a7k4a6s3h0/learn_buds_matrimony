@@ -1,19 +1,22 @@
 import json
 import os
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView,DetailView,ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-
+from .forms import AdminLoginForm,AdminProfileForm,NotificationDetailsForm
+from .models import *
+from subscription.models import Payment
+from U_auth.models import *
 from matrimony_admin.models import Subscription
-from .forms import AdminLoginForm
 from U_auth.permissions import *
 from django.db.models import Count, Sum, Q
 from django.db.models.functions import TruncMonth, TruncDay
 from datetime import datetime
-
+from U_messages.models import NotificationDetails,AmidUsers
 
 class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
     template_name = "admin_home.html"
@@ -161,15 +164,35 @@ class FinancialManagement(TemplateView):
     template_name = "financial_management.html"
 
 
-class NotifcationManagement(TemplateView):
+class NotifcationManagement(FormView):
     template_name = "notification_management.html"
+    form_class = NotificationDetailsForm
+    success_url = 'notification_management'
 
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            notification = form.save(commit=True)
+        return super().post(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # context = ['users'] = costume_user.objects.all()
         context['select_options'] = ['User 1', 'User 2', 'User 3']
         # Add other context variables if needed
         return context
-    
+    # def get_success_url(self) -> str:
+    #     return reverse_lazy('notification_management')
+
+
+# def admin_profile(request):
+#     return render(request,"admin_profile.html")
+
+
+class admin_profile(CheckSuperUserNotAuthendicated,FormView):
+    template_name = "admin_profile.html"
+    form_class = AdminProfileForm
     
     
 class SubscriptionManagementView(ListView):

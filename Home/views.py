@@ -193,29 +193,29 @@ class Matches(LoginRequiredMixin, TemplateView):
                 score += 9.09
 
             # Location Preference
-            preferred_locations = [location for location in user_preference.preferred_location.all()]
-            if str(other_user_personal.user_location.address_details['town']) in preferred_locations:
-                score += 9.09
+            # preferred_locations = [location for location in user_preference.preferred_location.all()]
+            # if str(other_user_personal.user_location.address_details['town']) in preferred_locations:
+            #     score += 9.09
 
             # Education Level
             if user_preference.education_level == other_user_personal.qualifications:
                 score += 9.09
 
-            # Hobbies
-            user_hobbies = set(user_preference.interests_hobbies.values_list('name', flat=True))
-            other_user_hobbies = set(hobby.hobby for hobby in other_user_personal.hobbies.all())
-            common_hobbies = user_hobbies.intersection(other_user_hobbies)
-            if len(user_hobbies) > 0:
-                hobby_score = (len(common_hobbies) / len(user_hobbies)) * 9.09
-                score += min(hobby_score, 9.09)
+            # # Hobbies
+            # user_hobbies = set(user_preference.interests_hobbies.values_list('name', flat=True))
+            # other_user_hobbies = set(hobby.hobby for hobby in other_user_personal.hobbies.all())
+            # common_hobbies = user_hobbies.intersection(other_user_hobbies)
+            # if len(user_hobbies) > 0:
+            #     hobby_score = (len(common_hobbies) / len(user_hobbies)) * 9.09
+            #     score += min(hobby_score, 9.09)
 
-            # Interests
-            user_interests = set(user_preference.interests_hobbies.values_list('name', flat=True))
-            other_user_interests = set(Interests.objects.filter(userpersonaldetails=other_user_personal).values_list('interest', flat=True))
-            common_interests = user_interests.intersection(other_user_interests)
-            if len(user_interests) > 0:
-                interest_score = (len(common_interests) / len(user_interests)) * 9.09
-                score += min(interest_score, 9.09)
+            # # Interests
+            # user_interests = set(user_preference.interests_hobbies.values_list('name', flat=True))
+            # other_user_interests = set(Interests.objects.filter(userpersonaldetails=other_user_personal).values_list('interest', flat=True))
+            # common_interests = user_interests.intersection(other_user_interests)
+            # if len(user_interests) > 0:
+            #     interest_score = (len(common_interests) / len(user_interests)) * 9.09
+            #     score += min(interest_score, 9.09)
 
             # Lifestyle Choices
             user_lifestyle_choices = set(user_preference.lifestyle_choices.all())
