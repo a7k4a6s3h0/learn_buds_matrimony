@@ -203,3 +203,22 @@ class SubscriptionManagementView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+    
+
+#arjun
+
+from django.views.generic import CreateView, ListView
+from django.urls import reverse_lazy
+from .models import Add_expense
+from .forms import AddExpenseForm  # Assuming you have a form for your model
+
+class AddExpenseView(CreateView):
+    model = Add_expense
+    form_class = AddExpenseForm  # Use the form you created for AddExpense
+    template_name = 'add_expense.html'  # Your template for adding expenses
+    success_url = reverse_lazy('add_expense')  # Redirect after successful submission
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['expenses'] = Add_expense.objects.all()  # Fetch all expenses for display
+        return context

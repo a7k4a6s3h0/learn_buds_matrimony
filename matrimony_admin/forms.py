@@ -84,3 +84,18 @@ class NotificationDetailsForm(forms.ModelForm):
 
 
 
+#arjun
+
+
+# forms.py
+
+from .models import Add_expense
+
+class AddExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Add_expense
+        fields = ['date', 'invoice_number', 'category', 'description', 'remark','dr', 'cr', 'invoice']  # Add other fields as necessary
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'invoice': forms.ClearableFileInput(attrs={'multiple': False}),  # Adjust if needed
+        }

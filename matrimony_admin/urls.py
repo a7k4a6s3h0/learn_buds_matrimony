@@ -11,4 +11,5 @@ urlpatterns =[
     path('notification_management',views.NotifcationManagement.as_view(),name='notification_management'),
     path('subscription_management',views.SubscriptionManagementView.as_view(),name='subscription_management'),
     path('admin_profile', views.admin_profile.as_view(), name="admin_profile"),
+    path('add-expense/', views.AddExpenseView.as_view(), name='add_expense'),#arjun
 ]
