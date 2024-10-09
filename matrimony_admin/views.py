@@ -1,15 +1,14 @@
 import json
 import os
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView,DetailView,ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from .forms import AdminLoginForm,AdminProfileForm
-from .models import *
-from subscription.models import Payment
-from U_auth.models import *
+
+from matrimony_admin.models import Subscription
+from .forms import AdminLoginForm
 from U_auth.permissions import *
 from django.db.models import Count, Sum, Q
 from django.db.models.functions import TruncMonth, TruncDay
@@ -171,17 +170,13 @@ class NotifcationManagement(TemplateView):
         # Add other context variables if needed
         return context
     
-
-# def admin_profile(request):
-#     return render(request,"admin_profile.html")
-
-
-class admin_profile(CheckSuperUserNotAuthendicated,FormView):
-    template_name = "admin_profile.html"
-    form_class = AdminProfileForm
+    
+    
+class SubscriptionManagementView(ListView):
+    model = Subscription
+    template_name = 'admin_subscription.html' 
+    context_object_name = 'subscriptions'  
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admin_details'] = self.request.user
         return context
-    
