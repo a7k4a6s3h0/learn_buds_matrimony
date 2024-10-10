@@ -1,0 +1,128 @@
+{% extends 'base_files/admin_base.html' %}
+
+{% block admin_title %}
+Add Expense
+{% endblock admin_title %}
+
+{% block admin_header %}
+<!-- You can add header content here if needed -->
+{% endblock admin_header %}
+
+{% block admin_content %}
+<!-- Include Bootstrap CSS (if not already included in your base template) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<div class="container pb-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto"> <!-- Center the column -->
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Form Section -->
+                    <div class="card mt-3" style="width: 100%;"> <!-- Set card to full width -->
+                        <div class="card-body">
+
+                             <!-- Form Section -->
+                            <div class="form-section">
+                                <h2>Add Expense</h2>
+                                <form method="post" enctype="multipart/form-data">  <!-- Ensure to include enctype for file uploads -->
+                                    {% csrf_token %}
+                                    {{ form.as_p }}  <!-- This renders the form fields dynamically -->
+
+                                    <button type="submit" class="submit-btn">Add</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- Table Section -->
+                    <div class="card mt-3" style="width: 150%;"> <!-- Set card to full width -->
+                        <div class="card-body">
+                            <table class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th style="color: #333;">Sl.No</th>
+                                        <th style="color: #333;">Date</th>
+                                        <th style="color: #333;">Invoice No</th>
+                                        <th style="color: #333;">Category</th>
+                                        <th style="color: #333;">Description / Remarks</th>
+                                        <th style="color: #333;">DR</th>
+                                        <th style="color: #333;">CR</th>
+                                        <th style="color: #333;">Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for expense in expenses %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ expense.date }}</td>
+                                        <td>{{ expense.invoice_number }}</td>
+                                        <td>{{ expense.category }}</td>
+                                        <td>{{ expense.description }}</td>
+                                        <td>{{ expense.dr }}</td>
+                                        <td>{{ expense.cr }}</td>
+                                        <td>
+                                            {% if expense.invoice %}
+                                            <div>
+                                                {% comment %} <img src="/static/images/file-uploaded-icon.png" alt="File Uploaded Icon" width="50" /> {% endcomment %}
+                                                <p>Your invoice has been successfully uploaded.</p>
+                                            </div>
+                                        {% else %}
+                                            <p>No file uploaded yet.</p>
+                                        {% endif %}
+                                        
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center">No expenses found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End of row -->
+        </div> <!-- End of col-md-10 -->
+    </div> <!-- End of row -->
+</div> <!-- End of container -->
+
+{% block admin_scripts %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+// Clear invoice button functionality
+document.getElementById('clear-invoice').addEventListener('click', function () {
+    document.getElementById('invoice-no').value = '';
+});
+
+// Add invoice button functionality
+document.getElementById('add-invoice').addEventListener('click', function () {
+    alert('Add invoice functionality can be implemented here.');
+});
+</script>
+
+<style>
+/* Custom styling to remove vertical lines from the table */
+.table {
+    border-collapse: collapse; /* Ensures that the borders collapse into single lines */
+}
+
+/* Remove vertical borders */
+.table th, .table td {
+    border-left: none; 
+    border-right: none; 
+}
+
+/* New styling for header font color */
+.table thead th {
+    color: #333; /* Your desired header color */
+}
+</style>
+
+{% endblock admin_scripts %}
+{% endblock admin_content %}
