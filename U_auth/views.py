@@ -911,3 +911,5 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
 
     def get_success_url(self) -> str:
         return reverse('privacy_setting_sec')  
+
+
