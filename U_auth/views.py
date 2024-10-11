@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from U_auth.permissions import RedirectNotAuthenticatedUserMixin, check_permissions
+from matrimony_admin.models import BlockedUserInfo
 from . permissions import RedirectAuthenticatedUserMixin
 from django.utils import timezone
 from datetime import timedelta
@@ -372,30 +373,34 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
         password = form.cleaned_data['password']
 
         # Authenticate the user
-        user = authenticate(email=email_or_phone, password=password)
-        if user is not None:
-            # Get the user's personal details
-            user_details = UserPersonalDetails.objects.filter(user=user).first()
-            # Check if user details were found
-            if user_details is not None:
-                print(f"User details retrieved: Blocked: {user_details.is_blocked}, Reason: {user_details.block_reason}")
-                # Check if the user is blocked
-                if user_details.is_blocked:
-                    # User is blocked, display block message with reason
-                    messages.error(self.request, f"You have been blocked by the admin. Reason: {user_details.block_reason or 'No reason provided'}")
-                    return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
-                # If user is not blocked, log them in
+        try:
+            # Try to find the user by email or phone
+            user = costume_user.objects.get(email=email_or_phone)
+
+            # Check if the user is blocked using the BlockedUserInfo model
+            blocked_info = BlockedUserInfo.objects.filter(user=user).first()
+
+            if blocked_info:
+                # User is blocked, show block message with the reason
+                block_reason = blocked_info.reason or "No reason provided"
+                messages.error(self.request, f"You have been blocked by the admin. Reason: {block_reason}")
+                return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+
+            # Authenticate the user
+            user = authenticate(email=email_or_phone, password=password)
+
+            if user is not None:
                 login(self.request, user)
                 return super().form_valid(form)  # Proceed to the success URL
             else:
-                # User details not found
-                messages.error(self.request, "User details not found.")
-                return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
-        else:
-            # If authentication failed
+                # If authentication failed
+                form.add_error(None, "Invalid username or password.")
+                return self.form_invalid(form)
+
+        except User.DoesNotExist:
+            # User was not found
             form.add_error(None, "Invalid username or password.")
             return self.form_invalid(form)
- 
     def form_invalid(self, form):
         # Render the form with errors and trigger the login modal
         if costume_user.objects.filter(email=self.user_email).exists():

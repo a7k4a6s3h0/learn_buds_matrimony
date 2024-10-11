@@ -164,38 +164,39 @@ class UserManagementView(ListView):
   
 @method_decorator(csrf_exempt, name='dispatch')
 class BlockUnblockUserView(View):
-    
+
     def post(self, request, *args, **kwargs):
         user_id = request.POST.get('userId')
-        is_active = request.POST.get('isActive') == "true"  # Ensure proper boolean conversion
-        block_reason = request.POST.get('blockReason', '')
+        is_active = request.POST.get('isActive') == "true"  # "true" for unblock, "false" for block
+        block_reason = request.POST.get('blockReason', '')  # Reason for blocking (if applicable)
 
         try:
+            # Get the user instance (custom user model)
             user_details = UserPersonalDetails.objects.get(id=user_id)
-            user = user_details.user  # Get the related User instance
-            
+            user = user_details.user  # Access the related user from UserPersonalDetails
+
             # Update the user's active status
             user.is_active = is_active
-            user_details.is_blocked = not is_active  # Reflect if the user is blocked or not
+            user.save()  # Save the updated status of the user
 
-            # If the user is blocked, store the block reason
             if not is_active:
-                user_details.block_reason = block_reason
+                # Block user: Store the block reason in BlockedUserInfo
+                blocked_user_info, created = BlockedUserInfo.objects.get_or_create(user=user)
+                blocked_user_info.reason = block_reason  # Set block reason
+                blocked_user_info.times += 1  # Increment block count
+                blocked_user_info.save()  # Save the BlockedUserInfo entry
             else:
-                user_details.block_reason = None  # Clear the block reason when unblocked
+                # Unblock user: Remove BlockedUserInfo if exists
+                BlockedUserInfo.objects.filter(user=user).delete()
 
-            user.save()  # Save the related User model
-            user_details.save()  # Save the UserPersonalDetails model
-
-            print(f"User {user_id} block status: {user_details.is_blocked}, reason: {user_details.block_reason}")
-
-
-            return JsonResponse({'status': 'success'})
+            return JsonResponse({'status': 'success', 'is_active': is_active})
 
         except UserPersonalDetails.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
 
-        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
 
 
 class AdminLoginView(CheckSuperUserAuthendicated, FormView):
