@@ -1,5 +1,4 @@
 {% load static %}
-{% comment %} <!DOCTYPE html> {% endcomment %}
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -72,7 +71,8 @@
                 <div class="content px-3">
                     <div class="d-flex justify-content-between align-items-center py-3">
                         <h2>User Management</h2>
-                        <button class="btn btn-dark">Add User</button>
+                        <!-- Button to open Add User Modal -->
+                        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
                     </div>
                     <table class="table table-striped align-middle">
                         <thead>
@@ -88,28 +88,68 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Repeat this block for each user -->
+                            {% for user in users %}
                             <tr>
                                 <td><input type="checkbox" /></td>
                                 <td>
-                                    <img src="https://example.com/user1.jpg" class="rounded-circle me-2" width="30" height="30" alt="User Image">
-                                    John Abraham
+                                    <img src="{{ user.profile_pic.url }}" class="rounded-circle me-2" width="30" height="30" alt="User Image">
+                                    {{ user.user.username }}
                                 </td>
-                                <td>Male</td>
-                                <td>25</td>
-                                <td>Building No:134, kakana, kochi, kerala</td>
+                                <td>{{ user.get_gender_display }}</td>
+                                <td>{{ user.age }}</td>
+                                <td>{{ user.user_location }}</td>
                                 <td>
-                                    <select class="form-select form-select-sm">
-                                        <option selected>Block</option>
-                                        <option value="1">Un-Block</option>
+                                    <select class="form-select form-select-sm status-select" data-user-id="{{ user.id }}">
+                                        <option {% if user.user.is_active == False %}selected{% endif %} value="0">Block</option>
+                                        <option {% if user.user.is_active == True %}selected{% endif %} value="1">Unblock</option>
                                     </select>
                                 </td>
-                                <td>Paid</td>
-                                <td><button class="btn btn-outline-secondary btn-sm"><i class="bi bi-pencil"></i></button></td>
+                                <td>{{ user.subscription_status }}</td>
+                                <td>
+                                    <a href="{% url 'edit_user' user.pk %}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </td>
                             </tr>
-                            <!-- Repeat block ends -->
+                            {% endfor %}
                         </tbody>
                     </table>
+                    <!-- Pagination Controls -->
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
                 </div>
             </div>
         </div>
@@ -118,11 +158,52 @@
         {% block admin_footer %}
         {% endblock admin_footer %}
     </footer>
+
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- jQuery (required for jQuery-based methods) -->
     <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
     <!-- Popper and Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    
+    <!-- JavaScript for sidebar toggle and block confirmation -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebarToggle = document.getElementById('sidebarToggle');
@@ -130,7 +211,55 @@
             sidebarToggle.addEventListener('click', function () {
                 sidebar.classList.toggle('show');
             });
+
+            // Confirmation for blocking/unblocking user
+            const statusSelects = document.querySelectorAll('.status-select');
+            statusSelects.forEach(select => {
+            select.addEventListener('change', function () {
+                const action = this.value === "0" ? "block" : "unblock";
+                let reason = '';
+
+                if (action === "block") {
+                    reason = prompt("Please provide a reason for blocking the user:");
+                    if (!reason) {
+                        alert("Block reason is required.");
+                        this.value = "1";  // Revert to Unblock
+                        return;
+                    }
+                }
+
+                const confirmMessage = `Are you sure you want to ${action} this user?`;
+                if (!confirm(confirmMessage)) {
+                    this.value = this.value === "0" ? "1" : "0";  // Revert the selection
+                    return;
+                }
+
+                const userId = this.getAttribute('data-user-id');
+                const isActive = this.value === "1";
+
+                // Get CSRF token from the DOM
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // Send the block/unblock request with reason if applicable
+                $.ajax({
+                    url: '{% url "block_unblock_user" %}',  // URL of the block/unblock view
+                    method: 'POST',
+                    data: {
+                        userId: userId,
+                        isActive: isActive,
+                        blockReason: reason,
+                        csrfmiddlewaretoken: csrfToken,  // Include CSRF token
+                    },
+                    success: function(response) {
+                        alert('User status updated successfully.');
+                    },
+                    error: function(error) {
+                        alert('Error updating user status.');
+                    }
+                });
+            });
         });
+    });    
     </script>
 </body>
 </html>
