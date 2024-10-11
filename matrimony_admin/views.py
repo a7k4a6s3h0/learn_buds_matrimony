@@ -171,12 +171,12 @@ class BlockUnblockUserView(View):
         block_reason = request.POST.get('blockReason', '')
 
         try:
-            user_details = UserPersonalDetails.objects.get(id=user_id)
+            user_details = costume_user.objects.get(id=user_id)
             user = user_details.user  # Get the related User instance
             
             # Update the user's active status
             user.is_active = is_active
-            user_details.is_blocked = not is_active  # Reflect if the user is blocked or not
+            # user_details.is_blocked = not is_active  # Reflect if the user is blocked or not
 
             # If the user is blocked, store the block reason
             if not is_active:
