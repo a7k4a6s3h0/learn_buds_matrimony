@@ -1,7 +1,7 @@
 from typing import Any
 from django import forms
 from U_messages.models import NotificationDetails,AmidUsers
-from U_auth.models import costume_user
+from U_auth.models import costume_user, UserPersonalDetails
 
 # import get_object_or_404()
 from django.shortcuts import get_object_or_404
@@ -99,3 +99,7 @@ class AddExpenseForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
             'invoice': forms.ClearableFileInput(attrs={'multiple': False}),  # Adjust if needed
         }
+
+class UserPersonalDetailsForm (forms.ModelForm):
+    class Meta:
+        fields = ['age', 'gender', 'dob', 'user_location', 'smoking_habits', 'drinking_habits', 'interests', 'hobbies', 'qualifications', 'profile_pic', 'short_video', 'bio']

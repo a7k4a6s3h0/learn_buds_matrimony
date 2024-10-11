@@ -1,7 +1,7 @@
 import json
 import os
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView,DetailView,ListView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -11,7 +11,7 @@ from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm
 from .models import BlockedUserInfo
 from U_auth.permissions import *
 
-from U_auth.models import costume_user
+from U_auth.models import costume_user, UserPersonalDetails, Location
 from django.db.models import Sum, Count, Q
 from django.db.models.functions import TruncDay
 from subscription.models import Payment
@@ -25,6 +25,12 @@ from django.db.models import Count, Sum, Q
 from django.db.models.functions import TruncMonth, TruncDay
 from datetime import datetime
 from U_messages.models import NotificationDetails,AmidUsers
+from .forms import UserPersonalDetailsForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
     template_name = "admin_home.html"
@@ -127,8 +133,69 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         return context
 
 
-def usr_mng(request):
-    return render(request, "user_manage.html")
+class UserManagementView(ListView):
+    model = UserPersonalDetails
+    template_name = 'user_manage.html'
+    context_object_name = 'users'
+    paginate_by = 10
+
+    def get_queryset(self):
+        # Use select_related to optimize query and reduce DB hits
+        return UserPersonalDetails.objects.select_related('user', 'user_location')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            # Get the pagination object and handle the page request
+            page_number = self.request.GET.get('page')
+            paginator = Paginator(self.get_queryset(), self.paginate_by)
+            page_obj = paginator.get_page(page_number)
+            context['page_obj'] = page_obj
+        except (PageNotAnInteger, EmptyPage):
+            # If page is not an integer, deliver first page.
+            # If page is out of range, deliver last page of results.
+            context['page_obj'] = paginator.page(1 if isinstance(PageNotAnInteger) else paginator.num_pages)
+        except Exception as e:
+            # Handle unexpected exceptions (optional)
+            context['error_message'] = f"An error occurred: {str(e)}"
+        
+        return context
+
+  
+@method_decorator(csrf_exempt, name='dispatch')
+class BlockUnblockUserView(View):
+    
+    def post(self, request, *args, **kwargs):
+        user_id = request.POST.get('userId')
+        is_active = request.POST.get('isActive') == "true"  # Ensure proper boolean conversion
+        block_reason = request.POST.get('blockReason', '')
+
+        try:
+            user_details = UserPersonalDetails.objects.get(id=user_id)
+            user = user_details.user  # Get the related User instance
+            
+            # Update the user's active status
+            user.is_active = is_active
+            user_details.is_blocked = not is_active  # Reflect if the user is blocked or not
+
+            # If the user is blocked, store the block reason
+            if not is_active:
+                user_details.block_reason = block_reason
+            else:
+                user_details.block_reason = None  # Clear the block reason when unblocked
+
+            user.save()  # Save the related User model
+            user_details.save()  # Save the UserPersonalDetails model
+
+            print(f"User {user_id} block status: {user_details.is_blocked}, reason: {user_details.block_reason}")
+
+
+            return JsonResponse({'status': 'success'})
+
+        except UserPersonalDetails.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
 
 class AdminLoginView(CheckSuperUserAuthendicated, FormView):
@@ -217,3 +284,25 @@ class AddExpenseView(CreateView):
         context = super().get_context_data(**kwargs)
         context['expenses'] = Add_expense.objects.all()  # Fetch all expenses for display
         return context
+def add_user(request):
+    if request.method == 'POST':
+        form = UserPersonalDetailsForm(request.Post, request.Files)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User added successfully!')
+            return redirect('usr_mng')
+        else:
+            form = UserPersonalDetailsForm()
+        return render(request, 'matrimony_admin/user_management.html', {'form': form})
+
+def edit_user(request, pk):
+    user_details = get_object_or_404(UserPersonalDetails, pk=pk)
+    if request.method == 'POST':
+        form = UserPersonalDeatilsForm(request.POST, request.FILES, instance=user_details)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User updated successfully!')
+            return redirect('usr_mng')
+    else:
+        form = UserPersonalDetailsForm(instance=user_details)
+    return render(request, 'matrimony_admin/user_management.html', {'form': form, 'user': user_details})
