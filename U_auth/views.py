@@ -336,34 +336,66 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
         return kwargs
 
 
+    # def form_valid(self, form):
+    #     """
+    #     If the form is valid, authenticate and log in the user.
+    #     """
+    #     email_or_phone = form.cleaned_data['email_or_phone']
+    #     password = form.cleaned_data['password']
+    #     # Authenticate the user
+    #     user = authenticate(email=email_or_phone, password=password)
+    #     # Check if the user is authenticated
+    #     if user is not None:
+    #         # If user is not blocked, log them in
+    #         login(self.request, user)
+    #         return super().form_valid(form)
+    #     # If authentication failed
+    #     else:
+    #         try:
+    #             user = costume_user.objects.all()
+    #             print(f"User details retrieved: Blocked: {user}, Reason: {user}")
+    #             if user:
+    #                 # User is blocked, display block message with reason
+    #                 messages.error(self.request, f"You have been blocked by the admin. Reason: {user.block_reason}")
+    #                 return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+    #         except costume_user.DoesNotExist:
+    #             messages.error(self.request, "User details not found.")
+    #             return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+    #     form.add_error(None, "Invalid username or password.")
+    #     return self.form_invalid(form)
+    
     def form_valid(self, form):
         """
         If the form is valid, authenticate and log in the user.
         """
         email_or_phone = form.cleaned_data['email_or_phone']
         password = form.cleaned_data['password']
+
         # Authenticate the user
         user = authenticate(email=email_or_phone, password=password)
-        # Check if the user is authenticated
         if user is not None:
-            # If user is not blocked, log them in
-            login(self.request, user)
-            return super().form_valid(form)
-        # If authentication failed
-        else:
-            try:
-                user = costume_user.objects.all()
-                print(f"User details retrieved: Blocked: {user}, Reason: {user}")
-                if user:
+            # Get the user's personal details
+            user_details = UserPersonalDetails.objects.filter(user=user).first()
+            # Check if user details were found
+            if user_details is not None:
+                print(f"User details retrieved: Blocked: {user_details.is_blocked}, Reason: {user_details.block_reason}")
+                # Check if the user is blocked
+                if user_details.is_blocked:
                     # User is blocked, display block message with reason
-                    messages.error(self.request, f"You have been blocked by the admin. Reason: {user.email}")
+                    messages.error(self.request, f"You have been blocked by the admin. Reason: {user_details.block_reason or 'No reason provided'}")
                     return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
-            except costume_user.DoesNotExist:
+                # If user is not blocked, log them in
+                login(self.request, user)
+                return super().form_valid(form)  # Proceed to the success URL
+            else:
+                # User details not found
                 messages.error(self.request, "User details not found.")
                 return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
-        form.add_error(None, "Invalid username or password.")
-        return self.form_invalid(form)
-    
+        else:
+            # If authentication failed
+            form.add_error(None, "Invalid username or password.")
+            return self.form_invalid(form)
+ 
     def form_invalid(self, form):
         # Render the form with errors and trigger the login modal
         if costume_user.objects.filter(email=self.user_email).exists():
