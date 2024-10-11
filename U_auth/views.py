@@ -309,8 +309,8 @@ class ResendOTPView(FormView):
             messages.error(self.request, "User does not exist. Please try again.")
             return redirect(reverse('auth_page'))
 
-class LoginView(RedirectAuthenticatedUserMixin, FormView):
 
+class LoginView(RedirectAuthenticatedUserMixin, FormView):
     template_name = 'auth/auth.html'
     form_class = LoginForm
     success_url = reverse_lazy('home')
@@ -324,17 +324,15 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
         kwargs = super().get_form_kwargs()
 
         # Extract email from the request's POST data
-        self.user_email = self.request.POST.get('email', None)
+        self.user_email = self.request.POST.get('email_or_phone', None)
 
         # Debugging: Print the extracted email
         print(f"Extracted email: {self.user_email}")
         self.request.session['user'] = self.user_email
 
-
         print(kwargs, "**********************************")
 
         return kwargs
-
 
     def form_valid(self, form):
         """
@@ -342,16 +340,27 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
         """
         email_or_phone = form.cleaned_data['email_or_phone']
         password = form.cleaned_data['password']
-
+        # Authenticate the user
         user = authenticate(email=email_or_phone, password=password)
-
+        # Check if the user is authenticated
         if user is not None:
+            # If user is not blocked, log them in
             login(self.request, user)
-            return super().form_valid(form)  # Redirects to success_url
+            return super().form_valid(form)
+        # If authentication failed
         else:
-            # Add a non-field error to the form
-            form.add_error(None, "Invalid username or password.")
-            return self.form_invalid(form)  # Redirects to error handling
+            try:
+                user = costume_user.objects.all()
+                print(f"User details retrieved: Blocked: {user}, Reason: {user}")
+                if user:
+                    # User is blocked, display block message with reason
+                    messages.error(self.request, f"You have been blocked by the admin. Reason: {user.email}")
+                    return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+            except costume_user.DoesNotExist:
+                messages.error(self.request, "User details not found.")
+                return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+        form.add_error(None, "Invalid username or password.")
+        return self.form_invalid(form)
     
     def form_invalid(self, form):
         # Render the form with errors and trigger the login modal
@@ -866,6 +875,8 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
 
     def get_context_data(self, **kwargs: dict) -> dict[str, Any]:
         context =  super().get_context_data(**kwargs)
+        user_partner_details = PartnerPreference.objects.filter(user=self.request.user).first()
+        # print(user_partner_details.occupation)
         interst_hobbies_list = []
         qualification_list = []
         locations_list = []
@@ -891,6 +902,7 @@ class UserPartnerPreferenceView_2(RedirectNotAuthenticatedUserMixin, FormView):
         context['location_list'] = locations_list
         context['LifestyleChoice_list'] = LifestyleChoice_list
         context['occupation'] = [occupation.job_title for occupation in Job_Details.objects.all()]
+        context['user_partner_details'] = user_partner_details
         return context
 
     def get_form_kwargs(self) -> dict[str, Any]:

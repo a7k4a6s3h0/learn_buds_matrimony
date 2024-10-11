@@ -1,3 +1,4 @@
+from typing import Iterable
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -42,16 +43,13 @@ class costume_user(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'phone', 'password']
 
-    def __str__(self):
-        return self.username if self.username else self.email
-
 
 class Qualifications(models.Model):
     qualification = models.CharField(max_length=50, blank=False)
 
 
     def __str__(self):
-        return f"Hobby: {self.qualification}"
+        return f"Qualification: {self.qualification}"
     
 class Hobbies(models.Model):
     hobby = models.CharField(max_length=100)
@@ -97,7 +95,8 @@ class UserPersonalDetails(models.Model):
     is_employee = models.BooleanField(default=False)
     is_jobseeker = models.BooleanField(default=False)
     bio = models.CharField(max_length=100, blank=True, default='This user hasn’t added a bio yet. Stay tuned for more!')
-
+    is_blocked = models.BooleanField(default=False)  # Add this field
+    block_reason = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}_details"
