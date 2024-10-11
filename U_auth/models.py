@@ -95,6 +95,8 @@ class UserPersonalDetails(models.Model):
     is_employee = models.BooleanField(default=False)
     is_jobseeker = models.BooleanField(default=False)
     bio = models.CharField(max_length=100, blank=True, default='This user hasn’t added a bio yet. Stay tuned for more!')
+    is_blocked = models.BooleanField(default=False)  # Add this field
+    block_reason = models.TextField(null=True, blank=True)
 
 
     def __str__(self):
