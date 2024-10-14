@@ -7,6 +7,7 @@ from django import forms
 from datetime import date
 from .models import *
 import re
+# from .models import costume_user
 
 class MultipleValueField(forms.CharField):
     def clean(self, value):
@@ -645,3 +646,4 @@ class UserPartnerPreferenceForm(forms.ModelForm):
         
         return partner_obj
     
+
