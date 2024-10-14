@@ -1,42 +1,35 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
 <ul class="nav justify-content-center align-items-center">
     <li class="nav-item mb-2">
         <a class="nav-link" aria-current="page" href="#">
-            <img src="{% static 'img/Logo.svg' %}"
-                 alt="Logo"
-                 width="30"
-                 height="30">
+            <img src="{% static 'img/Logo.svg' %}" alt="Logo" width="30" height="30">
         </a>
     </li>
     <li class="nav-item mb-2">
-        <a class="nav-link  {% if request.resolver_match.url_name == '/admin_home/' %}active{% endif %}" href="{% url 'admin_home' %}"><i class="bi bi-grid-fill"></i></a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}"
+           href="{% url 'admin_home' %}"><i class="bi bi-grid-fill"></i></a>
     </li>
     <li class="nav-item mb-2">
         <a class="nav-link " href="{% url 'admin_home' %}">
-            <img src="{% static 'img/heart.svg' %}"
-                 alt="heart"
-                 width="30"
-                 height="30">
+            <img src="{% static 'img/heart.svg' %}" alt="heart" width="30" height="30">
         </a>
     </li>
     <li class="nav-item mb-2">
-        <a class="nav-link" href="{% url 'admin_home' %}">
-            <img src="{% static 'img/ring.svg' %}"
-                 alt="ring"
-                 width="30"
-                 height="30">
+        <a class="nav-link color" href="{% url 'admin_home' %}">
+            <img src="{% static 'img/ring.svg' %}" alt="ring" width="30" height="30">
         </a>
     </li>
     <li class="nav-item mb-2">
-        <a class="nav-link {% if request.resolver_match.url_name == '/subscription_management/' %}active{% endif %}"href="{% url 'subscription_management' %}">
-            <img src="{% static 'img/cart.svg' %}"
-                 alt="cart"
-                 width="30"
-                 height="30">
+        <a class="nav-link {% if request.resolver_match.url_name == 'subscription_management' %}active{% endif %}"
+           href="{% url 'subscription_management' %}">
+            <img src="{% static 'img/cart.svg' %}" alt="cart" width="30" height="30">
         </a>
     </li>
     <li class="nav-item mb-2">
-        <a class="nav-link {% if request.resolver_match.url_name == '/user/' %}active{% endif %}" href="{% url 'user_management' %}">
+        <a class="nav-link {% if request.resolver_match.url_name == 'user_management' %}active{% endif %}"
+           href="{% url 'user_management' %}">
             <img src="{% static 'img/search.svg' %}"
                  alt="search"
                  width="30"
@@ -44,11 +37,8 @@
         </a>
     </li>
     <li class="nav-item mb-2">
-        <a class="nav-link"href="{% url 'financial_management' %}">
-            <img src="{% static 'img/globe.svg' %}"
-                 alt="globe"
-                 width="30"
-                 height="30">
+        <a class="nav-link {% if request.resolver_match.url_name == 'financial_management' %}active{% endif %}" href="{% url 'financial_management' %}">
+            <img src="{% static 'img/globe.svg' %}" alt="globe" width="30" height="30">
         </a>
     </li>
     <li class="nav-item mb-2">

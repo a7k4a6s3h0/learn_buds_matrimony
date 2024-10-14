@@ -85,6 +85,19 @@
   }
 }
 
-.active-icon-color {
-  color: #6039ff;
+.nav-link.active {
+  color: #000000; /* Desired color for active link */
+  font-weight: bold;
+  background-color: #007bff; /* Light gray background for active state */
+  border-radius: 5px;
+}
+
+.nav-link.active img {
+  filter: brightness(1.5); /* Makes the icon brighter */
+  transform: scale(1.1);   /* Slightly enlarges the icon */
+}
+
+/* Optional: Reset styles for non-active links, if needed */
+.nav-link img {
+  transition: all 0.3s ease; /* Smooth transition for active state */
 }

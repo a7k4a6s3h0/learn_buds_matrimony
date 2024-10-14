@@ -82,11 +82,6 @@
     left: 40%;
 }
 
-.nav-link.active {
-    color: #007bff; /* Desired color for active link */
-    font-weight: bold;
-}
-
 /* mobille screen css */
 @media (max-width: 768px){
     .point-chart {
