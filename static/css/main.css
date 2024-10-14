@@ -86,18 +86,59 @@
 }
 
 .nav-link.active {
-  color: #000000; /* Desired color for active link */
+  color: #000000; 
   font-weight: bold;
-  background-color: #007bff; /* Light gray background for active state */
+  background-color: #007bff; 
   border-radius: 5px;
 }
 
 .nav-link.active img {
-  filter: brightness(1.5); /* Makes the icon brighter */
-  transform: scale(1.1);   /* Slightly enlarges the icon */
+  filter: brightness(1.5); 
+  transform: scale(1.1);   
 }
 
-/* Optional: Reset styles for non-active links, if needed */
 .nav-link img {
-  transition: all 0.3s ease; /* Smooth transition for active state */
+  transition: all 0.3s ease; 
+}
+
+/* Day mode (default) */
+/* Day Mode */
+body.day-mode {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.day-mode a {
+  color: #111111; /* Link color in day mode */
+}
+
+body.day-mode div, body.day-mode section, body.day-mode header {
+  background-color: #f8f9fa; /* Background color for containers */
+  color: #000000; /* Text color */
+}
+
+.day-mode #toggle-btn {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+
+/* Night Mode */
+body.night-mode {
+  background-color: #343a40;
+  color: #f5f5f5;
+}
+
+body.night-mode a {
+  color: #ffffff; /* Link color in night mode */
+}
+
+body.night-mode div, body.night-mode section, body.night-mode header {
+  background-color: #343a40;
+  color: #f5f5f5;
+}
+
+.night-mode #toggle-btn {
+  background-color: #343a40;
+  color: #ffffff;
 }
