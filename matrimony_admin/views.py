@@ -1,30 +1,33 @@
+# Standard library imports
 import json
 import os
+from datetime import datetime, timedelta
+import re
+
+# Django core imports
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView,DetailView,ListView
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import TemplateView, DetailView, ListView, FormView, UpdateView, CreateView
+from django.urls import reverse_lazy
+from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import FormView
-from django.urls import reverse_lazy
-from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm
-from .models import BlockedUserInfo
-from U_auth.permissions import *
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
-from U_auth.models import costume_user
+# Django ORM and database functions
 from django.db.models import Sum, Count, Q
-from django.db.models.functions import TruncDay
-from subscription.models import Payment
-from django.utils import timezone
-from datetime import timedelta
+from django.db.models.functions import TruncDay, TruncMonth
 
+# Project-specific imports (models, forms, and permissions)
+from .models import BlockedUserInfo, Add_expense
+from .forms import AdminLoginForm, AdminProfileForm, NotificationDetailsForm, AdminProfileEditForm, AddExpenseForm
 from U_auth.models import *
-from matrimony_admin.models import Subscription
 from U_auth.permissions import *
-from django.db.models import Count, Sum, Q
-from django.db.models.functions import TruncMonth, TruncDay
-from datetime import datetime
-from U_messages.models import NotificationDetails,AmidUsers
+from subscription.models import Payment
+from matrimony_admin.models import Subscription
+from U_messages.models import NotificationDetails, AmidUsers
+
 
 class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
     template_name = "admin_home.html"
@@ -185,9 +188,96 @@ class NotifcationManagement(FormView):
 #     return render(request,"admin_profile.html")
 
 
-class admin_profile(CheckSuperUserNotAuthendicated, FormView):
+# class admin_profile(CheckSuperUserNotAuthendicated, FormView):
+#     template_name = "admin_profile.html"
+#     form_class = AdminProfileForm
+
+
+
+class admin_profile(CheckSuperUserNotAuthendicated, TemplateView):
     template_name = "admin_profile.html"
-    form_class = AdminProfileForm
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
+        user = get_object_or_404(costume_user,id=request.user.id)
+        job = Job_Details.objects.filter(user=user)
+        Country = Country_codes.objects.all()
+        context = self.get_context_data(admin_details=user, job=job,Country=Country)
+        
+        # Return the rendered template with the context
+        return self.render_to_response(context)
+
+
+    def post(self, request: HttpRequest, *args: str, **kwargs: dict) -> HttpResponse:
+        # Get the posted data
+        new_username = request.POST.get('username')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        password = request.POST.get('password')  # New password
+        nationality = request.POST.get('nationality')
+        designation = request.POST.get('designation')
+
+        # Get the user and country details
+        user = get_object_or_404(costume_user, id=request.user.id)
+        Country = get_object_or_404(Country_codes, country_name=nationality)
+
+        # Update username if provided
+        if new_username:
+            if costume_user.objects.filter(username=new_username).exclude(id=user.id).exists():
+                messages.error(request, 'This username is already taken.')
+                return redirect('admin_profile')
+            user.username = new_username
+
+        # Update email if provided
+        if email:
+            try:
+                validate_email(email)  # Validate email format
+            except ValidationError:
+                messages.error(request, 'Invalid email address.')
+                return redirect('admin_profile')
+
+            if costume_user.objects.filter(email=email).exclude(id=user.id).exists():
+                messages.error(request, 'This email is already associated with another account.')
+                return redirect('admin_profile')
+            user.email = email
+
+        # Validate and update phone number if provided
+        if phone:
+            # Validate phone number length
+            if len(phone) < 10 or len(phone) > 15:
+                messages.error(request, 'Invalid phone number format.')
+                return redirect('admin_profile')
+
+            if costume_user.objects.filter(phone=phone).exclude(id=user.id).exists():
+                messages.error(request, 'This phone number is already associated with another account.')
+                return redirect('admin_profile')
+            user.phone = phone
+
+        user.country_details = Country  # Update country details
+
+        # Check if a new password was provided, and update it
+        if password:
+            # Validate password length
+            if len(password) < 8:
+                messages.error(request, 'Password must be at least 8 characters long.')
+                return redirect('admin_profile')
+
+            # Validate password complexity (must contain both letters and digits)
+            if not re.search(r'[A-Za-z]', password) or not re.search(r'\d', password):
+                messages.error(request, 'Password must contain both letters and digits.')
+                return redirect('admin_profile')
+
+            # If validation passes, set the new password
+            user.set_password(password)
+
+        # Update job details if provided
+        job = Job_Details.objects.filter(user=user).first()  # Assuming one job entry per user
+        if job:
+            job.designation = designation  # Update designation
+            job.save()
+
+        user.save()  # Save the updated user
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('admin_profile')  # Redirect after updating
     
     
 class SubscriptionManagementView(ListView):
@@ -202,10 +292,7 @@ class SubscriptionManagementView(ListView):
 
 #arjun
 
-from django.views.generic import CreateView, ListView
-from django.urls import reverse_lazy
-from .models import Add_expense
-from .forms import AddExpenseForm  # Assuming you have a form for your model
+
 
 class AddExpenseView(CreateView):
     model = Add_expense

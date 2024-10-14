@@ -99,3 +99,48 @@ class AddExpenseForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'type': 'date'}),
             'invoice': forms.ClearableFileInput(attrs={'multiple': False}),  # Adjust if needed
         }
+
+from django import forms
+from U_auth.models import costume_user, Job_Details
+
+class AdminProfileEditForm(forms.ModelForm):
+    designation = forms.CharField(max_length=100, required=False)
+    job_location = forms.ModelChoiceField(queryset=Job_Details.objects.all(), required=False)  # Add this field
+    password = forms.CharField(
+        label='Password',
+        widget=forms.PasswordInput(),
+        required=False,  # Optional for edits
+    )
+
+    class Meta:
+        model = costume_user
+        fields = ['username', 'email', 'phone', 'country_details']  # Add any other fields needed
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if kwargs.get('instance'):
+            try:
+                job_details = Job_Details.objects.get(user=kwargs['instance'])
+                self.fields['designation'].initial = job_details.designation
+                self.fields['job_location'].initial = job_details.job_location  # Populate initial value
+            except Job_Details.DoesNotExist:
+                self.fields['designation'].initial = ''
+                self.fields['job_location'].initial = None  # Set initial to None if no job location found
+
+    def save(self, commit=True):
+        user = super().save(commit)
+        designation = self.cleaned_data.get('designation')
+        job_location = self.cleaned_data.get('job_location')  # Get job_location
+        password = self.cleaned_data.get('password')
+
+        if commit:
+            job_details, created = Job_Details.objects.get_or_create(user=user)
+            job_details.designation = designation
+            job_details.job_location = job_location  # Assign job_location here
+            job_details.save()
+
+            if password:
+                user.set_password(password)
+                user.save()
+
+        return user

@@ -40,7 +40,7 @@
         text-align: center;
         transition: transform 0.2s;
         height: 160px;
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -90,13 +90,49 @@
 
     .total-work-done-card {
         width: 250px;
-        height: 250px; 
+        height: 250px;
         margin: auto;
     }
 
-    
+
     .main-content {
         padding: 20px;
+    }
+
+        .messages {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .messages li {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+
+    .warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
     }
 </style>
 {% endblock admin_style %}
@@ -105,7 +141,8 @@
 <div class="d-flex">
     <div class="sidebar_2 bg-light p-3">
         <div class="profile-picture text-center mb-3">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAACUCAMAAABSgr46AAAAY1BMVEX///8AAAD8/PwEBAT29vbv7+/k5OTy8vLS0tJeXl7Ozs4JCQm2trYODg6goKBZWVmRkZGrq6vc3Nw7OzvGxsa+vr6JiYlBQUEiIiJ2dnYoKChkZGRvb29+fn4uLi5KSkoXFxfmAKL2AAAEfElEQVR4nO2ca2/qMAyGk/QCpR290NJy5///ytMU2DgMWjcEG7M8HyZNmia/suM4jlMhHA6Hw+FwOBwOh8PhcDgcfwjV89unMEuWUbSbJ7OA2hLLdO5SwXwvL8TNqvgcJyrVavHzH3lnjkn4KbGqRJjsWknejzqvRcp6PqW2zRLTtBN15T/v/KPO2K9IHaAivQ3QK6Fpcf4ztigRNI8EnnyZ+qwFChEc/g/QW4mejPj6sEuiy8cePGtssmRCbaoh2jN5PKBQs2KrUIkSoE/KQ0htqjEzkEApS65LUW2BCmfUlppS9mwUV7TplKcH2zTzBVQoC2pTDZmtgVEqM6brEOjDljW1qWaood3+h5hnrpkuwAplTm2sCf5OPi5Ib5lTW2tC0YxQmFFba8IUHqNMFYaHET7cUVtrQgCt2TQs16HIPz1KRQkuaf6AwriiNtaI4gD3IcsdXwh41XZkesrfwRUy7QzDF6LHcx0KUYOduKI21Yzprwunh2ypbTVjAj8+8axplIigAuOS2lgjFHy7+OJ6k5iAFfLsYggxhyrkWtOIDKyQZ+WtoxR6BubqQwVV+MW16S2gLmTaERY61cA0bph29eHJdMlWIaioadKa6fGwpZSL4TvEmvckXzjcyohYCxT+w4mob7Y+tZFP0OaP1aBCrtejHa3pVf9+4cmGawfjhBLB0EXwguu80DdDHTfeLtQEx16BNbV9Fuh3Ist7tRv6SzeuJ8Nr+m/ZPkFhf7dmSW2eBfpHMDfU5lmgfwYz1jWbYlzViP4o9Ty5SDjXpS2TqteF3Zh7WgVsnRgkm16Bly5HPZ8y9KQSKt+AxxMXq1KxG4auUrA+zTriVaL6Ffx+tAtXHa/7nMdBow21oBw+299lMS8Ug1j1qzETX9eOlPpB2/s3wMsINqR/X6GUh+x9u4s6vGbj8std9tnb7h2+6fq7pdHPvd5vPfolfEhokE31Tn48pb9yZbr+ftOuyGarl+ObFOXaitCivrPGOr/88zcgtBifF4mtxuhdsmoIn0mAC+x+HsknbfQHBYL8IEdMrY8koY5SdSqwe54zP4Un45xa4vJiystI6JKNPtDBZ2bMISxUlUhGDOQbUxP6sFhIyHv05/AohzPB85XPsSebXXzBNniHNoltAppsE74+Qs8KPaLBN/uV2kMovrug9DPYF+6CN1AkmxEvmS1wJOjCFYgubItCgovGMe8LLbBGH53yB24krIOeTkO8LHMiwu7bIAepbr8hK7TUNhzBErmsQReIveuH+Aq9ErU47b+8folAmaGGKWpBc1aYotY1hvdnT4H7IBo/lcrus2doBOPusC2BWdaEIz4gZA/M58IjXjFb5ICosLJ70QQE8wUY/EtlNokRFeJ02X6BeLzAaObTKsQvaTrwzvkKsZFIo9CnKNpa8Mq2CXaTBl1hQKQQ7yYxRLp0ugXv6xIhydEC83Ax5jteNsGbIqZSiNdQ/HyFU5IDMOYReMwXdJ3CMeDdkzqFH6CQKNM4hfag2g+dQntQVd54CqnOh2YjJ/8AOv4/PpAOf4oAAAAASUVORK5CYII=" class="rounded-circle" width="80" height="80" alt="Profile">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAACUCAMAAABSgr46AAAAY1BMVEX///8AAAD8/PwEBAT29vbv7+/k5OTy8vLS0tJeXl7Ozs4JCQm2trYODg6goKBZWVmRkZGrq6vc3Nw7OzvGxsa+vr6JiYlBQUEiIiJ2dnYoKChkZGRvb29+fn4uLi5KSkoXFxfmAKL2AAAEfElEQVR4nO2ca2/qMAyGk/QCpR290NJy5///ytMU2DgMWjcEG7M8HyZNmia/suM4jlMhHA6Hw+FwOBwOh8PhcDgcfwjV89unMEuWUbSbJ7OA2hLLdO5SwXwvL8TNqvgcJyrVavHzH3lnjkn4KbGqRJjsWknejzqvRcp6PqW2zRLTtBN15T/v/KPO2K9IHaAivQ3QK6Fpcf4ztigRNI8EnnyZ+qwFChEc/g/QW4mejPj6sEuiy8cePGtssmRCbaoh2jN5PKBQs2KrUIkSoE/KQ0htqjEzkEApS65LUW2BCmfUlppS9mwUV7TplKcH2zTzBVQoC2pTDZmtgVEqM6brEOjDljW1qWaood3+h5hnrpkuwAplTm2sCf5OPi5Ib5lTW2tC0YxQmFFba8IUHqNMFYaHET7cUVtrQgCt2TQs16HIPz1KRQkuaf6AwriiNtaI4gD3IcsdXwh41XZkesrfwRUy7QzDF6LHcx0KUYOduKI21Yzprwunh2ypbTVjAj8+8axplIigAuOS2lgjFHy7+OJ6k5iAFfLsYggxhyrkWtOIDKyQZ+WtoxR6BubqQwVV+MW16S2gLmTaERY61cA0bph29eHJdMlWIaioadKa6fGwpZSL4TvEmvckXzjcyohYCxT+w4mob7Y+tZFP0OaP1aBCrtejHa3pVf9+4cmGawfjhBLB0EXwguu80DdDHTfeLtQEx16BNbV9Fuh3Ist7tRv6SzeuJ8Nr+m/ZPkFhf7dmSW2eBfpHMDfU5lmgfwYz1jWbYlzViP4o9Ty5SDjXpS2TqteF3Zh7WgVsnRgkm16Bly5HPZ8y9KQSKt+AxxMXq1KxG4auUrA+zTriVaL6Ffx+tAtXHa/7nMdBow21oBw+299lMS8Ug1j1qzETX9eOlPpB2/s3wMsINqR/X6GUh+x9u4s6vGbj8std9tnb7h2+6fq7pdHPvd5vPfolfEhokE31Tn48pb9yZbr+ftOuyGarl+ObFOXaitCivrPGOr/88zcgtBifF4mtxuhdsmoIn0mAC+x+HsknbfQHBYL8IEdMrY8koY5SdSqwe54zP4Un45xa4vJiystI6JKNPtDBZ2bMISxUlUhGDOQbUxP6sFhIyHv05/AohzPB85XPsSebXXzBNniHNoltAppsE74+Qs8KPaLBN/uV2kMovrug9DPYF+6CN1AkmxEvmS1wJOjCFYgubItCgovGMe8LLbBGH53yB24krIOeTkO8LHMiwu7bIAepbr8hK7TUNhzBErmsQReIveuH+Aq9ErU47b+8folAmaGGKWpBc1aYotY1hvdnT4H7IBo/lcrus2doBOPusC2BWdaEIz4gZA/M58IjXjFb5ICosLJ70QQE8wUY/EtlNokRFeJ02X6BeLzAaObTKsQvaTrwzvkKsZFIo9CnKNpa8Mq2CXaTBl1hQKQQ7yYxRLp0ugXv6xIhydEC83Ax5jteNsGbIqZSiNdQ/HyFU5IDMOYReMwXdJ3CMeDdkzqFH6CQKNM4hfag2g+dQntQVd54CqnOh2YjJ/8AOv4/PpAOf4oAAAAASUVORK5CYII="
+                class="rounded-circle" width="80" height="80" alt="Profile">
             <h5>{{admin_details.username}}</h5>
             <p>Ahmedabad, Gujarat<br>India</p>
         </div>
@@ -119,6 +156,7 @@
         </div>
     </div>
 
+
     <!-- Main Content -->
     <div class="main-content w-100">
         <div class="row">
@@ -127,37 +165,57 @@
                 <div class="card rounded-rectangle edit-profile-card mb-4">
                     <div class="card-body">
                         <h4>Edit Profile</h4>
-                        <form>
+                        {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li class="{% if message.tags %}{{ message.tags }}{% endif %}">
+                                {{ message }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+
+                        <form ction="{% url 'admin_profile' %}" method="post">
+                            {% csrf_token %}
                             <div class="mb-3">
                                 <label for="lastName" class="form-label">User Name</label>
-                                <input type="text" class="form-control" id="userName" placeholder="{{admin_details.username}}">
+                                <input type="text" class="form-control" id="userName" name="username"
+                                    value="{{admin_details.username}}">
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" placeholder="Email">
+                                <input type="email" class="form-control" id="email" name="email"
+                                    value="{{admin_details.email}}">
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Phone Number</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">+91</span>
-                                    <input type="text" class="form-control" id="phone" placeholder="Phone Number">
+                                    <span class="input-group-text">+{{admin_details.country_details.calling_code}}</span>
+                                    <input type="text" class="form-control" id="phone" name="phone"
+                                        value="{{admin_details.phone}}">
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" placeholder="Change Password">
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Change Password">
                             </div>
                             <div class="mb-3">
                                 <label for="nationality" class="form-label">Nationality</label>
-                                <select class="form-select" id="nationality">
-                                    <option selected disabled>India</option>
+                                <p>{{ admin_details.country_details.country_name }}</p>
+                                <select class="form-select" id="nationality" name="nationality">
+                            
+                                {% for c in Country %}
+                                    <option selected value="{{ c.country_name }}">{{ c.country_name }}</option>
+                                {% endfor %}
                                 </select>
+
                             </div>
                             <div class="mb-3">
                                 <label for="designation" class="form-label">Designation</label>
-                                <select class="form-select" id="designation">
-                                    <option selected disabled>UI Intern</option>
-                                </select>
+                                {% for j in job %}
+                                <input type="text" class="form-control" id="designation" name="designation" value="{{ j.designation }}">
+                                {% endfor %}
                             </div>
                             <button type="submit" class="btn btn-primary save-button">Save</button>
                         </form>
