@@ -113,7 +113,7 @@ body.day-mode a {
 }
 
 body.day-mode div, body.day-mode section, body.day-mode header {
-  background-color: #f8f9fa; /* Background color for containers */
+  background-color: #ffffff; /* Background color for containers */
   color: #000000; /* Text color */
 }
 
