@@ -64,7 +64,6 @@
 
     .profile-container {
         background-color: beige;
-        width: 50%;
         display: flex;
         padding: 20px;
         gap: 10px;
@@ -456,7 +455,8 @@
         <script>
     // Ensure the DOM is fully loaded before attaching the event listeners
     document.addEventListener('DOMContentLoaded', function () {
-    
+        var hasPaid = {{ has_paid|yesno:"true,false" }};
+
         // Function to show the About section and hide Contact
         function showAbout() {
             document.getElementById('about_section').style.display = 'block';
@@ -476,13 +476,13 @@
             document.getElementById('button_1').style.backgroundColor = 'white';
             document.getElementById('button_2').style.backgroundColor = 'pink';
     
-            // Show the overlay and apply blur effect
-            document.getElementById('background-overlay').style.display = 'block';
-            document.querySelector('.container-fluid').classList.add('blur-background');
-    
             // Show the modal using Bootstrap 5's Modal API
-            var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle1'));
-            myModal.show();
+            if (!hasPaid) {
+                    document.getElementById('background-overlay').style.display = 'block';
+                    document.querySelector('.container-fluid').classList.add('blur-background');
+                    var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle1'));
+                    myModal.show();
+                }
         }
     
         // Attach the showAbout and showContact functions to the buttons
@@ -579,29 +579,5 @@
         {% endfor %}
     });
     {% endif %}
-
-    function show_Userdatas() {
-        var x = document.getElementById("show_details");
-        x.style.display = "none";
-        var Y = document.getElementById("address");
-        Y.style.display = "block";
-    
-        // Show the overlay and apply blur effect
-        document.getElementById('background-overlay').style.display = 'block';
-        document.querySelector('.container-fluid').classList.add('blur-background');
-    
-        // Show the modal using Bootstrap 5's Modal API
-        var myModal = new bootstrap.Modal(document.getElementById('exampleModalToggle1'));
-        myModal.show();
-    }
-    
-    // Remove blur, hide overlay, and refresh page when modal is closed
-    document.getElementById('exampleModalToggle1').addEventListener('hidden.bs.modal', function () {
-        document.getElementById('background-overlay').style.display = 'none';
-        document.querySelector('.container-fluid').classList.remove('blur-background');
-    
-        // Refresh the page
-        location.reload();
-    });
         </script>
     {% endblock scripts %}
