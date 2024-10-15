@@ -47,8 +47,8 @@
         <main>
             <div class="row gap-0 gx-0 sidebar-flex vh-100 ">
                 <div class="col-1 sidebar">{% include "./admin_nav.html" %}</div>
-                <div class="col bg-body-secondary">
-                    <nav class="navbar p-0 navbar-expand-lg bg-body-tertiary">
+                <div class="col ">
+                    <nav class="navbar p-0 navbar-expand-lg">
                         <div class="container no-flex-warp">
                             <button id="sidebarToggle" class="btn d-md-none">
                                 <i class="bi bi-list"></i>
@@ -57,7 +57,7 @@
                                 <div class="input-group  mb-3">
                                     <span class="input-group-text border-end-0" id="basic-addon1"><i class="bi bi-search"></i></span>
                                     <input type="text"
-                                           class="form-control search bg-body-tertiary border-start-0"
+                                           class="form-control search border-start-0"
                                            placeholder="search"
                                            aria-label="search"
                                            aria-describedby="basic-addon1">
@@ -66,10 +66,7 @@
                             <ul class="navbar-nav custom-nav ms-auto d-flex align-items-center">
                                 <li class="nav-item">
                                     <a class="nav-link" href="#" id="toggle-btn">
-                                        <img src="{% static 'img/moon.svg' %}"
-                                             alt="moon"
-                                             width="25"
-                                             height="25">
+                                        <i class="bi bi-moon-fill" id="theme-icon" ></i>
                                     </a>
                                 </li>
                                 <li class="nav-item mx-3">
@@ -83,7 +80,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">
                                         <img class="rounded-circle"
-                                             src="https://media.istockphoto.com/id/916306960/photo/faceless-man-in-hoodie-standing-isolated-on-black.jpg?s=612x612&w=0&k=20&c=pMeGd1UuJgvdZ2gV2VQC2Jn3VwMNeW6TF3cG9RIo1tY="
+                                             src="{{ request.user.user_details.profile_pic.url }}"
                                              alt="user-profile"
                                              height="40"
                                              width="40">
@@ -129,30 +126,28 @@
           });
         });
 
-        // Get button and body elements
         const toggleButton = document.getElementById('toggle-btn');
-        console.log(toggleButton)
+        const themeIcon = document.getElementById('theme-icon');
         const body = document.body;
 
-        // Add event listener to the button to toggle between day and night mode
+        if (localStorage.getItem('theme') === 'night') {
+            body.classList.add('night-mode');
+            themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+        } else {
+            body.classList.add('day-mode');
+        }
+
         toggleButton.addEventListener('click', function() {
-            console.log("in event")
-
             if (body.classList.contains('day-mode')) {
-                console.log("in day")
-
-                // Switch to night mode
                 body.classList.replace('day-mode', 'night-mode');
-                //toggleButton.textContent = 'Switch to Day Mode';
+                themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+                localStorage.setItem('theme', 'night');
             } else {
-                console.log("in night")
-                // Switch to day mode
                 body.classList.replace('night-mode', 'day-mode');
-                //toggleButton.textContent = 'Switch to Night Mode';
+                themeIcon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+                localStorage.setItem('theme', 'day');
             }
         });
-
-
 
     </script>
 </html>
