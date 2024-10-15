@@ -122,6 +122,15 @@ body.day-mode div, body.day-mode section, body.day-mode header {
   color: #000000;
 }
 
+/* Form styles for day mode */
+body.day-mode form input,
+body.day-mode form textarea,
+body.day-mode form select {
+  background-color: #f8f8f8;
+  color: #000000;
+  border: 1px solid #cccccc;
+}
+
 
 /* Night Mode */
 body.night-mode {
@@ -130,7 +139,7 @@ body.night-mode {
 }
 
 body.night-mode a {
-  color: #ffffff; /* Link color in night mode */
+  color: #111111; /* Link color in night mode */
 }
 
 body.night-mode div, body.night-mode section, body.night-mode header {
@@ -141,4 +150,25 @@ body.night-mode div, body.night-mode section, body.night-mode header {
 .night-mode #toggle-btn {
   background-color: #343a40;
   color: #ffffff;
+}
+
+body.night-mode table, body.night-mode th, body.night-mode td {
+  background-color: #424242;
+  color: #f5f5f5;
+  border-color: #666;
+}
+
+/* Form styles for night mode */
+body.night-mode form input,
+body.night-mode form span,
+body.night-mode form textarea,
+body.night-mode form select {
+  background-color: #2c3034;
+  color: #f5f5f5;
+  border: 1px solid #495057;
+}
+
+body.night-mode form label,
+body.night-mode form ::placeholder {
+  color: #f5f5f5;
 }
