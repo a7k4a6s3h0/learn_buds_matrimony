@@ -10,6 +10,7 @@ from U_auth.models import *
 from django.http import JsonResponse
 
 from U_messages.models import ChatRoom
+from subscription.models import Payment
 
 #for  interest-request
 from .models import InterestRequest,Shortlist
@@ -41,12 +42,15 @@ class UserProfileView(TemplateView):
             job_details = Job_Details.objects.get(user=user)
             additional_details = AdditionalDetails.objects.get(user=user)
             pictures = Pictures.objects.filter(user=user_details)
+            has_paid = Payment.objects.filter(user=self.request.user, status='200').exists()
             context['user'] = user
             context['user_details'] = user_details
             context['additional_details'] = additional_details
             context['pictures'] = pictures
             context['job_details'] = job_details
+            context['has_paid'] = has_paid
             return context
+        
 
 
 #Interest request View
