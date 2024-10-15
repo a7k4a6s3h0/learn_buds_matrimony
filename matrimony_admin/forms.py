@@ -118,15 +118,14 @@ class AdminProfileEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if kwargs.get('instance'):
+        if self.instance and self.instance.pk:
             try:
-                job_details = Job_Details.objects.get(user=kwargs['instance'])
+                job_details = Job_Details.objects.get(user=self.instance)
                 self.fields['designation'].initial = job_details.designation
                 self.fields['job_location'].initial = job_details.job_location  # Populate initial value
             except Job_Details.DoesNotExist:
                 self.fields['designation'].initial = ''
                 self.fields['job_location'].initial = None  # Set initial to None if no job location found
-
     def save(self, commit=True):
         user = super().save(commit)
         designation = self.cleaned_data.get('designation')
