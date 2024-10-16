@@ -17,7 +17,9 @@ urlpatterns = [
     path('shortlist/add/<int:user_id>/', views.AddToShortlistView.as_view(), name='add_to_shortlist'),
     path('shortlist/remove/<int:user_id>/', views.RemoveFromShortlistView.as_view(), name='remove_from_shortlist'),
     path('shortlist_by/', views.ShortlistByView.as_view(), name='shortlist_by'),
+    path('chat/create/<int:id>/', views.CreateChat.as_view(), name='create_chat'),
     path('chat',views.chat_pg.as_view(), name="chat"),
+    
     # path('contacted',views.user_contacted_pg, name="contacted"),
     # path('shortlisted',views.user_shortlisted_pg, name="shortlisted"),
     # path('shortlist',views.user_shortlist_pg, name="shortlist"),

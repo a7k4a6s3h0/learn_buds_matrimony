@@ -3,13 +3,18 @@
   <div class="profile-card position-relative">
     <!-- Profile Status -->
     <div class="profile-info position-absolute top-0 start-0 ms-1 p-2 w-100">
-      <p class="fs-6 px-2 rounded-pill" style="
-                                border: 1px solid rgba(255, 255, 255, 0.791);
-                                width: fit-content;
-                                background-color: rgba(255, 255, 255, 0.146);
-                            ">
-        {{ status }}
-      </p>
+<p class="fs-6 px-2 rounded-pill" style="
+        border: 1px solid rgba(255, 255, 255, 0.791);
+        width: fit-content;
+        background-color: rgba(255, 255, 255, 0.146);
+    ">
+  {% if status %}
+  Online
+  {% else %}
+  Offline
+  {% endif %}
+</p>
+
     </div>
     <!-- Profile Name, Gender, Age, Job, Location -->
     <div class="profile-info position-absolute bottom-0 text-center p-2 w-100">

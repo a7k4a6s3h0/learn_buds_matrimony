@@ -4,4 +4,6 @@ from .models import *
 
 admin.site.register(Subscription)
 admin.site.register(SubscriptionINFO)
+admin.site.register(BlockedUserInfo)
+admin.site.register(Add_expense)
 
