@@ -98,6 +98,7 @@ class UserPersonalDetails(models.Model):
     is_blocked = models.BooleanField(default=False)  # Add this field
     block_reason = models.TextField(null=True, blank=True)
 
+
     def __str__(self):
         return f"{self.user.username}_details"
 

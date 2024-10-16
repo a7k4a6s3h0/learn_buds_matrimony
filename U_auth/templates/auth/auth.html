@@ -160,14 +160,13 @@
                     {% endfor %}
                 </div>
             {% endif %} 
-            
             {% if messages %}
             <div class="alert alert-danger" role="alert">
                 {% for message in messages %}
                     {{ message }}
                 {% endfor %}
             </div>
-        {% endif %}
+        {% endif %}       
             <div class="modal-footer">
                 <p class="text-center w-100 mb-0">
                     <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#resetPasswordModal">Reset password?</a><br>
