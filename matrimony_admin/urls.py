@@ -14,8 +14,6 @@ urlpatterns = [
     path('delete-users/', views.DeleteUserView.as_view(), name='delete_users'),
     path('notification_management',views.NotifcationManagement.as_view(),name='notification_management'),
     path('subscription_management',views.SubscriptionManagementView.as_view(),name='subscription_management'),
-    path('user/add/', views.add_user, name='add_user'),
-    path('user/edit/<int:pk>/', views.edit_user, name='edit_user'),
     path('block-unblock-user/', views.BlockUnblockUserView.as_view(), name='block_unblock_user'),
     path('add-expense/', views.AddExpenseView.as_view(), name='add_expense'),#arjun
 ]

@@ -347,3 +347,30 @@ class AddExpenseView(CreateView):
             Add_expense.objects.all()
         )  # Fetch all expenses for display
         return context
+
+
+class EditUserView(UpdateView):
+    model = UserPersonalDetails
+    form_class = EditUserForm
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        return get_object_or_404(UserPersonalDetails, pk=user_id)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            self.form_valid(form)
+            return redirect('user_management')  # Redirect to user management page after success
+        else:
+            self.form_invalid(form)
+            return self.render_to_response({'form': form})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'User updated successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error updating the user.')
+        return super().form_invalid(form)
