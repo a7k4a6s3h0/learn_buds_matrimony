@@ -102,4 +102,31 @@ class AddExpenseForm(forms.ModelForm):
 
 class UserPersonalDetailsForm (forms.ModelForm):
     class Meta:
+        model = UserPersonalDetails
         fields = ['age', 'gender', 'dob', 'user_location', 'smoking_habits', 'drinking_habits', 'interests', 'hobbies', 'qualifications', 'profile_pic', 'short_video', 'bio']
+
+class EditUserForm(forms.ModelForm):
+    class Meta:
+        model = UserPersonalDetails
+        fields = ['age', 'gender', 'user_location']
+
+    username = forms.CharField(max_length=150)  # Include username from costume_user model
+
+    def __init__(self, *args, **kwargs):
+        user_instance = kwargs.pop('user_instance', None)
+        super(EditUserForm, self).__init__(*args, **kwargs)
+        
+        # Populate the username field with costume_user data
+        if user_instance:
+            self.fields['username'].initial = user_instance.username
+
+    def save(self, commit=True):
+        # Save changes to both UserPersonalDetails and costume_user models
+        user_details = super(EditUserForm, self).save(commit=False)
+        costume_user_instance = self.instance.user
+        costume_user_instance.username = self.cleaned_data['username']
+        
+        if commit:
+            costume_user_instance.save()
+            user_details.save()
+        return user_details

@@ -397,7 +397,7 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
                 form.add_error(None, "Invalid username or password.")
                 return self.form_invalid(form)
 
-        except User.DoesNotExist:
+        except costume_user.DoesNotExist:
             # User was not found
             form.add_error(None, "Invalid username or password.")
             return self.form_invalid(form)

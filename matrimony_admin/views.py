@@ -2,12 +2,12 @@ import json
 import os
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView,DetailView,ListView
+from django.views.generic import TemplateView,DetailView,ListView,DeleteView,UpdateView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import FormView
 from django.urls import reverse_lazy
-from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm
+from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm, EditUserForm
 from .models import BlockedUserInfo
 from U_auth.permissions import *
 
@@ -165,20 +165,19 @@ class UserManagementView(ListView):
 
         return context
 
-class DeleteUsersView(View):
-    def post(self, request):
-        # Get the list of user IDs selected for deletion
+class DeleteUserView(View):
+    success_url = reverse_lazy('user_manage')  # Redirect after successful deletion
+
+    def post(self, request, *args, **kwargs):
+        # Get the list of selected users from POST data
         selected_users = request.POST.getlist('selected_users')
-        
+
         if selected_users:
-            # Mark users as deleted
-            costume_user.objects.filter(id__in=selected_users).update(is_deleted=True)  # Use the correct user model
-            messages.success(request, f"{len(selected_users)} user(s) have been deleted.")
-        else:
-            messages.error(request, "No users were selected.")
+            # Delete all selected users
+            costume_user.objects.filter(id__in=selected_users).delete()
 
-        return HttpResponseRedirect(reverse('user_management'))  # Redirect back to the user management page
-
+        return HttpResponseRedirect(self.success_url)
+        
 @method_decorator(csrf_exempt, name='dispatch')
 class BlockUnblockUserView(View):
 
@@ -315,14 +314,28 @@ class AddExpenseView(CreateView):
         context['expenses'] = Add_expense.objects.all()  # Fetch all expenses for display
         return context
 
-def edit_user(request, pk):
-    user_details = get_object_or_404(UserPersonalDetails, pk=pk)
-    if request.method == 'POST':
-        form = UserPersonalDeatilsForm(request.POST, request.FILES, instance=user_details)
+class EditUserView(UpdateView):
+    model = UserPersonalDetails
+    form_class = EditUserForm
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        return get_object_or_404(UserPersonalDetails, pk=user_id)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
         if form.is_valid():
-            form.save()
-            messages.success(request, 'User updated successfully!')
-            return redirect('usr_mng')
-    else:
-        form = UserPersonalDetailsForm(instance=user_details)
-    return render(request, 'matrimony_admin/user_management.html', {'form': form, 'user': user_details})
+            self.form_valid(form)
+            return redirect('user_management')  # Redirect to user management page after success
+        else:
+            self.form_invalid(form)
+            return self.render_to_response({'form': form})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'User updated successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error updating the user.')
+        return super().form_invalid(form)
