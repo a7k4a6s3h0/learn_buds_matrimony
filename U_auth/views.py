@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from U_auth.permissions import RedirectNotAuthenticatedUserMixin, check_permissions
+from matrimony_admin.models import BlockedUserInfo
 from . permissions import RedirectAuthenticatedUserMixin
 from django.utils import timezone
 from datetime import timedelta
@@ -309,8 +310,8 @@ class ResendOTPView(FormView):
             messages.error(self.request, "User does not exist. Please try again.")
             return redirect(reverse('auth_page'))
 
-class LoginView(RedirectAuthenticatedUserMixin, FormView):
 
+class LoginView(RedirectAuthenticatedUserMixin, FormView):
     template_name = 'auth/auth.html'
     form_class = LoginForm
     success_url = reverse_lazy('home')
@@ -324,18 +325,45 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
         kwargs = super().get_form_kwargs()
 
         # Extract email from the request's POST data
-        self.user_email = self.request.POST.get('email', None)
+        self.user_email = self.request.POST.get('email_or_phone', None)
 
         # Debugging: Print the extracted email
         print(f"Extracted email: {self.user_email}")
         self.request.session['user'] = self.user_email
-
 
         print(kwargs, "**********************************")
 
         return kwargs
 
 
+    # def form_valid(self, form):
+    #     """
+    #     If the form is valid, authenticate and log in the user.
+    #     """
+    #     email_or_phone = form.cleaned_data['email_or_phone']
+    #     password = form.cleaned_data['password']
+    #     # Authenticate the user
+    #     user = authenticate(email=email_or_phone, password=password)
+    #     # Check if the user is authenticated
+    #     if user is not None:
+    #         # If user is not blocked, log them in
+    #         login(self.request, user)
+    #         return super().form_valid(form)
+    #     # If authentication failed
+    #     else:
+    #         try:
+    #             user = costume_user.objects.all()
+    #             print(f"User details retrieved: Blocked: {user}, Reason: {user}")
+    #             if user:
+    #                 # User is blocked, display block message with reason
+    #                 messages.error(self.request, f"You have been blocked by the admin. Reason: {user.block_reason}")
+    #                 return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+    #         except costume_user.DoesNotExist:
+    #             messages.error(self.request, "User details not found.")
+    #             return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+    #     form.add_error(None, "Invalid username or password.")
+    #     return self.form_invalid(form)
+    
     def form_valid(self, form):
         """
         If the form is valid, authenticate and log in the user.
@@ -343,16 +371,35 @@ class LoginView(RedirectAuthenticatedUserMixin, FormView):
         email_or_phone = form.cleaned_data['email_or_phone']
         password = form.cleaned_data['password']
 
-        user = authenticate(email=email_or_phone, password=password)
+        # Authenticate the user
+        try:
+            # Try to find the user by email or phone
+            user = costume_user.objects.get(email=email_or_phone)
 
-        if user is not None:
-            login(self.request, user)
-            return super().form_valid(form)  # Redirects to success_url
-        else:
-            # Add a non-field error to the form
+            # Check if the user is blocked using the BlockedUserInfo model
+            blocked_info = BlockedUserInfo.objects.filter(user=user).first()
+
+            if blocked_info:
+                # User is blocked, show block message with the reason
+                block_reason = blocked_info.reason or "No reason provided"
+                messages.error(self.request, f"You have been blocked by the admin. Reason: {block_reason}")
+                return self.render_to_response(self.get_context_data(form=form, show_login_modal=True))
+
+            # Authenticate the user
+            user = authenticate(email=email_or_phone, password=password)
+
+            if user is not None:
+                login(self.request, user)
+                return super().form_valid(form)  # Proceed to the success URL
+            else:
+                # If authentication failed
+                form.add_error(None, "Invalid username or password.")
+                return self.form_invalid(form)
+
+        except costume_user.DoesNotExist:
+            # User was not found
             form.add_error(None, "Invalid username or password.")
-            return self.form_invalid(form)  # Redirects to error handling
-    
+            return self.form_invalid(form)
     def form_invalid(self, form):
         # Render the form with errors and trigger the login modal
         if costume_user.objects.filter(email=self.user_email).exists():

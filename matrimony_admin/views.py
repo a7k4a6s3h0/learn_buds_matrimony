@@ -1,16 +1,22 @@
 import json
 import os
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, DetailView, ListView
+from django.shortcuts import render, redirect, get_object_or_404, get_object_or_404
+from django.views.generic import TemplateView, DetailView, ListView,DeleteView,UpdateView
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import FormView
+from django.views.generic import FormView, ListView
 from django.urls import reverse_lazy
-from .forms import AdminLoginForm, AdminProfileForm, NotificationDetailsForm
+from .forms import AdminLoginForm, AdminProfileForm,NotificationDetailsForm, EditUserForm
 from .models import BlockedUserInfo
 from U_auth.permissions import *
-
+from U_auth.models import UserPersonalDetails, Location
+from .forms import UserPersonalDetailsForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import JsonResponse
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from U_auth.models import costume_user
 from django.db.models import Sum, Count, Q
 from django.db.models.functions import TruncDay
@@ -142,6 +148,7 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
             "user", "user__user_details"
         ).all()
 
+
         # Aggregate the total revenue for payments with status 200
         matrimony_revenue = Payment.objects.filter(status=200).aggregate(
             total_revenue=Sum("amount")
@@ -161,8 +168,94 @@ class AdminHomeView(CheckSuperUserNotAuthendicated, TemplateView):
         return context
 
 
-def usr_mng(request):
-    return render(request, "user_manage.html")
+class UserManagementView(ListView):
+    model = UserPersonalDetails
+    template_name = 'user_manage.html'
+    context_object_name = 'users'
+    paginate_by = 10
+
+    def get_queryset(self):
+        
+        return UserPersonalDetails.objects.select_related('user', 'user_location')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Retrieve payment details for each user and assign subscription status
+        user_subscriptions = {}
+        for user in context['users']:
+            # Fetch the latest payment for each user, if any
+            payment = user.user.userpayment_details.order_by('-created_at').first()
+            if payment:
+                user.subscription_type = payment.status  # Store payment status as subscription type
+            else:
+                user.subscription_type = 'No Subscription'
+            user_subscriptions[user.id] = user.subscription_type
+
+        context['user_subscriptions'] = user_subscriptions
+
+        return context
+
+class DeleteUserView(View):
+    success_url = reverse_lazy('user_manage')  # Redirect after successful deletion
+
+    def post(self, request, *args, **kwargs):
+        # Get the list of selected users from POST data
+        selected_users = request.POST.getlist('selected_users')
+
+        if selected_users:
+            # Delete all selected users
+            costume_user.objects.filter(id__in=selected_users).delete()
+
+        return HttpResponseRedirect(self.success_url)
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class BlockUnblockUserView(View):
+
+    def post(self, request, *args, **kwargs):
+        user_id = request.POST.get('userId')
+        is_active = request.POST.get('isActive') == "true"  # "true" for unblock, "false" for block
+        block_reason = request.POST.get('blockReason', '')  # Reason for blocking (if applicable)
+
+        try:
+            # Get the user instance (UserPersonalDetails model)
+            user_details = UserPersonalDetails.objects.get(id=user_id)
+
+
+            # Update the user's active status
+            user_details.user.is_active = is_active
+            user_details.user.save()  # Save the updated status of the user
+
+            if not is_active:
+                # Block user: Update UserPersonalDetails
+                user_details.is_blocked = True
+                user_details.block_reason = block_reason  # Set block reason
+            else:
+                # Unblock user: Clear block details
+                user_details.is_blocked = False
+                user_details.block_reason = None  # Clear the block reason
+            
+            user_details.save()  # Save the updated UserPersonalDetails
+
+            # Handle BlockedUserInfo for tracking blocks
+            if not is_active:
+                # Store or update BlockedUserInfo
+                blocked_user_info, created = BlockedUserInfo.objects.get_or_create(user=user_details.user)
+                blocked_user_info.reason = block_reason  # Set or update block reason
+                blocked_user_info.times += 1  # Increment block count
+                blocked_user_info.save()  # Save the BlockedUserInfo entry
+            else:
+                # Unblock user: Remove BlockedUserInfo if exists
+                BlockedUserInfo.objects.filter(user=user_details.user).delete()
+
+            return JsonResponse({'status': 'success', 'is_active': is_active})
+
+        except UserPersonalDetails.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
 
 
 class AdminLoginView(CheckSuperUserAuthendicated, FormView):
@@ -254,3 +347,30 @@ class AddExpenseView(CreateView):
             Add_expense.objects.all()
         )  # Fetch all expenses for display
         return context
+
+
+class EditUserView(UpdateView):
+    model = UserPersonalDetails
+    form_class = EditUserForm
+
+    def get_object(self):
+        user_id = self.kwargs.get('user_id')
+        return get_object_or_404(UserPersonalDetails, pk=user_id)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            self.form_valid(form)
+            return redirect('user_management')  # Redirect to user management page after success
+        else:
+            self.form_invalid(form)
+            return self.render_to_response({'form': form})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'User updated successfully.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'There was an error updating the user.')
+        return super().form_invalid(form)
